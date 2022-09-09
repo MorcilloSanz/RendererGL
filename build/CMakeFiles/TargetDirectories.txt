@@ -1,0 +1,3 @@
+/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles/RendererGL.dir
+/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles/edit_cache.dir
+/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles/rebuild_cache.dir

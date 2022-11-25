@@ -23,11 +23,11 @@ public:
     }
 private:
     void deleteBuffers() {
-        if(framebuffer != 0)                    glDeleteBuffers(1, &framebuffer);
-        if(intermediateFrameBuffer != 0)        glDeleteBuffers(1, &intermediateFrameBuffer);
-        if(textureColorBufferMultiSampled != 0) glDeleteBuffers(1, &textureColorBufferMultiSampled);
-        if(screenTexture != 0)                  glDeleteBuffers(1, &screenTexture);
-        if(rbo != 0)                            glDeleteBuffers(1, &rbo);
+        glDeleteBuffers(1, &framebuffer);
+        glDeleteBuffers(1, &intermediateFrameBuffer);
+        glDeleteBuffers(1, &textureColorBufferMultiSampled);
+        glDeleteBuffers(1, &screenTexture);
+        glDeleteBuffers(1, &rbo);
         framebuffer = intermediateFrameBuffer = textureColorBufferMultiSampled = screenTexture = rbo = 0;
     }
 public:

@@ -17,8 +17,14 @@ void dockSpace(bool* p_open);
 void resizeFun(GLFWwindow* window, int width, int height);
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+// Window
+Window window;
+
 // Texture renderer
 TextureRenderer textureRenderer;
+
+// TrackBallCamera 
+TrackballCamera camera;
 
 // FPS camera
 FPSCamera fpsCamera;
@@ -27,7 +33,7 @@ void updateFPSCamera(double xpos, double ypos);
 
 int main(void) {
 
-    Window window("RendererGL", 1080, 720);
+    window = Window("RendererGL", 1080, 720);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
@@ -61,12 +67,13 @@ int main(void) {
     Renderer renderer;
 
     // Camera
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     camera.zoom(-5.5);
     float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
     renderer.setCamera(camera);
 
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+    fpsCamera.setSensitivity(sensitivity / 10);
     //renderer.setCamera(fpsCamera);
 
     // Light
@@ -218,37 +225,28 @@ int main(void) {
     //Model model("/home/morcillosanz/Desktop/model/model3/IceSnark.obj");
     //Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     Model model("/home/morcillosanz/Desktop/model/SkeletonOwl/skeleton_owl.obj");
+    //Model model("/home/morcillosanz/Desktop/model/MidnightMountain/MidnightMountain.dae");
+    //model.rotate(270, glm::vec3(1, 0, 0));
+    //Model model("/home/morcillosanz/Desktop/model/PipePlaza/mini8_course.dae");
+    //Model model("/home/morcillosanz/Desktop/model/circuit/Gctr_MarioCircuit.dae");
+    //model.setLineWidth(1.25f);
     //Model model("/home/morcillosanz/Desktop/model/Ahri/Ahri.obj");
     //Model model("/home/morcillosanz/Desktop/model/awp/Model.obj");
     //Model model("/home/morcillosanz/Desktop/model/soldier/EliteFederationSoldier.obj");
+    //Model model("/home/morcillosanz/Desktop/model/SpyroLakeHome/LakeHome.dae");
     //model.translate(glm::vec3(5.0, 0.0, 1.5));
+    model.translate(glm::vec3(0.0, 0.0, 2.5));
     model.scale(glm::vec3(0.01, 0.01, 0.01));
     //model.translate(glm::vec3(0.0, 1.0, 0.0));
-    //model.translate(glm::vec3(0.0, 0.0, 2.5));
     renderer.addGroup(model);
-
-    /*
-    Model model2("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
-    model2.translate(glm::vec3(0, -5, 0));
-    model2.scale(glm::vec3(0.001, 0.001, 0.001));
-    renderer.addGroup(model2);
-    
-    Model model3("/home/morcillosanz/Desktop/model/BlockCity/mini3_sky.dae");
-    model3.translate(glm::vec3(0, -5, 0));
-    model3.scale(glm::vec3(0.001, 0.001, 0.001));
-    renderer.addGroup(model3);
-    */
 
     // Init TextureRenderer
     textureRenderer = TextureRenderer(window.getWidth(), window.getHeight());
 
-    // Enable back face culling
-    //renderer.enableBackFaceCulling();
-
+    // Enable Rendering Features
+    renderer.enableBackFaceCulling();
     renderer.enableAntialiasing();
-
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    renderer.enableBlending();
 
     // Main loop
     while (!window.windowShouldClose()) {
@@ -355,6 +353,8 @@ int main(void) {
                 ImGui::SliderFloat("Pan sensitivity", &panSensitivity, 0.01f, 50.f);
                 ImGui::SliderFloat("Zoom sensitivity", &zoomSensitivity, 0.01f, 50.f);
 
+                fpsCamera.setSensitivity(sensitivity / 10);
+
                 ImGui::Separator();
 
                 ImGui::Text("Camera rotation angles");
@@ -387,6 +387,7 @@ int main(void) {
                 ImGui::SameLine();
                 if (ImGui::Button("FPS camera")) {
                     renderer.setCamera(fpsCamera);
+                    glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
                 ImGui::End();
@@ -396,6 +397,22 @@ int main(void) {
             { 
                 ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);       
                 ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   // Render texture
+                
+                // If resize change texture viewport
+                static ImVec2 previousSize(0, 0);
+                if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
+                    textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
+                    // Restart camera
+                    float theta = camera.getTheta(), phi = camera.getPhi();
+                    glm::vec3 center = camera.getCenter(), up = camera.getUp();
+                    float radius = camera.getRadius();
+                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y , 0.1, 1000);
+                    camera.setTheta(theta);  camera.setPhi(phi);
+                    camera.setCenter(center); camera.setUp(up);
+                    camera.setRadius(radius);
+                }
+                previousSize = ImGui::GetWindowSize();
+
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
                 ImGui::End();
             }
@@ -521,8 +538,9 @@ void dockSpace(bool* p_open) {
     ImGui::End();
 }
 
-void resizeFun(GLFWwindow* window, int width, int height) {
-    textureRenderer.updateViewPort(width, height);
+void resizeFun(GLFWwindow* w, int width, int height) {
+    window.setWidth(width);
+    window.setHeight(height);
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), width / height, 0.1, 1000);
 }
 
@@ -535,6 +553,7 @@ void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {
     else if(key == GLFW_KEY_A && action == GLFW_RELEASE)    movementLeft = false;
     if (key == GLFW_KEY_D && action == GLFW_PRESS)          movementRight = true;
     else if (key == GLFW_KEY_D && action == GLFW_RELEASE)   movementRight = false;
+    if(key == GLFW_KEY_ESCAPE) glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void updateFPSCamera(double xpos, double ypos) {

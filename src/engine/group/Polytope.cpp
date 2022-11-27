@@ -8,14 +8,22 @@
 
 Polytope::Polytope(const std::vector<Vec3f>& vertices)
     : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0) {
+    initPolytope(vertices);
+}
+
+Polytope::Polytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices) 
+    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()) {
+    initPolytope(vertices, indices);
+}
+
+void Polytope::initPolytope(const std::vector<Vec3f>& vertices) {
     vertexArray = std::make_shared<VertexArray>();
     vertexBuffer = std::make_shared<VertexBuffer>(vertices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
-Polytope::Polytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices) 
-    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()) {
+void Polytope::initPolytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices) {
     vertexArray = std::make_shared<VertexArray>();
     vertexBuffer = std::make_shared<VertexBuffer>(vertices, indices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);

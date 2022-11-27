@@ -1,5 +1,7 @@
 #include "FPSCamera.h"
 
+#include <iostream>
+
 #define DEFAULT_SENSITIVITY 0.1
 #define DEFAULT_CAMERA_SPEED 0.1
 
@@ -51,8 +53,9 @@ void FPSCamera::move(const Movement& movement) {
 }
 
 void FPSCamera::lookAround(double xpos, double ypos) {
-    float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    double xoffset = xpos - lastX;
+	double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
 	lastX = xpos;
 	lastY = ypos;
 
@@ -63,14 +66,12 @@ void FPSCamera::lookAround(double xpos, double ypos) {
 	pitch += yoffset;
 
 	// make sure that when pitch is out of bounds, screen doesn't get flipped
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	if (pitch > 89.0f) pitch = 89.0f;
+	if (pitch < -89.0f) pitch = -89.0f;
 
-	glm::vec3 front;
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(front);
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
 }

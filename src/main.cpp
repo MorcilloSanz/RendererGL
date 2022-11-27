@@ -11,11 +11,17 @@
 
 #include "ImguiStyles.h"
 
-// ImGui funcs
+// ImGui functions
+void initImGui(ImGuiIO& io);
 void dockSpace(bool* p_open);
+void renderImGui(ImGuiIO& io);
+
 // Window callbacks
-void resizeFun(GLFWwindow* window, int width, int height);
+void resizeFun(GLFWwindow* w, int width, int height);
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+// Camera functions
+void updateFPSCamera(double xpos, double ypos);
 
 // Window
 Window window;
@@ -28,56 +34,37 @@ TrackballCamera camera;
 
 // FPS camera
 FPSCamera fpsCamera;
-bool movementForward = false, movementBackward = false, movementRight = false, movementLeft = false;
-void updateFPSCamera(double xpos, double ypos);
+bool movementForward = false, movementBackward = false;
+bool movementRight = false, movementLeft = false;
 
 int main(void) {
 
+    // Create window
     window = Window("RendererGL", 1080, 720);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
-    // Init max texture units
-    int textureUnits;
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    Texture::textureUnits = textureUnits;
-
-    // Setup Dear ImGui context
+    // Init ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-
-    //ImGui::StyleColorsDark();
-    Style();
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
-
-    const char* glsl_version = "#version 130";
-    ImGui_ImplGlfw_InitForOpenGL(window.getGLFWwindow(), true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    initImGui(io);
 
     // Renderer
     Renderer renderer;
 
-    // Camera
+    // Trackball Camera
     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
-    camera.zoom(-5.5);
     float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
+    camera.zoom(-5.5);
     renderer.setCamera(camera);
 
+    // First Person Shooter Camera
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     fpsCamera.setSensitivity(sensitivity / 10);
-    //renderer.setCamera(fpsCamera);
 
     // Light
-    Light light(glm::vec3(2, -8, 5));
+    Light light(glm::vec3(2.743, 6.118, 16.245));
     renderer.setLight(light);
     renderer.disableLight();
     
@@ -98,12 +85,12 @@ int main(void) {
         Vec3f(-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f), // top-left
         Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f), // bottom-left
         // Left face
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // top-right
-        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 1.0f), // top-left
-        Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // bottom-left
-        Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // bottom-left
-        Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 0.0f), // bottom-right
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // top-right
+        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // top-right
+        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 0.0f), // top-left
+        Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // bottom-left
+        Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // bottom-left
+        Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 1.0f), // bottom-right
+        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // top-right
         // Right face
         Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f), // top-left
         Vec3f( 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f), // bottom-right
@@ -128,74 +115,23 @@ int main(void) {
     };
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
 
-    std::vector<Vec3f> vertices2 = {
-        // Back face
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // Bottom-left
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f), // top-right
-        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f), // bottom-right         
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f), // top-right
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f), // bottom-left
-        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // top-left
-        // Front face
-        Vec3f(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f), // bottom-left
-        Vec3f( 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f), // top-right
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f), // top-right
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f), // top-left
-        Vec3f(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f), // bottom-left
-        // Left face
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // top-right
-        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 1.0f), // top-left
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // bottom-left
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // bottom-left
-        Vec3f(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 0.0f), // bottom-right
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 0.0f), // top-right
-        // Right face
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f), // top-left
-        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f), // top-right         
-        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // top-left
-        Vec3f( 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f), // bottom-left     
-        // Bottom face
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f), // top-right
-        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f), // top-left
-        Vec3f( 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f), // bottom-left
-        Vec3f( 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f), // bottom-left
-        Vec3f(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f), // bottom-right
-        Vec3f(-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f), // top-right
-        // Top face
-        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // top-right     
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
-        Vec3f(-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // top-left
-        Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f) // bottom-left
-    };
-    std::shared_ptr<Polytope> cubePolytope2 = std::make_shared<Polytope>(vertices2);
-    cubePolytope2->translate(glm::vec3(1.5f, -1.5f, 0.f));
+    // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color
+    for(auto& vec : vertices)
+        vec.r = vec.g = vec.b = 1;
+
+    std::shared_ptr<Polytope> cubePolytope2 = std::make_shared<Polytope>(vertices);
+    cubePolytope2->translate(glm::vec3(0.f, 1.5f, 0.f));
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
     std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/texture2.png");
     cubePolytope2->addTexture(texture); // vertices2's colors are all white, thats why the texture looks like texture2.png
 
-    std::shared_ptr<Polytope> cubePolytope3 = std::make_shared<Polytope>(vertices);
-    cubePolytope3->translate(glm::vec3(1.5f, 0.f, 0.f));
-    std::shared_ptr<Texture> texture2 = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/texture.png");
-    cubePolytope3->addTexture(texture2); // vertices's colors arent white, thats why we see an interpolation between the colors and the texture
-
-    std::shared_ptr<Polytope> cubePolytope4 = std::make_shared<Polytope>(vertices2);
-    cubePolytope4->translate(glm::vec3(-1.5f, 0.f, 0.f));
-    cubePolytope4->addTexture(texture); // vertices's colors arent white, thats why we see an interpolation between the colors and the texture
-    cubePolytope4->addTexture(texture2);
-
+    // Cubes group
     Group group;
     group.setLineWidth(2.f);
     group.translate(glm::vec3(0, 0.5, 0));
     group.add(cubePolytope);
     group.add(cubePolytope2);
-    group.add(cubePolytope3);
-    group.add(cubePolytope4);
     renderer.addGroup(group);
 
     // Grid polytope
@@ -220,24 +156,10 @@ int main(void) {
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
 
-    //Model model("/home/morcillosanz/Desktop/model/model2/Stubbs.obj");
-    //Model model("/home/morcillosanz/Desktop/model/model1/MainMenuKratos.obj");
-    //Model model("/home/morcillosanz/Desktop/model/model3/IceSnark.obj");
-    //Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
+    // 3D model from file
     Model model("/home/morcillosanz/Desktop/model/SkeletonOwl/skeleton_owl.obj");
-    //Model model("/home/morcillosanz/Desktop/model/MidnightMountain/MidnightMountain.dae");
-    //model.rotate(270, glm::vec3(1, 0, 0));
-    //Model model("/home/morcillosanz/Desktop/model/PipePlaza/mini8_course.dae");
-    //Model model("/home/morcillosanz/Desktop/model/circuit/Gctr_MarioCircuit.dae");
-    //model.setLineWidth(1.25f);
-    //Model model("/home/morcillosanz/Desktop/model/Ahri/Ahri.obj");
-    //Model model("/home/morcillosanz/Desktop/model/awp/Model.obj");
-    //Model model("/home/morcillosanz/Desktop/model/soldier/EliteFederationSoldier.obj");
-    //Model model("/home/morcillosanz/Desktop/model/SpyroLakeHome/LakeHome.dae");
-    //model.translate(glm::vec3(5.0, 0.0, 1.5));
-    model.translate(glm::vec3(0.0, 0.0, 2.5));
+    model.translate(glm::vec3(1.5, 0.0, 0.0));
     model.scale(glm::vec3(0.01, 0.01, 0.01));
-    //model.translate(glm::vec3(0.0, 1.0, 0.0));
     renderer.addGroup(model);
 
     // Init TextureRenderer
@@ -402,7 +324,7 @@ int main(void) {
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
                     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
-                    // Restart camera
+                    // Restart trackball camera
                     float theta = camera.getTheta(), phi = camera.getPhi();
                     glm::vec3 center = camera.getCenter(), up = camera.getUp();
                     float radius = camera.getRadius();
@@ -410,6 +332,8 @@ int main(void) {
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
                     camera.setRadius(radius);
+                    // Restart fps camera
+                    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                 }
                 previousSize = ImGui::GetWindowSize();
 
@@ -456,18 +380,7 @@ int main(void) {
             updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
             
             // Rendering
-            ImGui::Render();
-            int display_w, display_h;
-            glfwGetFramebufferSize(window.getGLFWwindow(), &display_w, &display_h);
-            glViewport(0, 0, display_w, display_h);
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-            
-            if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-                GLFWwindow* backup_current_context = glfwGetCurrentContext();
-                ImGui::UpdatePlatformWindows();
-                ImGui::RenderPlatformWindowsDefault();
-                glfwMakeContextCurrent(backup_current_context);
-            }
+            renderImGui(io);
         }
 
         window.update();
@@ -479,6 +392,27 @@ int main(void) {
 
     window.terminate();
     return 0;
+}
+
+// ImGui functions
+
+void initImGui(ImGuiIO& io) {
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+    //ImGui::StyleColorsDark();
+    Style();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    const char* glsl_version = "#version 130";
+    ImGui_ImplGlfw_InitForOpenGL(window.getGLFWwindow(), true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
 void dockSpace(bool* p_open) {
@@ -538,10 +472,26 @@ void dockSpace(bool* p_open) {
     ImGui::End();
 }
 
+void renderImGui(ImGuiIO& io) {
+    ImGui::Render();
+    int display_w, display_h;
+    glfwGetFramebufferSize(window.getGLFWwindow(), &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+}
+
+// Window functions
+
 void resizeFun(GLFWwindow* w, int width, int height) {
     window.setWidth(width);
     window.setHeight(height);
-    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), width / height, 0.1, 1000);
 }
 
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {

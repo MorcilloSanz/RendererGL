@@ -26,6 +26,7 @@ public:
     ~Texture();
     Texture& operator=(const Texture& texture);
 private:
+    inline void initTextureUnits() { glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &Texture::textureUnits); }
     void generateTexture();
 public:
     virtual void bind();

@@ -30,6 +30,8 @@ public:
     Polytope() = default;
     ~Polytope() = default;
 public:
+    void initPolytope(const std::vector<Vec3f>& vertices);
+    void initPolytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices);
     void bind();
     void unbind();
     void updateVertices(std::vector<Vec3f>& vertices, bool copy2memory = false);

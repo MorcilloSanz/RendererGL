@@ -8,12 +8,14 @@ int Texture::textureUnits = 0;
 
 Texture::Texture(const std::string& _path, const Type& _type, bool _flip) 
 	: path(_path), id(0), width(0), height(0), bpp(0), slot(0), type(_type), flip(_flip) {
+	initTextureUnits();
 	//if(count < textureUnits) generateTexture();
 	generateTexture();
 }
 
 Texture::Texture() 
 	: id(0), width(0), height(0), bpp(0), path(""), slot(0), type(Type::None) {
+	initTextureUnits();
 }
 
 Texture::Texture(const Texture& texture)

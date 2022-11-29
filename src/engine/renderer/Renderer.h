@@ -18,9 +18,12 @@ private:
     bool hasCamera;
     Light* light;
     bool hasLight;
+    glm::vec3 backgroundColor;
 public:
     Renderer();
     ~Renderer() = default;
+private:
+    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) ;
 public:
     void setCamera(Camera& camera);
     void setLight(Light& light);
@@ -30,6 +33,7 @@ public:
     void enableFrontFaceCulling();  // Counter-clockwise order
     void removeGroup(Group& group);
     void render();
+    void setBackgroundColor(float r, float g, float b);
     void clear();
 public:
     inline void addGroup(Group& group) { groups.push_back(&group); }
@@ -45,4 +49,6 @@ public:
     inline void setLightEnabled(bool enable) { hasLight = enable; }
 
     inline std::shared_ptr<ShaderProgram>& getShaderProgram() { return shaderProgram; }
+
+    inline glm::vec3& getBackgroundColor() { return backgroundColor; }
 };

@@ -4,15 +4,18 @@
 
 #include "../../../glew/glew.h"
 
+#include "../../../glm/vec3.hpp"
+
 class TextureRenderer {
 private:
     unsigned int width, height;
     unsigned int framebuffer, intermediateFrameBuffer;
     unsigned int textureColorBufferMultiSampled, screenTexture;
     unsigned int rbo;
+    glm::vec3 backgroundColor;
 public:
     TextureRenderer(unsigned int _width, unsigned int _height) 
-        : width(_width), height(_height) {
+        : width(_width), height(_height), backgroundColor(0.1f, 0.1f, 0.1f) {
         updateViewPort(width, height);
     }
 
@@ -74,7 +77,7 @@ public:
 
     void renderToTexture() {
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
     }
@@ -86,10 +89,18 @@ public:
         glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         // 3. now render quad with scene's visuals as its texture image
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
     }
 
+    void setBackgroundColor(float r, float g, float b) {
+        backgroundColor.r = r;
+        backgroundColor.g = g;
+        backgroundColor.b = b;
+    }
+
     inline unsigned int getTexture() { return screenTexture; }
+
+    inline glm::vec3& getBackgroundColor() { return backgroundColor; }
 };

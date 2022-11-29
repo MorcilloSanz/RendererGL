@@ -21,10 +21,10 @@ private:
     ShaderType shaderType;
     unsigned int shaderID;
 private:
-    Shader(const std::string& _code, const ShaderType& _shaderType);
     static std::string readFile(const std::string& path);
     void compileShader();
 public:
+    Shader(const std::string& _code, const ShaderType& _shaderType);
     Shader();
     ~Shader() = default;
     Shader(const Shader& shader);

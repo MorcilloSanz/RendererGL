@@ -136,9 +136,9 @@ int main(void) {
 
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
-    float a = -20; float b = 20;
-    float c = -20; float d = 20;
-    float dx = 0.5f; float dz = 0.5f;
+    float a = -30; float b = -a;
+    float c = -30; float d = -c;
+    float dx = 0.5f; float dz = dx;
     while(a <= b) {
         gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
         gridVertices.push_back(Vec3f(a, 0, d, 0.3, 0.3, 0.3));
@@ -209,6 +209,12 @@ int main(void) {
                     group.setShowWire(!group.isShowWire());
                     model.setShowWire(!model.isShowWire());
                 }
+                ImGui::Separator();
+
+                glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();
+                static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};
+                ImGui::ColorEdit3("Background color", color, 0);
+                textureRenderer.setBackgroundColor(color[0], color[1], color[2]);
 
                 ImGui::Separator();
 

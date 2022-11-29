@@ -2455,7 +2455,8 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: ../src/engine/lightin
   ../glew/glew.h \
   /usr/include/GL/glu.h \
   /usr/include/GL/gl.h \
-  ../glew/glew.h
+  ../glew/glew.h \
+  ../src/engine/opengl/shader/Program.h
 
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: ../src/engine/model/Model.cpp \
   /usr/include/stdc-predef.h \
@@ -4919,7 +4920,8 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: ../src/engine/rend
   ../glew/glew.h \
   ../src/engine/renderer/Camera.h \
   ../src/engine/lighting/Light.h \
-  ../glew/glew.h
+  ../glew/glew.h \
+  ../src/engine/opengl/shader/Program.h
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o: ../src/engine/renderer/TrackballCamera.cpp \
   /usr/include/stdc-predef.h \
@@ -6367,6 +6369,8 @@ CMakeFiles/RendererGL.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/assimp/types.h:
 
 /usr/include/assimp/Importer.hpp:
+
+../src/engine/opengl/shader/Program.h:
 
 ../src/engine/opengl/shader/Shader.h:
 

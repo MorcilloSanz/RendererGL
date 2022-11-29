@@ -2,9 +2,11 @@
 
 #include "../../../glew/glew.h"
 
+#include "../opengl/shader/Program.h"
+
 Renderer::Renderer() : camera(nullptr), hasCamera(false), light(nullptr), hasLight(false) {
-    Shader vertexShader = Shader::fromFile("../src/engine/opengl/glsl/vertex_shader.glsl", Shader::ShaderType::Vertex);
-    Shader fragmentShader = Shader::fromFile("../src/engine/opengl/glsl/fragment_shader.glsl", Shader::ShaderType::Fragment);
+    Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
+    Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
     shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
     enableBlending();
     enableAntialiasing();
@@ -41,6 +43,29 @@ void Renderer::setLight(Light& light) {
     this->light = &light;
 }
 
+void Renderer::removeGroup(Group& group) {
+    unsigned int index = 0;
+    for(Group* g : groups) {
+        if(g == &group) {
+            removeGroup(index);
+            break;
+        }
+        index ++;
+    }
+}
+
+void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+    unsigned int index = 0;
+    shaderProgram->uniformInt("nTextures", polytope->getTextures().size());
+    for(auto& texture : polytope->getTextures()) {
+        texture->bind();
+        std::vector<int> textures;
+        for(int i = 0; i < index + 1; i ++) textures.push_back(polytope->getTextures()[i]->getID() - 1);
+        shaderProgram->uniformTextureArray("textures", textures);
+        index ++;
+    }
+}
+
 void Renderer::render() {
     
     if(!hasLight) shaderProgram->useProgram();
@@ -52,18 +77,6 @@ void Renderer::render() {
         projection = camera->getProjectionMatrix();
         view = camera->getViewMatrix();
     }
-
-    auto textureUniform = [&](std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) {
-        unsigned int index = 0;
-        shaderProgram->uniformInt("nTextures", polytope->getTextures().size());
-        for(auto& texture : polytope->getTextures()) {
-            texture->bind();
-            std::vector<int> textures;
-            for(int i = 0; i < index + 1; i ++) textures.push_back(polytope->getTextures()[i]->getID() - 1);
-            shaderProgram->uniformTextureArray("textures", textures);
-            index ++;
-        }
-    };
 
     for(Group* group : groups) {
         if(group->isVisible()) {
@@ -106,6 +119,12 @@ void Renderer::render() {
             }
         }
     }
+}
+
+void Renderer::setBackgroundColor(float r, float g, float b) {
+    backgroundColor.r = r;
+    backgroundColor.g = g;
+    backgroundColor.b = b;
 }
 
 void Renderer::clear() {

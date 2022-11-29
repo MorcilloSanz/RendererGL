@@ -11,9 +11,9 @@ is a template using ImGui and RendererGL
 # Dependencies
 ```
 GLFW
-GLEW
-GLM
-IMGUI
+GLEW (included)
+GLM (included)
+IMGUI (included)
 ASSIMP
 ```
 

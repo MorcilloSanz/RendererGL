@@ -157,9 +157,10 @@ int main(void) {
     renderer.addGroup(groupGrid);
 
     // 3D model from file
-    Model model("/home/morcillosanz/Desktop/model/SkeletonOwl/skeleton_owl.obj");
-    model.translate(glm::vec3(1.5, 0.0, 0.0));
-    model.scale(glm::vec3(0.01, 0.01, 0.01));
+    Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    model.setLineWidth(2.5f);
+    model.translate(glm::vec3(0.0, 0.0, 1.5));
+    //model.scale(glm::vec3(0.01, 0.01, 0.01));
     renderer.addGroup(model);
 
     // Init TextureRenderer

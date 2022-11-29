@@ -28,6 +28,7 @@ public:
     void enableAntialiasing();
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
+    void removeGroup(Group& group);
     void render();
     void clear();
 public:

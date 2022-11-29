@@ -41,6 +41,17 @@ void Renderer::setLight(Light& light) {
     this->light = &light;
 }
 
+void Renderer::removeGroup(Group& group) {
+    unsigned int index = 0;
+    for(Group* g : groups) {
+        if(g == &group) {
+            removeGroup(index);
+            break;
+        }
+        index ++;
+    }
+}
+
 void Renderer::render() {
     
     if(!hasLight) shaderProgram->useProgram();

@@ -18,12 +18,16 @@ public:
     Group();
     ~Group() = default;
 public:
+    void removePolytope(std::shared_ptr<Polytope>& polytope);
+public:
     inline void translate(const glm::vec3& v) { modelMatrix = glm::translate(modelMatrix, v); }
     inline void rotate(float degrees, const glm::vec3& axis) { modelMatrix = glm::rotate(modelMatrix, glm::radians(degrees), axis); }
     inline void scale(const glm::vec3& s) { modelMatrix = glm::scale(modelMatrix, s); }
 
     inline void add(const std::shared_ptr<Polytope>& polytope) { polytopes.push_back(polytope); }
     inline std::vector<std::shared_ptr<Polytope>>& getPolytopes() { return polytopes; }
+
+    inline void removePolytope(int index) { polytopes.erase(polytopes.begin() + index); }
 
     inline void setVisible(bool visible) { this->visible = visible; }
     inline bool isVisible() const { return visible; }

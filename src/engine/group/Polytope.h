@@ -25,17 +25,17 @@ protected:
     Material material;
     glm::mat4 modelMatrix;
 public:
-    Polytope(const std::vector<Vec3f>& vertices);
-    Polytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices);
+    Polytope(std::vector<Vec3f>& vertices);
+    Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
     Polytope() = default;
     ~Polytope() = default;
 public:
-    void initPolytope(const std::vector<Vec3f>& vertices);
-    void initPolytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices);
+    void initPolytope(std::vector<Vec3f>& vertices);
+    void initPolytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
     void bind();
     void unbind();
-    void updateVertices(std::vector<Vec3f>& vertices, bool copy2memory = false);
-    void updateIndices(std::vector<unsigned int>& indices, bool copy2memory = false);
+    void updateVertices(std::vector<Vec3f>& vertices);
+    void updateIndices(std::vector<unsigned int>& indices);
     void bindTexture();
     void unbindTexture();
     void draw(unsigned int primitive, bool showWire = false);
@@ -46,6 +46,7 @@ public:
 
     inline std::shared_ptr<VertexArray>& getVertexArray() { return vertexArray; }
     inline std::shared_ptr<VertexBuffer>& getVertexBuffer() { return vertexBuffer; }
+    inline std::shared_ptr<IndexBuffer>& getIndexBuffer() { return vertexBuffer->getIndexBuffer(); }
 
     inline void addTexture(const std::shared_ptr<Texture>& texture) { textures.push_back(texture); }
     inline std::vector<std::shared_ptr<Texture>>& getTextures() { return textures; }
@@ -61,4 +62,6 @@ public:
 
     inline void setMaterial(const Material& material) { this->material = material; }
     inline Material& getMaterial() { return material; }
+
+    inline float* getVerticesData() { return vertexBuffer->getVerticesData(); }
 };

@@ -19,7 +19,9 @@ public:
         updateViewPort(width, height);
     }
 
-    TextureRenderer() = default;
+    TextureRenderer()
+        : width(0), height(0), backgroundColor(0.1f, 0.1f, 0.1f) {
+    }
 
     ~TextureRenderer() {
         deleteBuffers();

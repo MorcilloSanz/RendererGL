@@ -27,7 +27,7 @@ void updateFPSCamera(double xpos, double ypos);
 Window window;
 
 // Texture renderer
-TextureRenderer textureRenderer;
+TextureRenderer textureRenderer; // DO NOT INSTANCIATE AGAIN, that would destroy the current object and delete TextureRenderer's buffers which ends up in OpenGL errors
 
 // TrackBallCamera 
 TrackballCamera camera;
@@ -115,10 +115,11 @@ int main(void) {
     };
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
 
-    // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color
+    // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color in cubePolytope2
     for(auto& vec : vertices)
         vec.r = vec.g = vec.b = 1;
 
+    // Cube Polytope 2 
     std::shared_ptr<Polytope> cubePolytope2 = std::make_shared<Polytope>(vertices);
     cubePolytope2->translate(glm::vec3(0.f, 1.5f, 0.f));
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
@@ -164,7 +165,7 @@ int main(void) {
     renderer.addGroup(model);
 
     // Init TextureRenderer
-    textureRenderer = TextureRenderer(window.getWidth(), window.getHeight());
+    textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
 
     // Enable Rendering Features
     renderer.enableBackFaceCulling();
@@ -185,6 +186,9 @@ int main(void) {
 
         // Rotate cubePolytope2
         cubePolytope2->rotate(1, glm::vec3(1, 0, 1));
+
+        // Update vertex from cubePolytope
+        cubePolytope->getVertexBuffer()->updateVertex(9, Vec3f(2.f, 2.f, -2.f, 0.f, 1.f, 0.f));
 
         // ImGUI
         {

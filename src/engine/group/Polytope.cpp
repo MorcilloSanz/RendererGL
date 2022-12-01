@@ -6,24 +6,24 @@
 #define MATERIAL_SPECULAR glm::vec3(1.0f, 1.0f, 1.0f)
 #define MATERIAL_SHININESS 32.f
 
-Polytope::Polytope(const std::vector<Vec3f>& vertices)
+Polytope::Polytope(std::vector<Vec3f>& vertices)
     : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0) {
     initPolytope(vertices);
 }
 
-Polytope::Polytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices) 
+Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) 
     : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()) {
     initPolytope(vertices, indices);
 }
 
-void Polytope::initPolytope(const std::vector<Vec3f>& vertices) {
+void Polytope::initPolytope(std::vector<Vec3f>& vertices) {
     vertexArray = std::make_shared<VertexArray>();
     vertexBuffer = std::make_shared<VertexBuffer>(vertices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
-void Polytope::initPolytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices) {
+void Polytope::initPolytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) {
     vertexArray = std::make_shared<VertexArray>();
     vertexBuffer = std::make_shared<VertexBuffer>(vertices, indices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
@@ -31,28 +31,25 @@ void Polytope::initPolytope(const std::vector<Vec3f>& vertices, const std::vecto
 }
 
 void Polytope::bind() {
-    if(vertexArray != nullptr && vertexBuffer != nullptr) {
+    if(vertexArray != nullptr && vertexBuffer != nullptr)
         vertexArray->bind();
-    }
 }
 
 void Polytope::unbind() {
-    if(vertexArray != nullptr && vertexBuffer != nullptr) {
+    if(vertexArray != nullptr && vertexBuffer != nullptr)
         vertexArray->unbind();
-        vertexBuffer->unbind();
-    }
 }
 
-void Polytope::updateVertices(std::vector<Vec3f>& vertices, bool copy2memory) {
+void Polytope::updateVertices(std::vector<Vec3f>& vertices) {
     if(vertexBuffer != nullptr) {
-        vertexBuffer->updateVertices(vertices, copy2memory);
+        vertexBuffer->updateVertices(vertices);
         vertexLength = vertices.size();
     }
 }
 
-void Polytope::updateIndices(std::vector<unsigned int>& indices, bool copy2memory) {
+void Polytope::updateIndices(std::vector<unsigned int>& indices) {
     if(vertexBuffer != nullptr && vertexBuffer->getIndexBuffer() != nullptr) {
-        vertexBuffer->getIndexBuffer()->updateIndices(indices, copy2memory);
+        vertexBuffer->getIndexBuffer()->updateIndices(indices);
         indicesLength = indices.size();
     }
 }

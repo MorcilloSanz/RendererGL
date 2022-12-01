@@ -4,23 +4,20 @@
 
 IndexBuffer::IndexBuffer() : Buffer() { }
 
-IndexBuffer::IndexBuffer(const std::vector<unsigned int> _indices)
-    : Buffer(), indices(_indices) {
-    initBuffer();
+IndexBuffer::IndexBuffer(const std::vector<unsigned int> indices)
+    : Buffer() {
+    initBuffer(indices);
 }
 
-IndexBuffer::IndexBuffer(const IndexBuffer& indexBuffer) :
-    indices(indexBuffer.indices) {
+IndexBuffer::IndexBuffer(const IndexBuffer& indexBuffer) {
     id = indexBuffer.id;
 }
 
-IndexBuffer::IndexBuffer(IndexBuffer&& indexBuffer) noexcept 
-    : indices(std::move(indexBuffer.indices)) {
+IndexBuffer::IndexBuffer(IndexBuffer&& indexBuffer) noexcept {
     id = indexBuffer.id;
 }
 
 IndexBuffer& IndexBuffer::operator=(const IndexBuffer& indexBuffer) {
-    indices = indexBuffer.indices;
     id = indexBuffer.id;
     return *this;
 }
@@ -30,11 +27,13 @@ IndexBuffer::~IndexBuffer() {
     glDeleteBuffers(1, &id);
 }
 
-void IndexBuffer::initBuffer() {
+void IndexBuffer::initBuffer(std::vector<unsigned int> indices) {
     glGenBuffers(1, &id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices), &indices[0], GL_DYNAMIC_DRAW);
 }
+
+void IndexBuffer::initBuffer() { }
 
 void IndexBuffer::bind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
@@ -44,8 +43,7 @@ void IndexBuffer::unbind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void IndexBuffer::updateIndices(const std::vector<unsigned int>& indices, bool copy2memory) {
-    if(copy2memory) this->indices = indices;
+void IndexBuffer::updateIndices(const std::vector<unsigned int>& indices) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
     unsigned int* ptr = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
     memcpy(ptr, &indices[0], indices.size());

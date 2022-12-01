@@ -27,7 +27,7 @@ protected:
     void initBuffer() override;
 public:
     void updateVertices(std::vector<Vec3f>& vertices);
-    void updateVertex(int pos, Vec3f* newVertex);
+    void updateVertex(int pos, Vec3f newVertex);
     void bind() override;
     void unbind() override;
 public:

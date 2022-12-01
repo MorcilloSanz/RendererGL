@@ -47,9 +47,9 @@ void Polytope::updateVertices(std::vector<Vec3f>& vertices) {
     }
 }
 
-void Polytope::updateIndices(std::vector<unsigned int>& indices, bool copy2memory) {
+void Polytope::updateIndices(std::vector<unsigned int>& indices) {
     if(vertexBuffer != nullptr && vertexBuffer->getIndexBuffer() != nullptr) {
-        vertexBuffer->getIndexBuffer()->updateIndices(indices, copy2memory);
+        vertexBuffer->getIndexBuffer()->updateIndices(indices);
         indicesLength = indices.size();
     }
 }

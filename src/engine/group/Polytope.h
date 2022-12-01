@@ -35,7 +35,7 @@ public:
     void bind();
     void unbind();
     void updateVertices(std::vector<Vec3f>& vertices);
-    void updateIndices(std::vector<unsigned int>& indices, bool copy2memory = false);
+    void updateIndices(std::vector<unsigned int>& indices);
     void bindTexture();
     void unbindTexture();
     void draw(unsigned int primitive, bool showWire = false);
@@ -46,6 +46,7 @@ public:
 
     inline std::shared_ptr<VertexArray>& getVertexArray() { return vertexArray; }
     inline std::shared_ptr<VertexBuffer>& getVertexBuffer() { return vertexBuffer; }
+    inline std::shared_ptr<IndexBuffer>& getIndexBuffer() { return vertexBuffer->getIndexBuffer(); }
 
     inline void addTexture(const std::shared_ptr<Texture>& texture) { textures.push_back(texture); }
     inline std::vector<std::shared_ptr<Texture>>& getTextures() { return textures; }

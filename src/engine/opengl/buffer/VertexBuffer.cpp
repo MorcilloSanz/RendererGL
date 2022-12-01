@@ -38,6 +38,9 @@ VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &id);
 }
 
+/*
+TODO: Refractor repeated code
+*/
 void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices) {
     // Load vertices
     unsigned int index = 0;
@@ -70,6 +73,9 @@ void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices) {
     unbind();
 }
 
+/*
+TODO: Refractor repeated code
+*/
 void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices) {
     // Load vertices
     unsigned int index = 0;
@@ -123,15 +129,15 @@ void VertexBuffer::updateVertices(std::vector<Vec3f>& vertices) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VertexBuffer::updateVertex(int pos, Vec3f* newVertex) {
+void VertexBuffer::updateVertex(int pos, Vec3f newVertex) {
     glBindBuffer(GL_ARRAY_BUFFER, id);
     float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
 
     int index = pos * 11;
-    ptr[index] = newVertex->x;     ptr[index + 1] = newVertex->y; ptr[index + 2] = newVertex->z;
-    ptr[index + 3] = newVertex->r; ptr[index + 4] = newVertex->g; ptr[index + 5] = newVertex->b;
-    ptr[index + 6] = newVertex->nx; ptr[index + 7] = newVertex->ny; ptr[index + 8] = newVertex->nz;
-    ptr[index + 9] = newVertex->tx; ptr[index + 10] = newVertex->ty;
+    ptr[index] = newVertex.x;     ptr[index + 1] = newVertex.y; ptr[index + 2] = newVertex.z;
+    ptr[index + 3] = newVertex.r; ptr[index + 4] = newVertex.g; ptr[index + 5] = newVertex.b;
+    ptr[index + 6] = newVertex.nx; ptr[index + 7] = newVertex.ny; ptr[index + 8] = newVertex.nz;
+    ptr[index + 9] = newVertex.tx; ptr[index + 10] = newVertex.ty;
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

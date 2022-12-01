@@ -25,16 +25,16 @@ protected:
     Material material;
     glm::mat4 modelMatrix;
 public:
-    Polytope(const std::vector<Vec3f>& vertices);
-    Polytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices);
+    Polytope(std::vector<Vec3f>& vertices);
+    Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
     Polytope() = default;
     ~Polytope() = default;
 public:
-    void initPolytope(const std::vector<Vec3f>& vertices);
-    void initPolytope(const std::vector<Vec3f>& vertices, const std::vector<unsigned int>& indices);
+    void initPolytope(std::vector<Vec3f>& vertices);
+    void initPolytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
     void bind();
     void unbind();
-    void updateVertices(std::vector<Vec3f>& vertices, bool copy2memory = false);
+    void updateVertices(std::vector<Vec3f>& vertices);
     void updateIndices(std::vector<unsigned int>& indices, bool copy2memory = false);
     void bindTexture();
     void unbindTexture();
@@ -61,4 +61,6 @@ public:
 
     inline void setMaterial(const Material& material) { this->material = material; }
     inline Material& getMaterial() { return material; }
+
+    inline float* getVerticesData() { return vertexBuffer->getVerticesData(); }
 };

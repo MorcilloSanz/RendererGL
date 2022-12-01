@@ -67,6 +67,20 @@ int main(void) {
     Light light(glm::vec3(2.743, 6.118, 16.245));
     renderer.setLight(light);
     renderer.disableLight();
+
+    // Square Polytope with indices
+    std::vector<Vec3f> squareVertices = {
+        Vec3f(0.5f,  0.5f, 0.0f , 1.0f, 0.0f, 0.0f),  // top right
+        Vec3f(0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f),  // bottom right
+        Vec3f(-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f),  // bottom left
+        Vec3f(-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f)   // top left 
+    };
+    std::vector<unsigned int> squareIndices = {
+        0, 1, 3,  // first Triangle
+        1, 2, 3   // second Triangle
+    };
+    //std::shared_ptr<Polytope> squarePolytope = std::make_shared<Polytope>(squareVertices, squareIndices);
+    //squarePolytope->translate(glm::vec3(0, 2, 0));
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -130,6 +144,7 @@ int main(void) {
     Group group;
     group.setLineWidth(2.f);
     group.translate(glm::vec3(0, 0.5, 0));
+    //group.add(squarePolytope);
     group.add(cubePolytope);
     group.add(cubePolytope2);
     renderer.addGroup(group);
@@ -164,7 +179,7 @@ int main(void) {
     renderer.addGroup(model);
 
     // Init TextureRenderer
-    textureRenderer = TextureRenderer(window.getWidth(), window.getHeight());
+    textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
 
     // Enable Rendering Features
     renderer.enableBackFaceCulling();
@@ -185,6 +200,9 @@ int main(void) {
 
         // Rotate cubePolytope2
         cubePolytope2->rotate(1, glm::vec3(1, 0, 1));
+
+        Vec3f newVertex(10.f, 10.f, 10.f, 1.f, 1.f, 1.f);
+        cubePolytope->getVertexBuffer()->updateVertex(0, &newVertex);
 
         // ImGUI
         {

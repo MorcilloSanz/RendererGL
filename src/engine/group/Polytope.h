@@ -35,6 +35,7 @@ public:
     void bind();
     void unbind();
     void updateVertices(std::vector<Vec3f>& vertices);
+    void updateVertex(int pos, Vec3f newVertex);
     void updateIndices(std::vector<unsigned int>& indices);
     void bindTexture();
     void unbindTexture();

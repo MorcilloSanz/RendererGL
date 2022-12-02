@@ -188,7 +188,9 @@ int main(void) {
         cubePolytope2->rotate(1, glm::vec3(1, 0, 1));
 
         // Update vertex from cubePolytope
-        cubePolytope->getVertexBuffer()->updateVertex(9, Vec3f(2.f, 2.f, -2.f, 0.f, 1.f, 0.f));
+        static Vec3f newVertex(1.f, 1.f, 1.f, 0.f, 1.f, 0.f);
+        cubePolytope->updateVertex(9, newVertex);
+        newVertex.x += 0.001;
 
         // ImGUI
         {

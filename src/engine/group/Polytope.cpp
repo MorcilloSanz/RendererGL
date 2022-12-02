@@ -47,6 +47,11 @@ void Polytope::updateVertices(std::vector<Vec3f>& vertices) {
     }
 }
 
+void Polytope::updateVertex(int pos, Vec3f newVertex) {
+    if(vertexBuffer != nullptr)
+        vertexBuffer->updateVertex(pos, newVertex);
+}
+
 void Polytope::updateIndices(std::vector<unsigned int>& indices) {
     if(vertexBuffer != nullptr && vertexBuffer->getIndexBuffer() != nullptr) {
         vertexBuffer->getIndexBuffer()->updateIndices(indices);

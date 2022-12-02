@@ -35,6 +35,7 @@ public:
     void bind();
     void unbind();
     void updateVertices(std::vector<Vec3f>& vertices);
+    void updateVertex(int pos, Vec3f newVertex);
     void updateIndices(std::vector<unsigned int>& indices);
     void bindTexture();
     void unbindTexture();
@@ -63,5 +64,6 @@ public:
     inline void setMaterial(const Material& material) { this->material = material; }
     inline Material& getMaterial() { return material; }
 
-    inline float* getVerticesData() { return vertexBuffer->getVerticesData(); }
+    inline std::vector<Vec3f> getVertices() { return vertexBuffer->getVertices(); }
+    inline std::vector<unsigned int> getIndices() { return vertexBuffer->getIndexBuffer()->getIndices(); }
 };

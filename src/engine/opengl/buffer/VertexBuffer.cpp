@@ -5,29 +5,30 @@
 VertexBuffer::VertexBuffer() : Buffer() { }
 
 VertexBuffer::VertexBuffer(std::vector<Vec3f>& vertices)
-    : Buffer(), hasIndexBuffer(false) {
+    : Buffer(), length(vertices.size()), hasIndexBuffer(false) {
     initBuffer(vertices);
 }
 
 VertexBuffer::VertexBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices) 
-    : Buffer(), hasIndexBuffer(true) {
+    : Buffer(), length(vertices.size()), hasIndexBuffer(true) {
     initBuffer(vertices, indices);
 }
 
 VertexBuffer::VertexBuffer(const VertexBuffer& vertexBuffer) 
-    : hasIndexBuffer(vertexBuffer.hasIndexBuffer) {
+    : length(vertexBuffer.length), hasIndexBuffer(vertexBuffer.hasIndexBuffer) {
     if(vertexBuffer.indexBuffer != nullptr) indexBuffer = vertexBuffer.indexBuffer;
     id = vertexBuffer.id;
 }
 
 VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept 
-    : hasIndexBuffer(vertexBuffer.hasIndexBuffer) {
+    : length(vertexBuffer.length), hasIndexBuffer(vertexBuffer.hasIndexBuffer) {
     if(indexBuffer != nullptr) indexBuffer = std::move(vertexBuffer.indexBuffer);
     id = vertexBuffer.id;
 }
 
 VertexBuffer& VertexBuffer::operator=(const VertexBuffer& vertexBuffer) {
     id = vertexBuffer.id;
+    length = vertexBuffer.length;
     hasIndexBuffer = vertexBuffer.hasIndexBuffer;
     if(indexBuffer != nullptr) indexBuffer = vertexBuffer.indexBuffer;
     return *this;
@@ -141,6 +142,27 @@ void VertexBuffer::updateVertex(int pos, Vec3f newVertex) {
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+std::vector<Vec3f> VertexBuffer::getVertices() {
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
+
+    std::vector<Vec3f> vertices;
+    for(int i = 0; i < length; i ++) {
+        Vec3f vertex(
+            ptr[i * 11], ptr[i * 11 + 1], ptr[i * 11 + 2],
+            ptr[i * 11 + 3], ptr[i * 11 + 4], ptr[i * 11 + 5],
+            ptr[i * 11 + 6], ptr[i * 11 + 7], ptr[i * 11 + 8],
+            ptr[i * 11 + 9], ptr[i * 11 + 10]
+        );
+        vertices.push_back(vertex);
+    }
+
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return vertices;
 }
 
 void VertexBuffer::bind() {

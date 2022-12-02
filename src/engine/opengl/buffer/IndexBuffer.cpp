@@ -5,20 +5,23 @@
 IndexBuffer::IndexBuffer() : Buffer() { }
 
 IndexBuffer::IndexBuffer(const std::vector<unsigned int> indices)
-    : Buffer() {
+    : Buffer(), length(indices.size()) {
     initBuffer(indices);
 }
 
-IndexBuffer::IndexBuffer(const IndexBuffer& indexBuffer) {
+IndexBuffer::IndexBuffer(const IndexBuffer& indexBuffer) 
+    : length(indexBuffer.length) {
     id = indexBuffer.id;
 }
 
-IndexBuffer::IndexBuffer(IndexBuffer&& indexBuffer) noexcept {
+IndexBuffer::IndexBuffer(IndexBuffer&& indexBuffer) noexcept 
+    : length(indexBuffer.length) {
     id = indexBuffer.id;
 }
 
 IndexBuffer& IndexBuffer::operator=(const IndexBuffer& indexBuffer) {
     id = indexBuffer.id;
+    length = indexBuffer.length;
     return *this;
 }
 
@@ -49,4 +52,17 @@ void IndexBuffer::updateIndices(const std::vector<unsigned int>& indices) {
     memcpy(ptr, &indices[0], indices.size());
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+std::vector<unsigned int> IndexBuffer::getIndices() {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+    unsigned int* ptr = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
+
+    std::vector<unsigned int> indices;
+    for(int i = 0; i < length; i ++) indices.push_back(ptr[i]);
+    
+    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    return indices;
 }

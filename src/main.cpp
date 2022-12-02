@@ -113,7 +113,33 @@ int main(void) {
         Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // top-left
         Vec3f(-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f) // bottom-left
     };
+
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
+
+    std::vector<Vec3f> cubeVertices {
+        // Front square
+        Vec3f(-0.5, -0.5,  0.5,  0.0f, 0.0f, 1.0f),
+        Vec3f( 0.5, -0.5,  0.5,  1.0f, 0.0f, 1.0f),
+        Vec3f( 0.5,  0.5,  0.5,  0.0f, 1.0f, 1.0f),
+        Vec3f(-0.5,  0.5,  0.5,  0.0f, 1.0f, 0.5f),
+        // Back square
+        Vec3f(-0.5, -0.5, -0.5,  0.0f, 0.0f, 1.0f),
+        Vec3f( 0.5, -0.5, -0.5,  1.0f, 0.0f, 1.0f),
+        Vec3f( 0.5,  0.5, -0.5,  0.0f, 1.0f, 1.0f),
+        Vec3f(-0.5,  0.5, -0.5,  0.0f, 1.0f, 0.5f)
+    };
+
+    std::vector<unsigned int> cubeIndices {
+        //front   //right   //back
+		0, 1, 2,  1, 5, 6,  7, 6, 5,
+		2, 3, 0,  6, 2, 1,  5, 4, 7,
+		//left    //bottom  //top
+		4, 0, 3,  4, 5, 1,  3, 2, 6,
+		3, 7, 4,  1, 0, 4,  6, 7, 3 
+    };
+
+    std::shared_ptr<Polytope> cubePolytopeIndices = std::make_shared<Polytope>(cubeVertices, cubeIndices);
+    cubePolytopeIndices->translate(glm::vec3(1.5, 0, 0));
 
     // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color in cubePolytope2
     for(auto& vec : vertices)
@@ -132,6 +158,7 @@ int main(void) {
     group.setLineWidth(2.f);
     group.translate(glm::vec3(0, 0.5, 0));
     group.add(cubePolytope);
+    group.add(cubePolytopeIndices);
     group.add(cubePolytope2);
     renderer.addGroup(group);
 
@@ -172,6 +199,9 @@ int main(void) {
     renderer.enableAntialiasing();
     renderer.enableBlending();
 
+    // Get First Vertex from cubePolytopeIndices
+    Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
+
     // Main loop
     while (!window.windowShouldClose()) {
 
@@ -188,9 +218,8 @@ int main(void) {
         cubePolytope2->rotate(1, glm::vec3(1, 0, 1));
 
         // Update vertex from cubePolytope
-        static Vec3f newVertex(1.f, 1.f, 1.f, 0.f, 1.f, 0.f);
-        cubePolytope->updateVertex(9, newVertex);
-        newVertex.x += 0.001;
+        cubePolytopeIndices->updateVertex(0, firstVertex);
+        firstVertex.z += 0.001;
 
         // ImGUI
         {

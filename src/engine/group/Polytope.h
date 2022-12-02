@@ -64,5 +64,6 @@ public:
     inline void setMaterial(const Material& material) { this->material = material; }
     inline Material& getMaterial() { return material; }
 
-    inline float* getVerticesData() { return vertexBuffer->getVerticesData(); }
+    inline std::vector<Vec3f> getVertices() { return vertexBuffer->getVertices(); }
+    inline std::vector<unsigned int> getIndices() { return vertexBuffer->getIndexBuffer()->getIndices(); }
 };

@@ -6,6 +6,11 @@
 #define MATERIAL_SPECULAR glm::vec3(1.0f, 1.0f, 1.0f)
 #define MATERIAL_SHININESS 32.f
 
+Polytope::Polytope(size_t length) 
+    : vertexLength(length), modelMatrix(1.f), indicesLength(0){
+    initPolytope(length);
+}
+
 Polytope::Polytope(std::vector<Vec3f>& vertices)
     : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0) {
     initPolytope(vertices);
@@ -14,6 +19,16 @@ Polytope::Polytope(std::vector<Vec3f>& vertices)
 Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) 
     : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()) {
     initPolytope(vertices, indices);
+}
+
+/*
+*  TODO: Refractor, repeated code
+*/
+void Polytope::initPolytope(size_t length) {
+    vertexArray = std::make_shared<VertexArray>();
+    vertexBuffer = std::make_shared<VertexBuffer>(length);
+    material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
+    unbind();
 }
 
 void Polytope::initPolytope(std::vector<Vec3f>& vertices) {

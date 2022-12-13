@@ -76,6 +76,11 @@
 },
 {
   "directory": "/home/morcillosanz/Desktop/GitHub/RendererGL/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/DynamicPolytope.cpp",
+  "file": "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/DynamicPolytope.cpp"
+},
+{
+  "directory": "/home/morcillosanz/Desktop/GitHub/RendererGL/build",
   "command": "/usr/bin/c++   -g -o CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/Group.cpp",
   "file": "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/Group.cpp"
 },

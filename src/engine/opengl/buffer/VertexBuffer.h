@@ -16,6 +16,7 @@ private:
     size_t length;
 public:
     VertexBuffer();
+    VertexBuffer(size_t _length);
     VertexBuffer(std::vector<Vec3f>& vertices);
     VertexBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices);
     VertexBuffer(const VertexBuffer& vertexBuffer);

@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RendererGL.dir/imgui/imgui_tables.cpp.o.d"
   "CMakeFiles/RendererGL.dir/imgui/imgui_widgets.cpp.o"
   "CMakeFiles/RendererGL.dir/imgui/imgui_widgets.cpp.o.d"
+  "CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o"
+  "CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.o"

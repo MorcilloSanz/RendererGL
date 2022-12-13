@@ -4,6 +4,11 @@
 
 VertexBuffer::VertexBuffer() : Buffer() { }
 
+VertexBuffer::VertexBuffer(size_t _length) 
+    : Buffer(), length(_length), hasIndexBuffer(false) {
+    initBuffer();
+}
+
 VertexBuffer::VertexBuffer(std::vector<Vec3f>& vertices)
     : Buffer(), length(vertices.size()), hasIndexBuffer(false) {
     initBuffer(vertices);
@@ -111,7 +116,30 @@ void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned
     unbind();
 }
 
-void VertexBuffer::initBuffer() { }
+/*
+TODO: Refractor repeated code
+*/
+// Needed -> Buffer interface
+void VertexBuffer::initBuffer() { 
+    // Vertex buffer
+    glGenBuffers(1, &id);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glBufferData(GL_ARRAY_BUFFER, length * sizeof(float) * 11, nullptr, GL_DYNAMIC_DRAW);
+    // position attribute
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
+    // color attribute
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+    // normal attribute
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+    // texture coordinates attribute
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(9 * sizeof(float)));
+    // Unbind VBO
+    unbind();
+}
 
 void VertexBuffer::updateVertices(std::vector<Vec3f>& vertices) {
     glBindBuffer(GL_ARRAY_BUFFER, id);

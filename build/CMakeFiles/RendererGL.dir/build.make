@@ -279,10 +279,24 @@ CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/Polytope.cpp -o CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.s
 
+CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o: CMakeFiles/RendererGL.dir/flags.make
+CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o: ../src/engine/group/DynamicPolytope.cpp
+CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/DynamicPolytope.cpp
+
+CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/DynamicPolytope.cpp > CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.i
+
+CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/DynamicPolytope.cpp -o CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.s
+
 CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o: ../src/engine/group/Group.cpp
 CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/group/Group.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.i: cmake_force
@@ -296,7 +310,7 @@ CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: ../src/engine/renderer/Renderer.cpp
 CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/Renderer.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.i: cmake_force
@@ -310,7 +324,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o: ../src/engine/renderer/Camera.cpp
 CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/Camera.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.i: cmake_force
@@ -324,7 +338,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o: ../src/engine/renderer/TrackballCamera.cpp
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/TrackballCamera.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.i: cmake_force
@@ -338,7 +352,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o: ../src/engine/renderer/FPSCamera.cpp
 CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/FPSCamera.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.i: cmake_force
@@ -352,7 +366,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: ../src/engine/lighting/Light.cpp
 CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/Light.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.i: cmake_force
@@ -366,7 +380,7 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: ../src/engine/texture/Texture.cpp
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.i: cmake_force
@@ -380,7 +394,7 @@ CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: ../src/engine/model/Model.cpp
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/model/Model.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.i: cmake_force
@@ -408,6 +422,7 @@ RendererGL_OBJECTS = \
 "CMakeFiles/RendererGL.dir/src/engine/opengl/buffer/IndexBuffer.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/opengl/shader/Shader.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.o" \
+"CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o" \
@@ -435,6 +450,7 @@ RendererGL: CMakeFiles/RendererGL.dir/src/engine/opengl/buffer/VertexBuffer.cpp.
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/opengl/buffer/IndexBuffer.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/opengl/shader/Shader.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.o
+RendererGL: CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/group/Group.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o
@@ -445,7 +461,7 @@ RendererGL: CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/build.make
 RendererGL: CMakeFiles/RendererGL.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Linking CXX executable RendererGL"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Linking CXX executable RendererGL"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RendererGL.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

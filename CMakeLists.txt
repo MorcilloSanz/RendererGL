@@ -25,6 +25,7 @@ set(HEADERS
         src/engine/opengl/buffer/IndexBuffer.h
         src/engine/opengl/shader/Shader.h
         src/engine/group/Polytope.h
+        src/engine/group/DynamicPolytope.h
         src/engine/group/Group.h
         src/engine/renderer/Renderer.h
         src/engine/renderer/TextureRenderer.h
@@ -55,6 +56,7 @@ set(SOURCES
         src/engine/opengl/buffer/IndexBuffer.cpp
         src/engine/opengl/shader/Shader.cpp
         src/engine/group/Polytope.cpp
+        src/engine/group/DynamicPolytope.cpp
         src/engine/group/Group.cpp
         src/engine/renderer/Renderer.cpp
         src/engine/renderer/Camera.cpp

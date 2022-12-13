@@ -184,6 +184,16 @@ int main(void) {
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
 
+    // Dynamic Polytope
+    size_t length = 5000;
+    std::shared_ptr<DynamicPolytope> dynamicPolytope = std::make_shared<DynamicPolytope>(length);
+
+    Group groupDynamic(GL_LINE_STRIP);
+    groupDynamic.setLineWidth(3.f);
+    groupDynamic.translate(glm::vec3(-1.5, 0, 0));
+    groupDynamic.add(dynamicPolytope);
+    renderer.addGroup(groupDynamic);
+
     // 3D model from file
     Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
     model.setLineWidth(2.5f);
@@ -220,6 +230,35 @@ int main(void) {
         // Update vertex from cubePolytope
         cubePolytopeIndices->updateVertex(0, firstVertex);
         firstVertex.z += 0.001;
+
+        // Add vertices to dynamicPolytope
+        {
+            static size_t numVertices = 0;
+
+            static float radius = 0.5f;
+            static float theta = 0.0f;
+            static float height = 0.1f;
+
+            const float dTheta = 0.01f;
+            const float dZ = 0.0005f;
+            
+            if(numVertices < dynamicPolytope->getVertexLength()) {
+
+                float x = radius * cos(theta);
+                float y = height;
+                float z = radius * sin(theta);
+
+                float r = (float)numVertices / dynamicPolytope->getVertexLength();
+                float g = 1 - r;
+                float b = 0.5f;
+
+                dynamicPolytope->addVertex(Vec3f(x, y, z, r, g, b));
+
+                theta += dTheta;
+                height += dZ;
+                numVertices ++;
+            }
+        }
 
         // ImGUI
         {

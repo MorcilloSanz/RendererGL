@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Polytope.h"
+#include "DynamicPolytope.h"
 
 class Group {
 private:

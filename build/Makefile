@@ -321,6 +321,30 @@ imgui/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/imgui/imgui_widgets.cpp.s
 .PHONY : imgui/imgui_widgets.cpp.s
 
+src/engine/group/DynamicPolytope.o: src/engine/group/DynamicPolytope.cpp.o
+.PHONY : src/engine/group/DynamicPolytope.o
+
+# target to build an object file
+src/engine/group/DynamicPolytope.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.o
+.PHONY : src/engine/group/DynamicPolytope.cpp.o
+
+src/engine/group/DynamicPolytope.i: src/engine/group/DynamicPolytope.cpp.i
+.PHONY : src/engine/group/DynamicPolytope.i
+
+# target to preprocess a source file
+src/engine/group/DynamicPolytope.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.i
+.PHONY : src/engine/group/DynamicPolytope.cpp.i
+
+src/engine/group/DynamicPolytope.s: src/engine/group/DynamicPolytope.cpp.s
+.PHONY : src/engine/group/DynamicPolytope.s
+
+# target to generate assembly for a file
+src/engine/group/DynamicPolytope.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/group/DynamicPolytope.cpp.s
+.PHONY : src/engine/group/DynamicPolytope.cpp.s
+
 src/engine/group/Group.o: src/engine/group/Group.cpp.o
 .PHONY : src/engine/group/Group.o
 
@@ -714,6 +738,9 @@ help:
 	@echo "... imgui/imgui_widgets.o"
 	@echo "... imgui/imgui_widgets.i"
 	@echo "... imgui/imgui_widgets.s"
+	@echo "... src/engine/group/DynamicPolytope.o"
+	@echo "... src/engine/group/DynamicPolytope.i"
+	@echo "... src/engine/group/DynamicPolytope.s"
 	@echo "... src/engine/group/Group.o"
 	@echo "... src/engine/group/Group.i"
 	@echo "... src/engine/group/Group.s"

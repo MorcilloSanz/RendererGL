@@ -189,7 +189,7 @@ int main(void) {
     std::shared_ptr<DynamicPolytope> dynamicPolytope = std::make_shared<DynamicPolytope>(length);
 
     Group groupDynamic(GL_LINE_STRIP);
-    groupDynamic.setLineWidth(3.f);
+    groupDynamic.setLineWidth(2.f);
     groupDynamic.translate(glm::vec3(-1.5, 0, 0));
     groupDynamic.add(dynamicPolytope);
     renderer.addGroup(groupDynamic);
@@ -240,7 +240,7 @@ int main(void) {
             static float height = 0.1f;
 
             const float dTheta = 0.01f;
-            const float dZ = 0.0005f;
+            const float dZ = 0.001f;
             
             if(numVertices < dynamicPolytope->getVertexLength()) {
 
@@ -296,6 +296,7 @@ int main(void) {
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
                 ImGui::End();
             }
+
             // Lighting window
             {
                 ImGui::Begin("Lighting"); 
@@ -343,6 +344,7 @@ int main(void) {
 
                 ImGui::End();
             }
+
             // Camera Window
             {
                 ImGui::Begin("Camera");       
@@ -404,11 +406,11 @@ int main(void) {
                 // If resize change texture viewport
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
-                    textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
                     // Restart trackball camera
                     float theta = camera.getTheta(), phi = camera.getPhi();
                     glm::vec3 center = camera.getCenter(), up = camera.getUp();
                     float radius = camera.getRadius();
+                    // Update camera aspect ratio
                     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y , 0.1, 1000);
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
@@ -571,6 +573,7 @@ void renderImGui(ImGuiIO& io) {
 // Window functions
 
 void resizeFun(GLFWwindow* w, int width, int height) {
+    textureRenderer.updateViewPort(width, height);
     window.setWidth(width);
     window.setHeight(height);
 }

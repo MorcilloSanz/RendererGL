@@ -6,6 +6,12 @@
 unsigned int Texture::count = 0;
 int Texture::textureUnits = 0;
 
+Image readImage(const std::string& path) {
+	Image image;
+	image.data = stbi_load(path.c_str(), &image.width, &image.height, &image.bpp, STBI_rgb);
+	return image;
+}
+
 Texture::Texture(const std::string& _path, const Type& _type, bool _flip) 
 	: path(_path), id(0), width(0), height(0), bpp(0), slot(0), type(_type), flip(_flip) {
 	initTextureUnits();

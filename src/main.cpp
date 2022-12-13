@@ -7,6 +7,7 @@
 #include "engine/renderer/TrackballCamera.h"
 #include "engine/renderer/FPSCamera.h"
 #include "engine/renderer/TextureRenderer.h"
+#include "engine/renderer/SkyBox.h"
 #include "engine/model/Model.h"
 
 #include "ImguiStyles.h"
@@ -201,13 +202,23 @@ int main(void) {
     //model.scale(glm::vec3(0.01, 0.01, 0.01));
     renderer.addGroup(model);
 
+    // SkyBox
+    std::vector<std::string> faces = {
+        "/home/morcillosanz/Desktop/right.png",
+        "/home/morcillosanz/Desktop/left.png",
+        "/home/morcillosanz/Desktop/top.png",
+        "/home/morcillosanz/Desktop/bottom.png",
+        "/home/morcillosanz/Desktop/front.png",
+        "/home/morcillosanz/Desktop/back.png"
+    };
+    std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
+    renderer.setSkyBox(skyBox);
+
     // Init TextureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
 
     // Enable Rendering Features
     renderer.enableBackFaceCulling();
-    renderer.enableAntialiasing();
-    renderer.enableBlending();
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
@@ -411,7 +422,7 @@ int main(void) {
                     glm::vec3 center = camera.getCenter(), up = camera.getUp();
                     float radius = camera.getRadius();
                     // Update camera aspect ratio
-                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y , 0.1, 1000);
+                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
                     camera.setRadius(radius);

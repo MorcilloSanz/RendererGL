@@ -4,14 +4,25 @@
 
 #include "../../../glew/glew.h"
 
+struct Image {
+    unsigned char* data;
+    int width, height, bpp;
+
+    ~Image() {
+        if(data != nullptr) free(data);
+    }
+};
+
+Image readImage(const std::string& path);
+
 class Texture {
 public:
     enum class Type {
         None, TextureAmbient, TextureDiffuse, TextureSpecular, TextureNormal, TextureHeight
     };
     static int textureUnits;
-protected:
     static unsigned int count;
+protected:
     int slot;
     unsigned int id;
     int width, height, bpp;

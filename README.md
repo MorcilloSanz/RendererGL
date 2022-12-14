@@ -1,6 +1,8 @@
 # RendererGL
 
-RendererGL is a basic 3D renderer in Modern OpenGL and C++
+RendererGL is a basic 3D engine written in C++ and OpenGL
+
+The file
 
 ```
 main.cpp
@@ -19,7 +21,11 @@ ASSIMP
 
 # Screenshots
 
+Loading a 3D model with a skybox and ilumination
+
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
+
+Some cute 3D models:
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)  
 

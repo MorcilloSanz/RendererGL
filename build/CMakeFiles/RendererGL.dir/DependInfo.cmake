@@ -28,6 +28,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/Camera.cpp" "CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o.d"
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/FPSCamera.cpp" "CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o.d"
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/Renderer.cpp" "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o.d"
+  "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/SkyBox.cpp" "CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o.d"
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/TrackballCamera.cpp" "CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o.d"
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.cpp" "CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o.d"
   "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/window/Window.cpp" "CMakeFiles/RendererGL.dir/src/engine/window/Window.cpp.o" "gcc" "CMakeFiles/RendererGL.dir/src/engine/window/Window.cpp.o.d"

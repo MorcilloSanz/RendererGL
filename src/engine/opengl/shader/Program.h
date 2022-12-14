@@ -132,4 +132,37 @@ public:
         "    FragColor = color;\n"
         "}\n";
     }
+
+    static std::string getSkyBoxVertexShaderCode() {
+        return
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "\n"
+        "out vec3 TexCoords;\n"
+        "\n"
+        "uniform mat4 projection;\n"
+        "uniform mat4 view;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    TexCoords = aPos;\n"
+        "    vec4 pos = projection * view * vec4(aPos, 1.0);\n"
+        "    gl_Position = pos.xyzw;\n"
+        "}\n";
+    }
+
+    static std::string getSkyBoxFragmentShaderCode() {
+        return
+        "#version 330 core\n"
+        "out vec4 FragColor;\n"
+        "\n"
+        "in vec3 TexCoords;\n"
+        "\n"
+        "uniform samplerCube skybox;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    FragColor = texture(skybox, TexCoords);\n"
+        "}\n";
+    }
 };

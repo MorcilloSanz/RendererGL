@@ -39,6 +39,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o.d"
+  "CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o"
+  "CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o"

@@ -609,6 +609,30 @@ src/engine/renderer/Renderer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.s
 .PHONY : src/engine/renderer/Renderer.cpp.s
 
+src/engine/renderer/SkyBox.o: src/engine/renderer/SkyBox.cpp.o
+.PHONY : src/engine/renderer/SkyBox.o
+
+# target to build an object file
+src/engine/renderer/SkyBox.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o
+.PHONY : src/engine/renderer/SkyBox.cpp.o
+
+src/engine/renderer/SkyBox.i: src/engine/renderer/SkyBox.cpp.i
+.PHONY : src/engine/renderer/SkyBox.i
+
+# target to preprocess a source file
+src/engine/renderer/SkyBox.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.i
+.PHONY : src/engine/renderer/SkyBox.cpp.i
+
+src/engine/renderer/SkyBox.s: src/engine/renderer/SkyBox.cpp.s
+.PHONY : src/engine/renderer/SkyBox.s
+
+# target to generate assembly for a file
+src/engine/renderer/SkyBox.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.s
+.PHONY : src/engine/renderer/SkyBox.cpp.s
+
 src/engine/renderer/TrackballCamera.o: src/engine/renderer/TrackballCamera.cpp.o
 .PHONY : src/engine/renderer/TrackballCamera.o
 
@@ -774,6 +798,9 @@ help:
 	@echo "... src/engine/renderer/Renderer.o"
 	@echo "... src/engine/renderer/Renderer.i"
 	@echo "... src/engine/renderer/Renderer.s"
+	@echo "... src/engine/renderer/SkyBox.o"
+	@echo "... src/engine/renderer/SkyBox.i"
+	@echo "... src/engine/renderer/SkyBox.s"
 	@echo "... src/engine/renderer/TrackballCamera.o"
 	@echo "... src/engine/renderer/TrackballCamera.i"
 	@echo "... src/engine/renderer/TrackballCamera.s"

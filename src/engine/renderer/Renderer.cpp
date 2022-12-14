@@ -67,6 +67,9 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
 }
 
 void Renderer::render() {
+
+    enableAntialiasing();
+    enableBlending();
     
     if(!hasLight) shaderProgram->useProgram();
     else    light->getShaderProgram()->useProgram();
@@ -118,6 +121,21 @@ void Renderer::render() {
                 for(auto& texture : polytope->getTextures()) texture->unbind();
             }
         }
+    }
+
+    if(skyBox != nullptr) {
+        skyBox->getShaderProgram()->useProgram();
+
+        view = glm::mat4(glm::mat3(camera->getViewMatrix())); // remove translation from the view matrix
+        skyBox->getShaderProgram()->uniformInt("skybox", 0);
+        skyBox->getShaderProgram()->uniformMat4("view", view);
+        skyBox->getShaderProgram()->uniformMat4("projection", projection);
+
+        glDepthRange(0.999,1.0);
+        skyBox->draw();
+        glDepthRange(0.0,1.0);
+
+        glDepthFunc(GL_LESS); // set depth function back to default
     }
 }
 

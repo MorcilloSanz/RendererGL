@@ -10,10 +10,13 @@
 #include "Camera.h"
 #include "../lighting/Light.h"
 
+#include "SkyBox.h"
+
 class Renderer {
 private:
     std::shared_ptr<ShaderProgram> shaderProgram;
     std::vector<Group*> groups;
+    std::shared_ptr<SkyBox> skyBox;
     Camera* camera;
     bool hasCamera;
     Light* light;
@@ -51,4 +54,6 @@ public:
     inline std::shared_ptr<ShaderProgram>& getShaderProgram() { return shaderProgram; }
 
     inline glm::vec3& getBackgroundColor() { return backgroundColor; }
+
+    inline void setSkyBox(const std::shared_ptr<SkyBox>& skyBox) { this->skyBox = skyBox; }
 };

@@ -2,7 +2,7 @@
 
 RendererGL is a basic 3D engine written in C++ and OpenGL
 
-The file
+The file:
 
 ```
 main.cpp
@@ -13,10 +13,10 @@ is a template using ImGui and RendererGL
 # Dependencies
 ```
 GLFW
-GLEW (included)
-GLM (included)
-IMGUI (included)
-ASSIMP
+GLEW    (included)
+GLM     (included)
+IMGUI   (included)
+ASSIMP  (only for reading 3D models)
 ```
 
 # Screenshots

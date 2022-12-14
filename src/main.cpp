@@ -204,12 +204,12 @@ int main(void) {
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Desktop/right.png",
-        "/home/morcillosanz/Desktop/left.png",
-        "/home/morcillosanz/Desktop/top.png",
-        "/home/morcillosanz/Desktop/bottom.png",
-        "/home/morcillosanz/Desktop/front.png",
-        "/home/morcillosanz/Desktop/back.png"
+        "/home/morcillosanz/Desktop/Yokohama3/posx.jpg",
+        "/home/morcillosanz/Desktop/Yokohama3/negx.jpg",
+        "/home/morcillosanz/Desktop/Yokohama3/posy.jpg",
+        "/home/morcillosanz/Desktop/Yokohama3/negy.jpg",
+        "/home/morcillosanz/Desktop/Yokohama3/posz.jpg",
+        "/home/morcillosanz/Desktop/Yokohama3/negz.jpg"
     };
     std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
     renderer.setSkyBox(skyBox);

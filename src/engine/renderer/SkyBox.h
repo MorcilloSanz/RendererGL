@@ -16,6 +16,15 @@ private:
     std::shared_ptr<ShaderProgram> shaderProgram;
 public:
     SkyBox() = default;
+    // loads a cubemap texture from 6 individual texture faces
+    // order:
+    // +X (right)
+    // -X (left)
+    // +Y (top)
+    // -Y (bottom)
+    // +Z (front) 
+    // -Z (back)
+    // -------------------------------------------------------
     SkyBox(const std::vector<std::string>& _faces);
     ~SkyBox();
 private:

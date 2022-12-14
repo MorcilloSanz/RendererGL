@@ -19,6 +19,8 @@ ASSIMP
 
 # Screenshots
 
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
+
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)  
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)  

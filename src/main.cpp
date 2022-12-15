@@ -195,6 +195,14 @@ int main(void) {
     groupDynamic.add(dynamicPolytope);
     renderer.addGroup(groupDynamic);
 
+    // Dynamic Polytope for mouse picking testing
+    std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
+    Group groupMousePicking(GL_POINTS);
+    groupMousePicking.setPointSize(4.f);
+    groupMousePicking.translate(glm::vec3(0, 0, 0));
+    groupMousePicking.add(mousePickingPolytope);
+    renderer.addGroup(groupMousePicking);
+
     // 3D model from file
     Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
     model.setLineWidth(2.5f);
@@ -414,7 +422,7 @@ int main(void) {
                 ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);       
                 ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   // Render texture
                 
-                // If resize change texture viewport
+                // Resize window
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
                     // Restart trackball camera
@@ -431,47 +439,79 @@ int main(void) {
                 }
                 previousSize = ImGui::GetWindowSize();
 
+                // Mouse Events
+                ImVec2 size = ImGui::GetWindowSize();
+                ImVec2 mousePositionAbsolute = ImGui::GetMousePos();
+                ImVec2 screenPositionAbsolute = ImGui::GetItemRectMin();
+                ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
+
+                static bool first = true;
+                static ImVec2 previous(0, 0);
+
+                if(ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
+                    if(first) {
+                        previous = mousePositionRelative;
+                        first = false;
+                    }
+                }else first = true;
+
+                // Camera rotation
+                if(ImGui::IsMouseDragging(ImGuiMouseButton_Left) && windowFocus) {
+                    float dTheta = (mousePositionRelative.x - previous.x) / size.x;
+                    float dPhi = (mousePositionRelative.y - previous.y) / size.y;
+                    previous = mousePositionRelative;
+                    camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
+                }
+
+                // Camera pan
+                if(ImGui::IsMouseDragging(ImGuiMouseButton_Right) && windowFocus) {
+                    float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
+                    float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
+                    previous = mousePositionRelative;
+                    camera.pan(dx * panSensitivity, -dy * panSensitivity);
+                }
+
+                // Camera zoom
+                if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
+
+                // FPS Camera
+                updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
+
+                // Mouse Picking
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                    float x = (2.0f * mousePositionRelative.x) / ImGui::GetWindowSize().x - 1.0f;
+                    float y = (2.0f * mousePositionRelative.y) / ImGui::GetWindowSize().y - 1.0f;
+                    float z = 1.0f;
+
+                    // Ray casting
+                    glm::vec3 ray_nds(x, y, z);
+
+                    glm::vec4 ray_clip(ray_nds.x, ray_nds.y, -1.0, 1.0);
+                    glm::vec4 ray_eye = camera.getInverseProjectionMatrix() * ray_clip;
+                    ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+
+                    glm::vec4 ray_wor = camera.getInverseViewMatrix() * ray_eye;
+                    glm::vec3 ray_world(ray_wor.x, ray_wor.y, ray_wor.z);
+
+                    ray_world = glm::normalize(ray_world); // This is the ray for raycasting
+
+                    
+                    // Get a 3d point from ray with a distance from the camera
+                    auto get3D = [&](float distance) {
+                        glm::vec3 cameraPos = camera.getEye();
+                        glm::vec3 start = cameraPos;
+                        glm::vec3 scaledRay(ray_world.x * distance, ray_world.y * distance, ray_world.z * distance);
+                        return glm::vec3(start.x + scaledRay.x, start.y + scaledRay.y, start.z + scaledRay.z);
+                    };
+
+                    glm::vec3 temp = get3D(1);
+                    Vec3f point3D = Vec3f(temp.x, temp.y, temp.z);
+                    mousePickingPolytope->addVertex(point3D);
+                }
+
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
                 ImGui::End();
             }
-
-            // Mouse events
-            ImVec2 size = ImGui::GetWindowSize();
-            ImVec2 mousePositionAbsolute = ImGui::GetMousePos();
-            ImVec2 screenPositionAbsolute = ImGui::GetItemRectMin();
-            ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
-
-            static bool first = true;
-            static ImVec2 previous(0, 0);
-
-            if(ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
-                if(first) {
-                    previous = mousePositionRelative;
-                    first = false;
-                }
-            }else first = true;
-
-            // Camera rotation
-            if(ImGui::IsMouseDragging(ImGuiMouseButton_Left) && windowFocus) {
-                float dTheta = (mousePositionRelative.x - previous.x) / size.x;
-                float dPhi = (mousePositionRelative.y - previous.y) / size.y;
-                previous = mousePositionRelative;
-                camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
-            }
-
-            // Camera pan
-            if(ImGui::IsMouseDragging(ImGuiMouseButton_Right) && windowFocus) {
-                float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
-                float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
-                previous = mousePositionRelative;
-                camera.pan(dx * panSensitivity, -dy * panSensitivity);
-            }
-
-            // Camera zoom
-            if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
-
-            // FPS Camera
-            updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
             
             // Rendering
             renderImGui(io);

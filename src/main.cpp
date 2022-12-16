@@ -439,8 +439,11 @@ int main(void) {
             // Render window
             static bool windowFocus = false;
             { 
-                ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);       
-                ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   // Render texture
+                ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+                windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
+
+                // Render graphics as a texture
+                ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);
@@ -498,7 +501,7 @@ int main(void) {
                 updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
 
                 // Mouse Picking
-                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay)) {
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay) && windowFocus) {
 
                     MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
                     MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
@@ -522,7 +525,6 @@ int main(void) {
                     }
                 }
 
-                windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
                 ImGui::End();
             }
             

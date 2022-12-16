@@ -28,7 +28,10 @@ public:
             );
         }
 
-        // Useful for (irregular) polygonal clipping (Maybe for clipping a point cloud for example)
+        /**
+         * @brief Returns a 3D point which projection belongs to the Screen Plane (X, Y)
+         * @return glm::vec3 
+         */
         inline glm::vec3 getScreenProjectedPoint() {
             return getPoint(1);
         }

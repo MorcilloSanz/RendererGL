@@ -203,7 +203,7 @@ int main(void) {
     // Dynamic Polytope for mouse picking (ray casting)
     std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
     Group groupMousePicking(GL_POINTS);
-    groupMousePicking.setPointSize(4.f);
+    groupMousePicking.setPointSize(8.f);
     groupMousePicking.add(mousePickingPolytope);
     renderer.addGroup(groupMousePicking);
 
@@ -439,8 +439,11 @@ int main(void) {
             // Render window
             static bool windowFocus = false;
             { 
-                ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);       
-                ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   // Render texture
+                ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+                windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
+
+                // Render graphics as a texture
+                ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);
@@ -498,7 +501,7 @@ int main(void) {
                 updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
 
                 // Mouse Picking
-                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay)) {
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay) && windowFocus) {
 
                     MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
                     MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
@@ -512,8 +515,8 @@ int main(void) {
 
                     if(enableDrawRay) {
                         // Get the points of the ray from the screen to 'rayLong' distance
-                        glm::vec3 begin = mouseRay.getPoint(rayLong / 2);
-                        glm::vec3 end = mouseRay.getPoint(-rayLong / 2);
+                        glm::vec3 begin = mouseRay.getPoint(rayLong);
+                        glm::vec3 end = mouseRay.getPoint(1);
                         // Add these two vertices into the GL_LINES dynamic polytope
                         Vec3f vertex1(begin.x, begin.y, begin.z, 0, 1, 0);
                         Vec3f vertex2(end.x, end.y, end.z, 0, 0, 1);
@@ -522,7 +525,6 @@ int main(void) {
                     }
                 }
 
-                windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
                 ImGui::End();
             }
             

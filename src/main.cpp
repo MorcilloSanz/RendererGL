@@ -8,6 +8,7 @@
 #include "engine/renderer/FPSCamera.h"
 #include "engine/renderer/TextureRenderer.h"
 #include "engine/renderer/SkyBox.h"
+#include "engine/renderer/MouseRayCasting.h"
 #include "engine/model/Model.h"
 
 #include "ImguiStyles.h"
@@ -38,10 +39,14 @@ FPSCamera fpsCamera;
 bool movementForward = false, movementBackward = false;
 bool movementRight = false, movementLeft = false;
 
+// Mouse Ray casting (gui)
+bool enablePoint3d = false, enableDrawRay;
+float rayLong = 100;
+
 int main(void) {
 
     // Create window
-    window = Window("RendererGL", 1080, 720);
+    window = Window("RendererGL", 1280, 800);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
@@ -195,13 +200,19 @@ int main(void) {
     groupDynamic.add(dynamicPolytope);
     renderer.addGroup(groupDynamic);
 
-    // Dynamic Polytope for mouse picking testing
+    // Dynamic Polytope for mouse picking (ray casting)
     std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
     Group groupMousePicking(GL_POINTS);
     groupMousePicking.setPointSize(4.f);
-    groupMousePicking.translate(glm::vec3(0, 0, 0));
     groupMousePicking.add(mousePickingPolytope);
     renderer.addGroup(groupMousePicking);
+
+    // Dynamic Polytope for ray casting drawing
+    std::shared_ptr<DynamicPolytope> raysPolytope = std::make_shared<DynamicPolytope>(length);
+    Group raysGroup(GL_LINES);
+    raysGroup.setLineWidth(2.f);
+    raysGroup.add(raysPolytope);
+    renderer.addGroup(raysGroup);
 
     // 3D model from file
     Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
@@ -414,6 +425,15 @@ int main(void) {
                     glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
+                ImGui::Separator();
+
+                ImGui::TextColored(ImColor(200, 150, 255), "Mouse Ray Casting");
+
+                ImGui::Checkbox("Enable 3D Point", &enablePoint3d);
+                ImGui::SameLine();
+                ImGui::Checkbox("Enable Drawing Ray", &enableDrawRay);
+                ImGui::SliderFloat("Ray long", &rayLong, 0.5f, 1500);
+
                 ImGui::End();
             }
             // Render window
@@ -478,35 +498,27 @@ int main(void) {
                 updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
 
                 // Mouse Picking
-                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                    float x = (2.0f * mousePositionRelative.x) / ImGui::GetWindowSize().x - 1.0f;
-                    float y = (2.0f * mousePositionRelative.y) / ImGui::GetWindowSize().y - 1.0f;
-                    float z = 1.0f;
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay)) {
 
-                    // Ray casting
-                    glm::vec3 ray_nds(x, y, z);
+                    MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+                    MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
 
-                    glm::vec4 ray_clip(ray_nds.x, ray_nds.y, -1.0, 1.0);
-                    glm::vec4 ray_eye = camera.getInverseProjectionMatrix() * ray_clip;
-                    ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+                    if(enablePoint3d) {
+                        glm::vec3 screenProjectedPoint = mouseRay.getScreenProjectedPoint();
+                        Vec3f point3D = Vec3f(screenProjectedPoint.x, screenProjectedPoint.y, screenProjectedPoint.z, 1, 0, 0);
+                        mousePickingPolytope->addVertex(point3D);
+                    }
 
-                    glm::vec4 ray_wor = camera.getInverseViewMatrix() * ray_eye;
-                    glm::vec3 ray_world(ray_wor.x, ray_wor.y, ray_wor.z);
-
-                    ray_world = glm::normalize(ray_world); // This is the ray for raycasting
-
-                    
-                    // Get a 3d point from ray with a distance from the camera
-                    auto get3D = [&](float distance) {
-                        glm::vec3 cameraPos = camera.getEye();
-                        glm::vec3 start = cameraPos;
-                        glm::vec3 scaledRay(ray_world.x * distance, ray_world.y * distance, ray_world.z * distance);
-                        return glm::vec3(start.x + scaledRay.x, start.y + scaledRay.y, start.z + scaledRay.z);
-                    };
-
-                    glm::vec3 temp = get3D(1);
-                    Vec3f point3D = Vec3f(temp.x, temp.y, temp.z);
-                    mousePickingPolytope->addVertex(point3D);
+                    if(enableDrawRay) {
+                        // Get the points of the ray from the screen to 'rayLong' distance
+                        glm::vec3 begin = mouseRay.getPoint(rayLong / 2);
+                        glm::vec3 end = mouseRay.getPoint(-rayLong / 2);
+                        // Add these two vertices into the GL_LINES dynamic polytope
+                        Vec3f vertex1(begin.x, begin.y, begin.z, 0, 1, 0);
+                        Vec3f vertex2(end.x, end.y, end.z, 0, 0, 1);
+                        raysPolytope->addVertex(vertex1);
+                        raysPolytope->addVertex(vertex2);
+                    }
                 }
 
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();

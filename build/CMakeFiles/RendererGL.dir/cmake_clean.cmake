@@ -37,6 +37,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RendererGL.dir/src/engine/renderer/Camera.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.o.d"
+  "CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.o"
+  "CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o"

@@ -4,7 +4,9 @@
 
 #include "../opengl/shader/Program.h"
 
-Renderer::Renderer() : camera(nullptr), hasCamera(false), light(nullptr), hasLight(false) {
+Renderer::Renderer() 
+    : camera(nullptr), hasCamera(false), light(nullptr), hasLight(false),
+    projection(glm::mat4(1.f)), view(glm::mat4(1.f)) {
     Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
     shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
@@ -66,77 +68,89 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
     }
 }
 
-void Renderer::render() {
+void Renderer::primitiveSettings(Group* group) {
+    glPointSize(group->getPointSize());
+    glLineWidth(group->getLineWidth());
+}
 
+void Renderer::lightShaderUniforms() {
+    light->getShaderProgram()->uniformVec3("light.position", light->getPosition());
+    light->getShaderProgram()->uniformVec3("light.color", light->getColor());
+    light->getShaderProgram()->uniformVec3("light.ambient", light->getAmbientColor());
+    light->getShaderProgram()->uniformVec3("light.diffuse", light->getDiffuseColor());
+    light->getShaderProgram()->uniformVec3("light.specular", light->getSpecularColor());
+    light->getShaderProgram()->uniformVec3("viewPos", camera->getEye());
+}
+
+void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
+    light->getShaderProgram()->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
+    light->getShaderProgram()->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
+    light->getShaderProgram()->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
+}
+
+void Renderer::lightMVPuniform(const glm::mat4& model) {
+    light->getShaderProgram()->uniformMat4("model", model);
+    light->getShaderProgram()->uniformMat4("view", view);
+    light->getShaderProgram()->uniformMat4("projection", projection);
+}
+
+void Renderer::drawGroup(Group* group) {
+    if(!group->isVisible()) return;
+
+    primitiveSettings(group);
+    
+    for(auto& polytope : group->getPolytopes()) {
+        // Uniforms
+        glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+        if(!hasLight) {
+            glm::mat4 mvp = projection * view * model;
+            shaderProgram->uniformMat4("mvp", mvp);
+            textureUniform(shaderProgram, polytope);
+        } 
+        else if(hasCamera) {
+            lightShaderUniforms();
+            lightMaterialUniforms(polytope);
+            textureUniform(light->getShaderProgram(), polytope);
+            lightMVPuniform(model);
+        }
+        // Draw
+        polytope->draw(group->getPrimitive(), group->isShowWire());
+        // unbind textures
+        for(auto& texture : polytope->getTextures()) texture->unbind();
+    }
+}
+
+void Renderer::drawSkyBox() {
+    if(skyBox == nullptr) return;
+    skyBox->getShaderProgram()->useProgram();
+    // remove translation from the view matrix
+    view = glm::mat4(glm::mat3(camera->getViewMatrix())); 
+    skyBox->getShaderProgram()->uniformInt("skybox", 0);
+    skyBox->getShaderProgram()->uniformMat4("view", view);
+    skyBox->getShaderProgram()->uniformMat4("projection", projection);
+    // Draw call
+    glDepthRange(0.999,1.0);
+    skyBox->draw();
+    glDepthRange(0.0,1.0);
+     // set depth function back to default
+    glDepthFunc(GL_LESS);
+}
+
+void Renderer::render() {
     enableAntialiasing();
     enableBlending();
-    
-    if(!hasLight) shaderProgram->useProgram();
-    else    light->getShaderProgram()->useProgram();
-
-    glm::mat4 projection(1.f);
-    glm::mat4 view(1.f);
+    // Use shader programs
+    if(!hasLight)   shaderProgram->useProgram();
+    else            light->getShaderProgram()->useProgram();
+    // Init transform matrices
     if(hasCamera) {
         projection = camera->getProjectionMatrix();
         view = camera->getViewMatrix();
     }
-
-    for(Group* group : groups) {
-        if(group->isVisible()) {
-            // Primitive settings
-            glPointSize(group->getPointSize());
-            glLineWidth(group->getLineWidth());
-            // Draw call
-            for(auto& polytope : group->getPolytopes()) {
-                // Calculate model view matrix
-                glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
-                glm::mat4 mvp = projection * view * model;
-                // Send to vertex shader
-                if(!hasLight) {
-                    shaderProgram->uniformMat4("mvp", mvp);
-                    textureUniform(shaderProgram, polytope);
-                } 
-                else if(hasCamera) {
-                    // Light
-                    light->getShaderProgram()->uniformVec3("light.position", light->getPosition());
-                    light->getShaderProgram()->uniformVec3("light.color", light->getColor());
-                    light->getShaderProgram()->uniformVec3("light.ambient", light->getAmbientColor());
-                    light->getShaderProgram()->uniformVec3("light.diffuse", light->getDiffuseColor());
-                    light->getShaderProgram()->uniformVec3("light.specular", light->getSpecularColor());
-                    light->getShaderProgram()->uniformVec3("viewPos", camera->getEye());
-                    // Material
-                    light->getShaderProgram()->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
-                    light->getShaderProgram()->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
-                    light->getShaderProgram()->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
-                    // Texture
-                    textureUniform(light->getShaderProgram(), polytope);
-                    // Model view projection
-                    light->getShaderProgram()->uniformMat4("model", model);
-                    light->getShaderProgram()->uniformMat4("view", view);
-                    light->getShaderProgram()->uniformMat4("projection", projection);
-                }
-                // Draw
-                polytope->draw(group->getPrimitive(), group->isShowWire());
-                // unbind textures
-                for(auto& texture : polytope->getTextures()) texture->unbind();
-            }
-        }
-    }
-
-    if(skyBox != nullptr) {
-        skyBox->getShaderProgram()->useProgram();
-
-        view = glm::mat4(glm::mat3(camera->getViewMatrix())); // remove translation from the view matrix
-        skyBox->getShaderProgram()->uniformInt("skybox", 0);
-        skyBox->getShaderProgram()->uniformMat4("view", view);
-        skyBox->getShaderProgram()->uniformMat4("projection", projection);
-
-        glDepthRange(0.999,1.0);
-        skyBox->draw();
-        glDepthRange(0.0,1.0);
-
-        glDepthFunc(GL_LESS); // set depth function back to default
-    }
+    // Draw groups
+    for(Group* group : groups) drawGroup(group);
+    // Draw skybox
+    drawSkyBox();
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

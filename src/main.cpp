@@ -8,6 +8,7 @@
 #include "engine/renderer/FPSCamera.h"
 #include "engine/renderer/TextureRenderer.h"
 #include "engine/renderer/SkyBox.h"
+#include "engine/renderer/MouseRayCasting.h"
 #include "engine/model/Model.h"
 
 #include "ImguiStyles.h"
@@ -38,10 +39,14 @@ FPSCamera fpsCamera;
 bool movementForward = false, movementBackward = false;
 bool movementRight = false, movementLeft = false;
 
+// Mouse Ray casting (gui)
+bool enablePoint3d = false, enableDrawRay;
+float rayLong = 100;
+
 int main(void) {
 
     // Create window
-    window = Window("RendererGL", 1080, 720);
+    window = Window("RendererGL", 1280, 800);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
@@ -194,6 +199,20 @@ int main(void) {
     groupDynamic.translate(glm::vec3(-1.5, 0, 0));
     groupDynamic.add(dynamicPolytope);
     renderer.addGroup(groupDynamic);
+
+    // Dynamic Polytope for mouse picking (ray casting)
+    std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
+    Group groupMousePicking(GL_POINTS);
+    groupMousePicking.setPointSize(4.f);
+    groupMousePicking.add(mousePickingPolytope);
+    renderer.addGroup(groupMousePicking);
+
+    // Dynamic Polytope for ray casting drawing
+    std::shared_ptr<DynamicPolytope> raysPolytope = std::make_shared<DynamicPolytope>(length);
+    Group raysGroup(GL_LINES);
+    raysGroup.setLineWidth(2.f);
+    raysGroup.add(raysPolytope);
+    renderer.addGroup(raysGroup);
 
     // 3D model from file
     Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
@@ -406,6 +425,15 @@ int main(void) {
                     glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
+                ImGui::Separator();
+
+                ImGui::TextColored(ImColor(200, 150, 255), "Mouse Ray Casting");
+
+                ImGui::Checkbox("Enable 3D Point", &enablePoint3d);
+                ImGui::SameLine();
+                ImGui::Checkbox("Enable Drawing Ray", &enableDrawRay);
+                ImGui::SliderFloat("Ray long", &rayLong, 0.5f, 1500);
+
                 ImGui::End();
             }
             // Render window
@@ -414,7 +442,7 @@ int main(void) {
                 ImGui::Begin("Renderer", &p_open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);       
                 ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   // Render texture
                 
-                // If resize change texture viewport
+                // Resize window
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
                     // Restart trackball camera
@@ -431,47 +459,71 @@ int main(void) {
                 }
                 previousSize = ImGui::GetWindowSize();
 
+                // Mouse Events
+                ImVec2 size = ImGui::GetWindowSize();
+                ImVec2 mousePositionAbsolute = ImGui::GetMousePos();
+                ImVec2 screenPositionAbsolute = ImGui::GetItemRectMin();
+                ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
+
+                static bool first = true;
+                static ImVec2 previous(0, 0);
+
+                if(ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
+                    if(first) {
+                        previous = mousePositionRelative;
+                        first = false;
+                    }
+                }else first = true;
+
+                // Camera rotation
+                if(ImGui::IsMouseDragging(ImGuiMouseButton_Left) && windowFocus) {
+                    float dTheta = (mousePositionRelative.x - previous.x) / size.x;
+                    float dPhi = (mousePositionRelative.y - previous.y) / size.y;
+                    previous = mousePositionRelative;
+                    camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
+                }
+
+                // Camera pan
+                if(ImGui::IsMouseDragging(ImGuiMouseButton_Right) && windowFocus) {
+                    float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
+                    float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
+                    previous = mousePositionRelative;
+                    camera.pan(dx * panSensitivity, -dy * panSensitivity);
+                }
+
+                // Camera zoom
+                if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
+
+                // FPS Camera
+                updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
+
+                // Mouse Picking
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay)) {
+
+                    MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+                    MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
+
+                    if(enablePoint3d) {
+                        glm::vec3 screenProjectedPoint = mouseRay.getScreenProjectedPoint();
+                        Vec3f point3D = Vec3f(screenProjectedPoint.x, screenProjectedPoint.y, screenProjectedPoint.z, 1, 0, 0);
+                        mousePickingPolytope->addVertex(point3D);
+                    }
+
+                    if(enableDrawRay) {
+                        // Get the points of the ray from the screen to 'rayLong' distance
+                        glm::vec3 begin = mouseRay.getPoint(rayLong / 2);
+                        glm::vec3 end = mouseRay.getPoint(-rayLong / 2);
+                        // Add these two vertices into the GL_LINES dynamic polytope
+                        Vec3f vertex1(begin.x, begin.y, begin.z, 0, 1, 0);
+                        Vec3f vertex2(end.x, end.y, end.z, 0, 0, 1);
+                        raysPolytope->addVertex(vertex1);
+                        raysPolytope->addVertex(vertex2);
+                    }
+                }
+
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
                 ImGui::End();
             }
-
-            // Mouse events
-            ImVec2 size = ImGui::GetWindowSize();
-            ImVec2 mousePositionAbsolute = ImGui::GetMousePos();
-            ImVec2 screenPositionAbsolute = ImGui::GetItemRectMin();
-            ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
-
-            static bool first = true;
-            static ImVec2 previous(0, 0);
-
-            if(ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
-                if(first) {
-                    previous = mousePositionRelative;
-                    first = false;
-                }
-            }else first = true;
-
-            // Camera rotation
-            if(ImGui::IsMouseDragging(ImGuiMouseButton_Left) && windowFocus) {
-                float dTheta = (mousePositionRelative.x - previous.x) / size.x;
-                float dPhi = (mousePositionRelative.y - previous.y) / size.y;
-                previous = mousePositionRelative;
-                camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
-            }
-
-            // Camera pan
-            if(ImGui::IsMouseDragging(ImGuiMouseButton_Right) && windowFocus) {
-                float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
-                float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
-                previous = mousePositionRelative;
-                camera.pan(dx * panSensitivity, -dy * panSensitivity);
-            }
-
-            // Camera zoom
-            if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
-
-            // FPS Camera
-            updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
             
             // Rendering
             renderImGui(io);

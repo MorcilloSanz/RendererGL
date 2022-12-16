@@ -33,6 +33,7 @@ set(HEADERS
         src/engine/renderer/TrackballCamera.h
         src/engine/renderer/FPSCamera.h
         src/engine/renderer/SkyBox.h
+        src/engine/renderer/MouseRayCasting.h
         src/engine/lighting/Light.h
         src/engine/texture/vendor/stb_image.h
         src/engine/texture/Texture.h
@@ -64,6 +65,7 @@ set(SOURCES
         src/engine/renderer/TrackballCamera.cpp
         src/engine/renderer/FPSCamera.cpp
         src/engine/renderer/SkyBox.cpp
+        src/engine/renderer/MouseRayCasting.cpp
         src/engine/lighting/Light.cpp
         src/engine/texture/Texture.cpp
         src/engine/model/Model.cpp

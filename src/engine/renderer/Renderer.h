@@ -15,18 +15,26 @@
 class Renderer {
 private:
     std::shared_ptr<ShaderProgram> shaderProgram;
+    glm::mat4 projection;
+    glm::mat4 view;
     std::vector<Group*> groups;
-    std::shared_ptr<SkyBox> skyBox;
     Camera* camera;
     bool hasCamera;
     Light* light;
     bool hasLight;
     glm::vec3 backgroundColor;
+    std::shared_ptr<SkyBox> skyBox;
 public:
     Renderer();
     ~Renderer() = default;
 private:
-    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) ;
+    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
+    void primitiveSettings(Group* group);
+    void lightShaderUniforms();
+    void lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope);
+    void lightMVPuniform(const glm::mat4& model);
+    void drawGroup(Group* group);
+    void drawSkyBox();
 public:
     void setCamera(Camera& camera);
     void setLight(Light& light);

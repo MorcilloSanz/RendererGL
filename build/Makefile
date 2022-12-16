@@ -585,6 +585,30 @@ src/engine/renderer/FPSCamera.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/FPSCamera.cpp.s
 .PHONY : src/engine/renderer/FPSCamera.cpp.s
 
+src/engine/renderer/MouseRayCasting.o: src/engine/renderer/MouseRayCasting.cpp.o
+.PHONY : src/engine/renderer/MouseRayCasting.o
+
+# target to build an object file
+src/engine/renderer/MouseRayCasting.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.o
+.PHONY : src/engine/renderer/MouseRayCasting.cpp.o
+
+src/engine/renderer/MouseRayCasting.i: src/engine/renderer/MouseRayCasting.cpp.i
+.PHONY : src/engine/renderer/MouseRayCasting.i
+
+# target to preprocess a source file
+src/engine/renderer/MouseRayCasting.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.i
+.PHONY : src/engine/renderer/MouseRayCasting.cpp.i
+
+src/engine/renderer/MouseRayCasting.s: src/engine/renderer/MouseRayCasting.cpp.s
+.PHONY : src/engine/renderer/MouseRayCasting.s
+
+# target to generate assembly for a file
+src/engine/renderer/MouseRayCasting.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.s
+.PHONY : src/engine/renderer/MouseRayCasting.cpp.s
+
 src/engine/renderer/Renderer.o: src/engine/renderer/Renderer.cpp.o
 .PHONY : src/engine/renderer/Renderer.o
 
@@ -795,6 +819,9 @@ help:
 	@echo "... src/engine/renderer/FPSCamera.o"
 	@echo "... src/engine/renderer/FPSCamera.i"
 	@echo "... src/engine/renderer/FPSCamera.s"
+	@echo "... src/engine/renderer/MouseRayCasting.o"
+	@echo "... src/engine/renderer/MouseRayCasting.i"
+	@echo "... src/engine/renderer/MouseRayCasting.s"
 	@echo "... src/engine/renderer/Renderer.o"
 	@echo "... src/engine/renderer/Renderer.i"
 	@echo "... src/engine/renderer/Renderer.s"

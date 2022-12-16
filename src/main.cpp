@@ -203,7 +203,7 @@ int main(void) {
     // Dynamic Polytope for mouse picking (ray casting)
     std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
     Group groupMousePicking(GL_POINTS);
-    groupMousePicking.setPointSize(4.f);
+    groupMousePicking.setPointSize(8.f);
     groupMousePicking.add(mousePickingPolytope);
     renderer.addGroup(groupMousePicking);
 
@@ -515,8 +515,8 @@ int main(void) {
 
                     if(enableDrawRay) {
                         // Get the points of the ray from the screen to 'rayLong' distance
-                        glm::vec3 begin = mouseRay.getPoint(rayLong / 2);
-                        glm::vec3 end = mouseRay.getPoint(-rayLong / 2);
+                        glm::vec3 begin = mouseRay.getPoint(rayLong);
+                        glm::vec3 end = mouseRay.getPoint(1);
                         // Add these two vertices into the GL_LINES dynamic polytope
                         Vec3f vertex1(begin.x, begin.y, begin.z, 0, 1, 0);
                         Vec3f vertex2(end.x, end.y, end.z, 0, 0, 1);

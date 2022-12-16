@@ -504,6 +504,7 @@ int main(void) {
                     MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
 
                     if(enablePoint3d) {
+                        // The projection of this point belongs to the Screen Plane (X, Y)
                         glm::vec3 screenProjectedPoint = mouseRay.getScreenProjectedPoint();
                         Vec3f point3D = Vec3f(screenProjectedPoint.x, screenProjectedPoint.y, screenProjectedPoint.z, 1, 0, 0);
                         mousePickingPolytope->addVertex(point3D);

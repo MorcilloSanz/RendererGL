@@ -15,6 +15,7 @@ private:
     glm::vec3 position;
     glm::vec3 color;
     float ambientStrength, diffuseStrength, specularStrength;
+    bool blinn, gammaCorrection;
     std::shared_ptr<ShaderProgram> shaderProgram;
 public:
     Light(const glm::vec3& position);
@@ -41,6 +42,12 @@ public:
     inline glm::vec3 getDiffuseColor() { return color * glm::vec3(diffuseStrength); }
     inline glm::vec3 getAmbientColor() { return getDiffuseColor() * glm::vec3(ambientStrength); }
     inline glm::vec3 getSpecularColor() { return color * glm::vec3(specularStrength); }
+
+    inline bool isBlinn() const { return blinn; }
+    inline void setBlinn(bool blinn) { this->blinn = blinn; }
+
+    inline bool isGammaCorrection() const { return gammaCorrection; }
+    inline void setGammaCorrection(bool gammaCorrection) { this->gammaCorrection = gammaCorrection; }
 
     inline std::shared_ptr<ShaderProgram>& getShaderProgram() { return shaderProgram; }
 };

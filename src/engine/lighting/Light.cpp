@@ -17,7 +17,8 @@ Light::Light(const glm::vec3& position, const glm::vec3& color)
 }
 
 Light::Light(const glm::vec3& _position, const glm::vec3& _color, float _ambientStrength, float _diffuseStrength, float _specularStrength) 
-    : position(_position), color(_color), ambientStrength(_ambientStrength), diffuseStrength(_diffuseStrength), specularStrength(_specularStrength) {
+    : position(_position), color(_color), ambientStrength(_ambientStrength), diffuseStrength(_diffuseStrength), specularStrength(_specularStrength),
+    blinn(true), gammaCorrection(false) {
     Shader vertexShader(Program::getPhongVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentShader(Program::getPhongFragmentShaderCode(), Shader::ShaderType::Fragment);
     shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);

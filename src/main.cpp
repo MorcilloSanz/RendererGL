@@ -337,6 +337,18 @@ int main(void) {
                 ImGui::Checkbox("Enable lighting", &enable);
                 renderer.setLightEnabled(enable);
 
+                ImGui::SameLine();
+
+                static bool enableBlinn = true;
+                ImGui::Checkbox("Blinn", &enableBlinn);
+                light.setBlinn(enableBlinn);
+
+                ImGui::SameLine();
+
+                static bool gammaCorrection = false;
+                ImGui::Checkbox("Gamma correction", &gammaCorrection);
+                light.setGammaCorrection(gammaCorrection);
+
                 static float ambientStrength = light.getAmbientStrength();
                 ImGui::SliderFloat("Ambient strength", &ambientStrength, 0.f, 1.f);
                 light.setAmbientStrength(ambientStrength);

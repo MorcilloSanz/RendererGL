@@ -79,6 +79,8 @@ void Renderer::lightShaderUniforms() {
     light->getShaderProgram()->uniformVec3("light.ambient", light->getAmbientColor());
     light->getShaderProgram()->uniformVec3("light.diffuse", light->getDiffuseColor());
     light->getShaderProgram()->uniformVec3("light.specular", light->getSpecularColor());
+    light->getShaderProgram()->uniformInt("blinn", light->isBlinn());
+    light->getShaderProgram()->uniformInt("gammaCorrection", light->isGammaCorrection());
     light->getShaderProgram()->uniformVec3("viewPos", camera->getEye());
 }
 

@@ -18,12 +18,13 @@ Features:
 * ImGui as user interface
 * Trackball and First Person Shooter camera
 * Polytopes and Groups in order to create a 3D scene
+* Dynamic Polytopes
 * Linear transforms
 * Get and Set data directly from GPU
 * Textures
 * Load 3D models
 * Depth testing, blending, face culling...
-* Anti Aliasing
+* Anti aliasing
 * Texture Renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting
 * Gamma correction

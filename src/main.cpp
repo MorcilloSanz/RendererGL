@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <cmath>
 
 #include "engine/window/Window.h"
 
@@ -40,7 +41,8 @@ bool movementForward = false, movementBackward = false;
 bool movementRight = false, movementLeft = false;
 
 // Mouse Ray casting (gui)
-bool enablePoint3d = false, enableDrawRay;
+bool enablePoint3d = false, enableDrawRay = false;
+bool enableObjectSelecting = false;
 float rayLong = 100;
 
 int main(void) {
@@ -241,12 +243,6 @@ int main(void) {
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
-
-    // Select objects
-    cubePolytope->setSelected(true);
-
-    model.setOutliningWidth(2.f);
-    model.setSelected(true);
    
     // Main loop
     while (!window.windowShouldClose()) {
@@ -451,6 +447,7 @@ int main(void) {
                 ImGui::SameLine();
                 ImGui::Checkbox("Enable Drawing Ray", &enableDrawRay);
                 ImGui::SliderFloat("Ray long", &rayLong, 0.5f, 1500);
+                ImGui::Checkbox("Enable object selecting", &enableObjectSelecting);
 
                 ImGui::End();
             }
@@ -519,7 +516,7 @@ int main(void) {
                 updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
 
                 // Mouse Picking
-                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay) && windowFocus) {
+                if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay || enableObjectSelecting) && windowFocus) {
 
                     MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
                     MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
@@ -540,6 +537,120 @@ int main(void) {
                         Vec3f vertex2(end.x, end.y, end.z, 0, 0, 1);
                         raysPolytope->addVertex(vertex1);
                         raysPolytope->addVertex(vertex2);
+                    }
+
+                    if(enableObjectSelecting) {
+
+                        // THIS IS A SIMPLE EXAMPLE OF BARYCENTRIC INTERSECTIONS (FOR THIS TEST). 
+                        // BUILD A BETTER ONE FOR YOUR OWN APPLICATION / GAME / GAMEENGINE
+
+                        struct Plane {
+                            double A, B, C, D;
+
+                            Plane(double _A, double _B, double _C, double _D)
+                                : A(_A), B(_B), C(_C), D(_D) {
+                            }
+                            Plane() = default;
+                            ~Plane() = default;
+
+                            static Plane plane3points(Vec3f& p1, Vec3f& p2, Vec3f& p3) {
+                                Vec3f v1 = p2 - p1;
+                                Vec3f v2 = p3 - p1;
+                                Vec3f normal = v1 ^ v2;
+                                double D = -(p1.x * normal.x + p1.y * normal.y + p1.z * normal.z);
+                                return Plane(normal.x, normal.y, normal.z, D);
+                            }
+                        };
+
+                        auto intersection = [&](MouseRayCasting::Ray& ray, Plane& plane) {
+                            double lambda = -( (plane.A * ray.origin.x + plane.B * ray.origin.y + plane.C * ray.origin.z + plane.D) 
+                                / (plane.A * ray.rayDirection.x + plane.B * ray.rayDirection.y + plane.C * ray.rayDirection.z) );
+                            return Vec3f(
+                                ray.origin.x + lambda * ray.rayDirection.x, 
+                                ray.origin.y + lambda * ray.rayDirection.y, 
+                                ray.origin.z + lambda * ray.rayDirection.z
+                            );
+                        };
+
+                        struct Vec2f {
+                            float x, y;
+                            Vec2f(float _x, float _y) : x(_x), y(_y) { }
+                            Vec2f() = default;
+                            ~Vec2f() = default;
+
+                            // Dot product
+                            inline float operator * (const Vec2f& rhs) const {
+                                return x * rhs.x + y * rhs.y;
+                            }
+
+                            // Cross product
+                            inline float operator ^ (const Vec2f& rhs) const {
+                                return x * rhs.y - y * rhs.x;
+                            }
+                        };
+
+                        auto isPointInTriangle = [&](float x, float y, float x0, float y0, float x1, float y1, float x2, float y2) {
+                            Vec2f v1(x0, y0);
+                            Vec2f v2(x1, y1);
+                            Vec2f v3(x2, y2);
+
+                            int maxX = std::max(v1.x, std::max(v2.x, v3.x));
+                            int maxY = std::max(v1.y, std::max(v2.y, v3.y));
+                            int minX = std::min(v1.x, std::min(v2.x, v3.x));
+                            int minY = std::min(v1.y, std::min(v2.y, v3.y));
+
+                            Vec2f vs1(v2.x - v1.x, v2.y - v1.y);
+                            Vec2f vs2(v3.x - v1.x, v3.y - v1.y);
+
+                            Vec2f q(x - v1.x, y - v1.y);
+
+                            float s = static_cast<float>(q ^ vs2) / (vs1 ^ vs2);
+                            float t = static_cast<float>(vs1 ^ q) / (vs1 ^ vs2);
+
+                            if((s >= 0) && (t >= 0) && (s + t <= 1)) {
+                                std::cout << "Intersected: " << std::to_string(x) << " " << std::to_string(y) << std::endl;
+                                return true;
+                            }
+                            return false;
+                        };
+
+                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group& group, std::shared_ptr<Polytope>& polytope) {
+                            for(int i = 0; i < points.size() / 3; i += 3) {
+
+                                glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);
+                                glm::vec4 vertex2(points[i + 1].x, points[i + 1].y, points[i + 1].z, 1);
+                                glm::vec4 vertex3(points[i + 2].x, points[i + 2].y, points[i + 2].z, 1);
+
+                                // Apply transforms
+                                glm::mat4 model = group.getModelMatrix() * polytope->getModelMatrix();
+
+                                vertex1 = model * vertex1;
+                                vertex2 = model * vertex2;
+                                vertex3 = model * vertex3;
+
+                                Vec3f v1(vertex1.x, vertex1.y, vertex1.z);
+                                Vec3f v2(vertex2.x, vertex2.y, vertex2.z);
+                                Vec3f v3(vertex3.x, vertex3.y, vertex3.z);
+
+                                Plane trianglePlane = Plane::plane3points(v1, v2, v3);
+                                Vec3f rayIntersection = intersection(mouseRay, trianglePlane);
+                                
+                                // Check if intersection is inside of the triangle
+                                if(isPointInTriangle(
+                                    rayIntersection.x, rayIntersection.y,
+                                    v1.x, v1.y,
+                                    v2.x, v2.y,
+                                    v3.x, v3.y
+                                )) {
+                                    mousePickingPolytope->addVertex(rayIntersection);
+                                    polytope->setSelected(true);
+                                    break;
+                                }
+                            }
+                        };
+
+                        static std::vector<Vec3f> pointsCube = cubePolytope->getVertices();
+                        checkPolytopeSelection(pointsCube, group, cubePolytope);
                     }
                 }
 

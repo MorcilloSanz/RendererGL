@@ -242,6 +242,12 @@ int main(void) {
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
 
+    // Select objects
+    cubePolytope->setSelected(true);
+
+    model.setOutliningWidth(2.f);
+    model.setSelected(true);
+   
     // Main loop
     while (!window.windowShouldClose()) {
 

@@ -179,4 +179,28 @@ public:
         "    FragColor = texture(skybox, TexCoords);\n"
         "}\n";
     }
+
+    static std::string getOutlineVertexShaderCode() {
+        return
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "\n"
+        "uniform mat4 mvp;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 pos = mvp * vec4(aPos, 1.0);\n"
+        "    gl_Position = pos.xyzw;\n"
+        "}\n";
+    }
+
+    static std::string getOutlineFragmentShaderCode() {
+        return
+        "#version 330 core\n"
+        "out vec4 FragColor;\n"
+        "\n"
+        "void main() {\n"
+        "    FragColor = vec4(1.0, 0.7, 0.28, 1.0);\n"
+        "}\n";
+    }
 };

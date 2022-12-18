@@ -7,42 +7,20 @@
 Renderer::Renderer() 
     : camera(nullptr), hasCamera(false), light(nullptr), hasLight(false),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)) {
-    Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
+    initShaders();
     enableBlending();
     enableAntialiasing();
 }
 
-void Renderer::enableBlending() {
-    glEnable(GL_BLEND & GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void Renderer::enableAntialiasing() {
-    glEnable(GL_MULTISAMPLE);
-}
-
-void Renderer::enableBackFaceCulling() {
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW); 
-}
-
-void Renderer::enableFrontFaceCulling() {
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CCW); 
-}
-
-void Renderer::setCamera(Camera& camera) {
-    hasCamera = true;
-    this->camera = &camera;
-}
-
-void Renderer::setLight(Light& light) {
-    hasLight = true;
-    this->light = &light;
+void Renderer::initShaders() {
+    // Default shader program
+    Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
+    Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
+    shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
+    // Selection shader program
+    Shader vertexSelectionShader(Program::getOutlineVertexShaderCode(), Shader::ShaderType::Vertex);
+    Shader fragmentSelectionShader(Program::getOutlineFragmentShaderCode(), Shader::ShaderType::Fragment);
+    shaderProgramSelection = std::make_shared<ShaderProgram>(vertexSelectionShader, fragmentSelectionShader);
 }
 
 void Renderer::removeGroup(Group& group) {
@@ -102,10 +80,14 @@ void Renderer::drawGroup(Group* group) {
     primitiveSettings(group);
     
     for(auto& polytope : group->getPolytopes()) {
-        // Uniforms
+        // Compute model matrix from polytope and group
         glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+        glm::mat4 mvp = projection * view * model;
+        // Use shader programs
+        if(!hasLight)   shaderProgram->useProgram();
+        else            light->getShaderProgram()->useProgram();
+        // Uniforms
         if(!hasLight) {
-            glm::mat4 mvp = projection * view * model;
             shaderProgram->uniformMat4("mvp", mvp);
             textureUniform(shaderProgram, polytope);
         } 
@@ -115,8 +97,16 @@ void Renderer::drawGroup(Group* group) {
             textureUniform(light->getShaderProgram(), polytope);
             lightMVPuniform(model);
         }
-        // Draw
+        // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
+        if(polytope->isSelected()) {
+            shaderProgramSelection->useProgram();
+            shaderProgramSelection->uniformMat4("mvp", mvp);
+            glLineWidth(group->getOutliningWidth());
+            polytope->draw(group->getPrimitive(), true);
+            glLineWidth(group->getLineWidth());
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         // unbind textures
         for(auto& texture : polytope->getTextures()) texture->unbind();
     }
@@ -134,16 +124,13 @@ void Renderer::drawSkyBox() {
     glDepthRange(0.999,1.0);
     skyBox->draw();
     glDepthRange(0.0,1.0);
-     // set depth function back to default
+    // set depth function back to default
     glDepthFunc(GL_LESS);
 }
 
 void Renderer::render() {
     enableAntialiasing();
     enableBlending();
-    // Use shader programs
-    if(!hasLight)   shaderProgram->useProgram();
-    else            light->getShaderProgram()->useProgram();
     // Init transform matrices
     if(hasCamera) {
         projection = camera->getProjectionMatrix();
@@ -161,7 +148,40 @@ void Renderer::setBackgroundColor(float r, float g, float b) {
     backgroundColor.b = b;
 }
 
+void Renderer::setCamera(Camera& camera) {
+    hasCamera = true;
+    this->camera = &camera;
+}
+
+void Renderer::setLight(Light& light) {
+    hasLight = true;
+    this->light = &light;
+}
+
 void Renderer::clear() {
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glStencilMask(0xFF);
+    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+
+void Renderer::enableBlending() {
+    glEnable(GL_BLEND & GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthFunc(GL_LESS);
+}
+
+void Renderer::enableAntialiasing() {
+    glEnable(GL_MULTISAMPLE);
+}
+
+void Renderer::enableBackFaceCulling() {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW); 
+}
+
+void Renderer::enableFrontFaceCulling() {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CCW); 
 }

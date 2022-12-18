@@ -7,11 +7,15 @@
 #include "Polytope.h"
 #include "DynamicPolytope.h"
 
+#define POINT_SIZE 1.0
+#define LINE_WIDTH 1.0
+#define OUTLINING_WIDTH 3.0
+
 class Group {
 private:
     std::vector<std::shared_ptr<Polytope>> polytopes;
     unsigned int primitive;
-    float pointSize, lineWidth;
+    float pointSize, lineWidth, outliningWidth;
     bool showWire, visible;
     glm::mat4 modelMatrix;
 public:
@@ -20,6 +24,8 @@ public:
     ~Group() = default;
 public:
     void removePolytope(std::shared_ptr<Polytope>& polytope);
+    bool isSelected();
+    void setSelected(bool selected);
 public:
     inline void translate(const glm::vec3& v) { modelMatrix = glm::translate(modelMatrix, v); }
     inline void rotate(float degrees, const glm::vec3& axis) { modelMatrix = glm::rotate(modelMatrix, glm::radians(degrees), axis); }
@@ -42,9 +48,11 @@ public:
     inline void setModelMatrix(const glm::mat4& modelMatrix) { this->modelMatrix = modelMatrix; }
     inline glm::mat4& getModelMatrix() { return modelMatrix; }
 
-    inline void setPointSize(float pointSize) { this->pointSize = pointSize; }
-    inline void setLineWidth(float lineWidth) { this->lineWidth = lineWidth; }
-
     inline float getPointSize() const { return pointSize; }
     inline float getLineWidth() const { return lineWidth; }
+    inline float getOutliningWidth() const { return outliningWidth; }
+
+    inline void setPointSize(float pointSize) { this->pointSize = pointSize; }
+    inline void setLineWidth(float lineWidth) { this->lineWidth = lineWidth; }
+    inline void setOutliningWidth(float outliningWidth) { this->outliningWidth = outliningWidth; }
 };

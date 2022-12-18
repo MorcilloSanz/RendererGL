@@ -15,6 +15,7 @@
 class Renderer {
 private:
     std::shared_ptr<ShaderProgram> shaderProgram;
+    std::shared_ptr<ShaderProgram> shaderProgramSelection;
     glm::mat4 projection;
     glm::mat4 view;
     std::vector<Group*> groups;
@@ -28,6 +29,7 @@ public:
     Renderer();
     ~Renderer() = default;
 private:
+    void initShaders();
     void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
     void primitiveSettings(Group* group);
     void lightShaderUniforms();
@@ -36,16 +38,16 @@ private:
     void drawGroup(Group* group);
     void drawSkyBox();
 public:
+    void removeGroup(Group& group);
+    void render();
+    void setBackgroundColor(float r, float g, float b);
     void setCamera(Camera& camera);
     void setLight(Light& light);
+    void clear();
     void enableBlending();
     void enableAntialiasing();
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
-    void removeGroup(Group& group);
-    void render();
-    void setBackgroundColor(float r, float g, float b);
-    void clear();
 public:
     inline void addGroup(Group& group) { groups.push_back(&group); }
     inline void removeGroup(int index) { groups.erase(groups.begin() + index); }

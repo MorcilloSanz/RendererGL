@@ -165,7 +165,29 @@ CMakeFiles/RendererGL.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
  /usr/include/c++/11/backward/auto_ptr.h \
  /usr/include/c++/11/pstl/glue_memory_defs.h \
- /usr/include/c++/11/pstl/execution_defs.h \
+ /usr/include/c++/11/pstl/execution_defs.h /usr/include/c++/11/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+ /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/limits \
+ /usr/include/c++/11/tr1/gamma.tcc \
+ /usr/include/c++/11/tr1/special_function_util.h \
+ /usr/include/c++/11/tr1/bessel_function.tcc \
+ /usr/include/c++/11/tr1/beta_function.tcc \
+ /usr/include/c++/11/tr1/ell_integral.tcc \
+ /usr/include/c++/11/tr1/exp_integral.tcc \
+ /usr/include/c++/11/tr1/hypergeometric.tcc \
+ /usr/include/c++/11/tr1/legendre_function.tcc \
+ /usr/include/c++/11/tr1/modified_bessel_func.tcc \
+ /usr/include/c++/11/tr1/poly_hermite.tcc \
+ /usr/include/c++/11/tr1/poly_laguerre.tcc \
+ /usr/include/c++/11/tr1/riemann_zeta.tcc \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/window/Window.h \
  /usr/include/c++/11/functional /usr/include/c++/11/bits/std_function.h \
  /usr/include/c++/11/unordered_map /usr/include/c++/11/bits/hashtable.h \
@@ -195,7 +217,6 @@ CMakeFiles/RendererGL.dir/src/main.cpp.o: \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../simd/platform.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/type_vec3.inl \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/compute_vector_relational.hpp \
- /usr/include/c++/11/limits \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/vector_bool3_precision.hpp \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/vector_float3.hpp \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/vector_float3_precision.hpp \
@@ -303,28 +324,6 @@ CMakeFiles/RendererGL.dir/src/main.cpp.o: \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../exponential.hpp \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../detail/type_vec1.hpp \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../detail/type_vec1.inl \
- /usr/include/c++/11/cmath /usr/include/math.h \
- /usr/include/x86_64-linux-gnu/bits/math-vector.h \
- /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
- /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
- /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
- /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
- /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/tr1/gamma.tcc \
- /usr/include/c++/11/tr1/special_function_util.h \
- /usr/include/c++/11/tr1/bessel_function.tcc \
- /usr/include/c++/11/tr1/beta_function.tcc \
- /usr/include/c++/11/tr1/ell_integral.tcc \
- /usr/include/c++/11/tr1/exp_integral.tcc \
- /usr/include/c++/11/tr1/hypergeometric.tcc \
- /usr/include/c++/11/tr1/legendre_function.tcc \
- /usr/include/c++/11/tr1/modified_bessel_func.tcc \
- /usr/include/c++/11/tr1/poly_hermite.tcc \
- /usr/include/c++/11/tr1/poly_laguerre.tcc \
- /usr/include/c++/11/tr1/riemann_zeta.tcc \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../detail/func_exponential.inl \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../detail/../vector_relational.hpp \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../group/../../../glm/./ext/../detail/../detail/../detail/../detail/../detail/setup.hpp \

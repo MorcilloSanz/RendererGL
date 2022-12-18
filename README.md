@@ -10,6 +10,37 @@ main.cpp
 
 is a template using ImGui and RendererGL
 
+## Engine
+
+Features:
+
+* Create a window, handle its events and create an OpenGL context
+* ImGui as user interface
+* Trackball and First Person Shooter camera
+* Polytopes and Groups in order to create a 3D scene
+* Dynamic Polytopes
+* Linear transforms
+* Get and Set data directly from GPU
+* Textures
+* Load 3D models
+* Depth testing, blending, face culling...
+* Anti aliasing
+* Texture Renderer (capture FrameBuffer and create a texture)
+* Blinn-Phong lighting
+* Gamma correction
+* Skybox
+* Mouse ray casting
+* Object selection
+
+To do:
+
+* Shadows
+* PBR (physically based rendering)
+* Normal, Parallax Mapping
+* HDR
+* Bloom
+* SSAO
+
 # Dependencies
 ```
 GLFW
@@ -24,6 +55,10 @@ ASSIMP  (only for reading 3D models)
 Loading a 3D model with a skybox and ilumination
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
+
+Mouse Ray Casting (Intersection between ray and a mesh)
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.gif)  
 
 Some cute 3D models:
 

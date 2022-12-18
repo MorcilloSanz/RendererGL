@@ -18,6 +18,40 @@ struct Vec3 {
     }
     Vec3() : x(0), y(0), z(0), r(1), g(1), b(1), nx(0), ny(0), nz(0), tx(0), ty(0) {}
     ~Vec3() = default;
+
+    inline double getModule() {
+        return sqrt(x * x + y * y + z * z);
+    }
+
+    Vec3 getUnit() {
+        double norm = getModule();
+        return Vec3(x / norm, y / norm, z / norm);
+    }
+
+    // Dot product
+    inline double operator * (const Vec3& vec) {
+        return vec.x * x + vec.y * y + vec.z * z;
+    }
+
+    Vec3& operator * (T value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        return *this;
+    }
+
+    // Cross product
+    inline Vec3 operator ^ (const Vec3& vec) {
+        return Vec3(y * vec.z - z * vec.y, -x * vec.z + z * vec.x, x * vec.y - y * vec.x);
+    }
+
+    inline Vec3 operator + (const Vec3& vec) {
+        return Vec3(vec.x + x, vec.y + y, vec.z + z);
+    }
+
+    inline Vec3 operator - (const Vec3& vec) {
+        return Vec3(vec.x - x, vec.y - y, vec.z - z);
+    }
 };
 typedef Vec3<float> Vec3f;
 typedef Vec3<int> Vec3i;

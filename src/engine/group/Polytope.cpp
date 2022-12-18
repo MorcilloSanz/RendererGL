@@ -2,22 +2,18 @@
 
 #include "../../../glew/glew.h"
 
-#define MATERIAL_DIFFUSE glm::vec3(1.0f, 1.0f, 1.0f)
-#define MATERIAL_SPECULAR glm::vec3(1.0f, 1.0f, 1.0f)
-#define MATERIAL_SHININESS 32.f
-
 Polytope::Polytope(size_t length) 
-    : vertexLength(length), modelMatrix(1.f), indicesLength(0){
+    : vertexLength(length), modelMatrix(1.f), indicesLength(0), selected(false) {
     initPolytope(length);
 }
 
 Polytope::Polytope(std::vector<Vec3f>& vertices)
-    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0) {
+    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0), selected(false) {
     initPolytope(vertices);
 }
 
 Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) 
-    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()) {
+    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()), selected(false) {
     initPolytope(vertices, indices);
 }
 

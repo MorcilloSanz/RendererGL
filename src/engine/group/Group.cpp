@@ -1,11 +1,13 @@
 #include "Group.h"
 
 Group::Group(unsigned int _primitive, bool _showWire) 
-    : primitive(_primitive), showWire(_showWire), modelMatrix(1.f), visible(true), pointSize(1), lineWidth(1) {
+    : primitive(_primitive), showWire(_showWire), modelMatrix(1.f), visible(true), 
+    pointSize(POINT_SIZE), lineWidth(LINE_WIDTH), outliningWidth(OUTLINING_WIDTH) {
 }
 
 Group::Group() 
-    : primitive(GL_TRIANGLES), showWire(false), modelMatrix(1.f), visible(true), pointSize(1), lineWidth(1){
+    : primitive(GL_TRIANGLES), showWire(false), modelMatrix(1.f), visible(true), 
+    pointSize(POINT_SIZE), lineWidth(LINE_WIDTH), outliningWidth(OUTLINING_WIDTH) {
 }
 
 void Group::removePolytope(std::shared_ptr<Polytope>& polytope) {
@@ -17,4 +19,16 @@ void Group::removePolytope(std::shared_ptr<Polytope>& polytope) {
         }
         index ++;
     }
+}
+
+bool Group::isSelected() {
+    bool selected = true;
+    for(auto& p : polytopes) {
+        if(!p->isSelected()) selected = false;
+    }
+    return selected;
+}
+
+void Group::setSelected(bool selected) {
+    for(auto& p : polytopes) p->setSelected(selected);
 }

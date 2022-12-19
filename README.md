@@ -56,6 +56,10 @@ Loading a 3D model with a skybox and ilumination
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
 
+Blinn-Phong lighting
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.gif)  
+
 Mouse Ray Casting (Intersection between ray and a mesh)
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.gif)  

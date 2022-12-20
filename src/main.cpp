@@ -607,15 +607,12 @@ int main(void) {
                             float s = static_cast<float>(q ^ vs2) / (vs1 ^ vs2);
                             float t = static_cast<float>(vs1 ^ q) / (vs1 ^ vs2);
 
-                            if((s >= 0) && (t >= 0) && (s + t <= 1)) {
-                                std::cout << "Intersected: " << std::to_string(x) << " " << std::to_string(y) << std::endl;
-                                return true;
-                            }
+                            if((s >= 0) && (t >= 0) && (s + t <= 1)) return true;
                             return false;
                         };
 
                         auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group& group, std::shared_ptr<Polytope>& polytope) {
-                            for(int i = 0; i < points.size() / 3; i += 3) {
+                            for(int i = 0; i < points.size(); i += 3) {
 
                                 glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);
                                 glm::vec4 vertex2(points[i + 1].x, points[i + 1].y, points[i + 1].z, 1);
@@ -641,16 +638,48 @@ int main(void) {
                                     v1.x, v1.y,
                                     v2.x, v2.y,
                                     v3.x, v3.y
-                                )) {
-                                    mousePickingPolytope->addVertex(rayIntersection);
+                                ) || isPointInTriangle(
+                                    rayIntersection.y, rayIntersection.z,
+                                    v1.y, v1.z,
+                                    v2.y, v2.z,
+                                    v3.y, v3.z
+                                ) || isPointInTriangle(
+                                    rayIntersection.x, rayIntersection.z,
+                                    v1.x, v1.z,
+                                    v2.x, v2.z,
+                                    v3.x, v3.z
+                                ) ) {
                                     polytope->setSelected(true);
+                                    if(enablePoint3d) mousePickingPolytope->addVertex(rayIntersection);
                                     break;
                                 }
+                                polytope->setSelected(false);
                             }
                         };
 
+                        // CubePolytope selection
                         static std::vector<Vec3f> pointsCube = cubePolytope->getVertices();
                         checkPolytopeSelection(pointsCube, group, cubePolytope);
+
+                        // CubePolytope2 selection
+                        static std::vector<Vec3f> pointsCube2 = cubePolytope2->getVertices();
+                        checkPolytopeSelection(pointsCube2, group, cubePolytope2);
+
+                        // CubePolytope indices selection
+                        static std::vector<Vec3f> pointsIndices;
+                        static std::vector<Vec3f> cubeVertices = cubePolytopeIndices->getVertices();
+                        static std::vector<unsigned int> cubeIndices = cubePolytopeIndices->getIndices();
+                        if(pointsIndices.empty()) {
+                            for(int i = 0; i < cubeIndices.size(); i += 3) {
+                                Vec3f vertex1 = cubeVertices[cubeIndices[i]];
+                                Vec3f vertex2 = cubeVertices[cubeIndices[i + 1]];
+                                Vec3f vertex3 = cubeVertices[cubeIndices[i + 2]];
+                                pointsIndices.push_back(vertex1);
+                                pointsIndices.push_back(vertex2);
+                                pointsIndices.push_back(vertex3);
+                            }
+                        }
+                        checkPolytopeSelection(pointsIndices, group, cubePolytopeIndices);
                     }
                 }
 

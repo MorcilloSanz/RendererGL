@@ -14,7 +14,7 @@ is a template using ImGui and RendererGL
 
 Features:
 
-* Create a window, handle its events and create an OpenGL context
+* Create a window, handle its events and create an OpenGL context (GLFW)
 * ImGui as user interface
 * Trackball and First Person Shooter camera
 * Polytopes and Groups in order to create a 3D scene
@@ -31,15 +31,6 @@ Features:
 * Skybox
 * Mouse ray casting
 * Object selection
-
-To do:
-
-* Shadows
-* PBR (physically based rendering)
-* Normal, Parallax Mapping
-* HDR
-* Bloom
-* SSAO
 
 # Dependencies
 ```

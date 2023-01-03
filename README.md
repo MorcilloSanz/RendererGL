@@ -53,8 +53,8 @@ Loading a 3D model with a skybox and ilumination
     <td>Mouse Ray Casting object selection</td>
   </tr>
   <tr>
-    <td><img src="./img/lighting.gif" height = "734"></td>
-    <td><img src="./img/mouseRayCasting.gif" height = "734"></td>
+    <td><img src="./img/lighting.gif"></td>
+    <td><img src="./img/mouseRayCasting.gif"></td>
   </tr>
 </table>
 

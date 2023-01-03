@@ -47,13 +47,16 @@ Loading a 3D model with a skybox and ilumination
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
 
-Blinn-Phong lighting
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.gif)  
-
-Mouse Ray Casting (Intersection between ray and a mesh)
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.gif)  
+<table style="padding:10px">
+  <tr>
+    <td>Blinn-Phong Lighting</td>
+    <td>Mouse Ray Casting object selection</td>
+  </tr>
+  <tr>
+    <td><img src="./img/lighting.gif"></td>
+    <td><img src="./img/mouseRayCasting.gif"></td>
+  </tr>
+</table>
 
 Some cute 3D models:
 
@@ -62,5 +65,3 @@ Some cute 3D models:
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)  
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)  
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/4.png)  

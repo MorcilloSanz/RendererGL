@@ -71,9 +71,18 @@ int main(void) {
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     fpsCamera.setSensitivity(sensitivity / 10);
 
-    // Light
-    Light light(glm::vec3(2.743, 6.118, 16.245));
-    renderer.setLight(light);
+    // Lighting
+    Light light(glm::vec3(0, 4, 0));
+    renderer.addLight(light);
+
+    Light light2(glm::vec3(4, -2, 0));
+    light2.setColor(glm::vec3(1, 0, 0));
+    renderer.addLight(light2);
+
+    Light light3(glm::vec3(0, 2, -4));
+    light3.setColor(glm::vec3(0, 0, 1));
+    renderer.addLight(light3);
+
     renderer.disableLight();
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
@@ -191,6 +200,25 @@ int main(void) {
     Group groupGrid(GL_LINES);
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
+
+    // Light polytopes
+    Group lightsGroup;
+    lightsGroup.setVisible(false);
+
+    for(Light* light : renderer.getLights()) {
+        for(auto& vec : cubeVertices) {
+            glm::vec3 lightColor = light->getColor();
+            vec.r = lightColor.r;
+            vec.g = lightColor.g;
+            vec.b = lightColor.b;
+        }
+        std::shared_ptr<Polytope> lightPolytope = std::make_shared<Polytope>(cubeVertices, cubeIndices);
+        lightPolytope->translate(light->getPosition());
+        lightPolytope->scale(glm::vec3(0.25, 0.25, 0.25));
+        lightsGroup.add(lightPolytope);
+    }
+
+    renderer.addGroup(lightsGroup);
 
     // Dynamic Polytope
     size_t length = 5000;
@@ -339,18 +367,19 @@ int main(void) {
                 static bool enable = false;
                 ImGui::Checkbox("Enable lighting", &enable);
                 renderer.setLightEnabled(enable);
+                lightsGroup.setVisible(enable);
 
                 ImGui::SameLine();
 
                 static bool enableBlinn = true;
                 ImGui::Checkbox("Blinn", &enableBlinn);
-                light.setBlinn(enableBlinn);
+                Light::blinn = enableBlinn;
 
                 ImGui::SameLine();
 
                 static bool gammaCorrection = false;
                 ImGui::Checkbox("Gamma correction", &gammaCorrection);
-                light.setGammaCorrection(gammaCorrection);
+                Light::gammaCorrection = gammaCorrection;
 
                 static float ambientStrength = light.getAmbientStrength();
                 ImGui::SliderFloat("Ambient strength", &ambientStrength, 0.f, 1.f);
@@ -366,7 +395,19 @@ int main(void) {
 
                 static float color[3] = {1, 1, 1};
                 ImGui::ColorEdit3("Light color", color, 0);
-                light.setColor(glm::vec3(color[0], color[1], color[2]));
+                glm::vec3 lightColor = light.getColor();
+
+                static std::shared_ptr<Polytope> lightPolytope = lightsGroup.getPolytopes()[0];
+
+                if(color[0] != lightColor.r || color[1] != lightColor.g || color[2] != lightColor.b) {
+                    light.setColor(glm::vec3(color[0], color[1], color[2]));
+                    for(auto& vec : cubeVertices) {
+                        vec.r = color[0];
+                        vec.g = color[1];
+                        vec.b = color[2];
+                    }
+                    lightPolytope->updateVertices(cubeVertices);
+                }
 
                 static float lx = light.getPosition().x;
                 static float ly = light.getPosition().y;
@@ -376,7 +417,16 @@ int main(void) {
                 ImGui::SliderFloat("x:", &lx, -50.f, 50.f);
                 ImGui::SliderFloat("y:", &ly, -50.f, 50.f);
                 ImGui::SliderFloat("z:", &lz, -50.f, 50.f);
-                light.setPosition(glm::vec3(lx, ly, lz));
+
+                glm::vec3 lightPosition = light.getPosition();
+
+                if(glm::vec3(lx, ly, lz) != lightPosition) {
+                    float dx = lx - lightPosition.x;
+                    float dy = ly - lightPosition.y;
+                    float dz = lz - lightPosition.z;
+                    light.setPosition(glm::vec3(lx, ly, lz));
+                    lightPolytope->translate(glm::vec3(dx, dy, dz));
+                }
 
                 ImGui::Separator();
 

@@ -5,7 +5,7 @@
 #include "../opengl/shader/Program.h"
 
 Renderer::Renderer() 
-    : camera(nullptr), hasCamera(false), light(nullptr), hasLight(false),
+    : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)) {
     initShaders();
     enableBlending();
@@ -17,6 +17,10 @@ void Renderer::initShaders() {
     Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
     shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
+    // Lighting shader program
+    Shader vertexLightingShader(Program::getPhongVertexShaderCode(), Shader::ShaderType::Vertex);
+    Shader fragmentLightingShader(Program::getPhongFragmentShaderCode(), Shader::ShaderType::Fragment);
+    shaderProgramLighting = std::make_shared<ShaderProgram>(vertexLightingShader, fragmentLightingShader);
     // Selection shader program
     Shader vertexSelectionShader(Program::getOutlineVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader(Program::getOutlineFragmentShaderCode(), Shader::ShaderType::Fragment);
@@ -52,26 +56,30 @@ void Renderer::primitiveSettings(Group* group) {
 }
 
 void Renderer::lightShaderUniforms() {
-    light->getShaderProgram()->uniformVec3("light.position", light->getPosition());
-    light->getShaderProgram()->uniformVec3("light.color", light->getColor());
-    light->getShaderProgram()->uniformVec3("light.ambient", light->getAmbientColor());
-    light->getShaderProgram()->uniformVec3("light.diffuse", light->getDiffuseColor());
-    light->getShaderProgram()->uniformVec3("light.specular", light->getSpecularColor());
-    light->getShaderProgram()->uniformInt("blinn", light->isBlinn());
-    light->getShaderProgram()->uniformInt("gammaCorrection", light->isGammaCorrection());
-    light->getShaderProgram()->uniformVec3("viewPos", camera->getEye());
+    shaderProgramLighting->uniformInt("nLights", nLights);
+    for(int i = 0; i < nLights; i ++) {
+        std::string lightUniform = "lights[" + std::to_string(i) + "]";
+        shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
+        shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor());
+        shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbientColor());
+        shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuseColor());
+        shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecularColor());
+    }
+    shaderProgramLighting->uniformInt("blinn", Light::blinn);
+    shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
+    shaderProgramLighting->uniformVec3("viewPos", camera->getEye());
 }
 
 void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
-    light->getShaderProgram()->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
-    light->getShaderProgram()->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
-    light->getShaderProgram()->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
+    shaderProgramLighting->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
+    shaderProgramLighting->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
+    shaderProgramLighting->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
 }
 
 void Renderer::lightMVPuniform(const glm::mat4& model) {
-    light->getShaderProgram()->uniformMat4("model", model);
-    light->getShaderProgram()->uniformMat4("view", view);
-    light->getShaderProgram()->uniformMat4("projection", projection);
+    shaderProgramLighting->uniformMat4("model", model);
+    shaderProgramLighting->uniformMat4("view", view);
+    shaderProgramLighting->uniformMat4("projection", projection);
 }
 
 void Renderer::drawGroup(Group* group) {
@@ -85,7 +93,7 @@ void Renderer::drawGroup(Group* group) {
         glm::mat4 mvp = projection * view * model;
         // Use shader programs
         if(!hasLight)   shaderProgram->useProgram();
-        else            light->getShaderProgram()->useProgram();
+        else            shaderProgramLighting->useProgram();
         // Uniforms
         if(!hasLight) {
             shaderProgram->uniformMat4("mvp", mvp);
@@ -94,7 +102,7 @@ void Renderer::drawGroup(Group* group) {
         else if(hasCamera) {
             lightShaderUniforms();
             lightMaterialUniforms(polytope);
-            textureUniform(light->getShaderProgram(), polytope);
+            textureUniform(shaderProgramLighting, polytope);
             lightMVPuniform(model);
         }
         // Draw polytope
@@ -153,9 +161,10 @@ void Renderer::setCamera(Camera& camera) {
     this->camera = &camera;
 }
 
-void Renderer::setLight(Light& light) {
+void Renderer::addLight(Light& light) {
     hasLight = true;
-    this->light = &light;
+    lights.push_back(&light);
+    nLights ++;
 }
 
 void Renderer::clear() {

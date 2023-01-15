@@ -213,7 +213,8 @@ public:
         "out vec4 FragColor;\n"
         "\n"
         "void main() {\n"
-        "    FragColor = vec4(1.0, 0.7, 0.28, 1.0);\n"
+        "    FragColor = vec4(1.0, 0.7, 0.28, 0.5);\n"
+        //"    FragColor = vec4(1.0, 1.0, 1.0, 0.15);\n"
         "}\n";
     }
 };

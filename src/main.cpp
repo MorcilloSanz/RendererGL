@@ -132,6 +132,7 @@ int main(void) {
     };
 
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
+    cubePolytope->translate(glm::vec3(4.5, 0, 0));
 
     std::vector<Vec3f> cubeVertices {
         // Front square
@@ -156,14 +157,14 @@ int main(void) {
     };
 
     std::shared_ptr<Polytope> cubePolytopeIndices = std::make_shared<Polytope>(cubeVertices, cubeIndices);
-    cubePolytopeIndices->translate(glm::vec3(1.5, 0, 0));
+    cubePolytopeIndices->translate(glm::vec3(0, 0, 0));
 
     // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color in cubePolytope2
     for(auto& vec : vertices) vec.r = vec.g = vec.b = 1;
 
     // Cube Polytope 2 
     std::shared_ptr<Polytope> cubePolytope2 = std::make_shared<Polytope>(vertices);
-    cubePolytope2->translate(glm::vec3(0.f, 1.5f, 0.f));
+    cubePolytope2->translate(glm::vec3(2.5f, 1.5f, -1.5f));
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
     std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/texture2.png");
@@ -172,7 +173,7 @@ int main(void) {
     // Cubes group
     Group group;
     group.setLineWidth(2.f);
-    group.translate(glm::vec3(0, 0.5, 0));
+    group.translate(glm::vec3(-2.5, 0.5, 0));
     group.add(cubePolytope);
     group.add(cubePolytopeIndices);
     group.add(cubePolytope2);
@@ -180,8 +181,8 @@ int main(void) {
 
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
-    float a = -30; float b = -a;
-    float c = -30; float d = -c;
+    float a = -10; float b = -a;
+    float c = -10; float d = -c;
     float dx = 0.5f; float dz = dx;
     while(a <= b) {
         gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
@@ -197,7 +198,6 @@ int main(void) {
     std::shared_ptr<Polytope> gridPolytope = std::make_shared<Polytope>(gridVertices);
 
     Group groupGrid(GL_LINES);
-    groupGrid.setLineWidth(0.5f);
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
 
@@ -220,13 +220,30 @@ int main(void) {
 
     renderer.addGroup(lightsGroup);
 
+    // Axis polytope
+    std::vector<Vec3f> xAxis = { Vec3f(0, 0, 0, 1, 0, 0), Vec3f(1, 0, 0, 1, 0, 0)};
+    std::shared_ptr<Polytope> xAxisPolytope = std::make_shared<Polytope>(xAxis);
+
+    std::vector<Vec3f> yAxis = { Vec3f(0, 0, 0, 0, 1, 0), Vec3f(0, 1, 0, 0, 1, 0) };
+    std::shared_ptr<Polytope> yAxisPolytope = std::make_shared<Polytope>(yAxis);
+
+    std::vector<Vec3f> zAxis = { Vec3f(0, 0, 0, 0, 0, 1), Vec3f(0, 0, 1, 0, 0, 1) };
+    std::shared_ptr<Polytope> zAxisPolytope = std::make_shared<Polytope>(zAxis);
+
+    Group axisGroup(GL_LINES);
+    axisGroup.setLineWidth(3.0f);
+    axisGroup.add(xAxisPolytope);
+    axisGroup.add(yAxisPolytope);
+    axisGroup.add(zAxisPolytope);
+    renderer.addGroup(axisGroup);
+
     // Dynamic Polytope
     size_t length = 5000;
     std::shared_ptr<DynamicPolytope> dynamicPolytope = std::make_shared<DynamicPolytope>(length);
 
     Group groupDynamic(GL_LINE_STRIP);
     groupDynamic.setLineWidth(2.f);
-    groupDynamic.translate(glm::vec3(-1.5, 0, 0));
+    groupDynamic.translate(glm::vec3(-1, 0, 0));
     groupDynamic.add(dynamicPolytope);
     renderer.addGroup(groupDynamic);
 
@@ -245,22 +262,20 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
-    Model model("/home/morcillosanz/Desktop/model/decoration1/deco0045.dae");
+    Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
     model.setLineWidth(2.5f);
-    model.translate(glm::vec3(0.0, 0.12, 1.5));
-    //model.scale(glm::vec3(0.1, 0.1, 0.1));
-    model.rotate(180, glm::vec3(0, 1, 0));
-    
+    model.translate(glm::vec3(0.0, 0.0, 2.0));
+    //model.scale(glm::vec3(0.01, 0.01, 0.01));
     renderer.addGroup(model);
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Desktop/Yokohama3/posx.jpg",
-        "/home/morcillosanz/Desktop/Yokohama3/negx.jpg",
-        "/home/morcillosanz/Desktop/Yokohama3/posy.jpg",
-        "/home/morcillosanz/Desktop/Yokohama3/negy.jpg",
-        "/home/morcillosanz/Desktop/Yokohama3/posz.jpg",
-        "/home/morcillosanz/Desktop/Yokohama3/negz.jpg"
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveX.tga",
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeX.tga",
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveY.tga",
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeY.tga",
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveZ.tga",
+        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
     };
     std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
     renderer.setSkyBox(skyBox);
@@ -273,8 +288,6 @@ int main(void) {
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
-
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
     // Main loop
     while (!window.windowShouldClose()) {

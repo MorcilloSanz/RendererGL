@@ -59,6 +59,11 @@ void Renderer::primitiveSettings(Group* group) {
     glLineWidth(group->getLineWidth());
 }
 
+void Renderer::defaultPrimitiveSettings() {
+    glPointSize(1.0f);
+    glLineWidth(1.0f);
+}
+
 void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("nLights", nLights);
     for(int i = 0; i < nLights; i ++) {
@@ -123,6 +128,9 @@ void Renderer::drawGroup(Group* group) {
         // unbind textures
         for(auto& texture : polytope->getTextures()) texture->unbind();
     }
+
+    // Set default primitive settings
+    defaultPrimitiveSettings();
 }
 
 void Renderer::drawSkyBox() {

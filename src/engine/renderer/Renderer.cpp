@@ -21,6 +21,10 @@ void Renderer::initShaders() {
     Shader vertexLightingShader(Program::getPhongVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentLightingShader(Program::getPhongFragmentShaderCode(), Shader::ShaderType::Fragment);
     shaderProgramLighting = std::make_shared<ShaderProgram>(vertexLightingShader, fragmentLightingShader);
+    // SkyBox shader program
+    Shader vertexSkyBoxShader(Program::getSkyBoxVertexShaderCode(), Shader::ShaderType::Vertex);
+    Shader fragmentSkyBoxShader(Program::getSkyBoxFragmentShaderCode(), Shader::ShaderType::Fragment);
+    shaderProgramSkyBox = std::make_shared<ShaderProgram>(vertexSkyBoxShader, fragmentSkyBoxShader);
     // Selection shader program
     Shader vertexSelectionShader(Program::getOutlineVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader(Program::getOutlineFragmentShaderCode(), Shader::ShaderType::Fragment);
@@ -53,6 +57,11 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
 void Renderer::primitiveSettings(Group* group) {
     glPointSize(group->getPointSize());
     glLineWidth(group->getLineWidth());
+}
+
+void Renderer::defaultPrimitiveSettings() {
+    glPointSize(1.0f);
+    glLineWidth(1.0f);
 }
 
 void Renderer::lightShaderUniforms() {
@@ -110,24 +119,28 @@ void Renderer::drawGroup(Group* group) {
         if(polytope->isSelected()) {
             shaderProgramSelection->useProgram();
             shaderProgramSelection->uniformMat4("mvp", mvp);
-            glLineWidth(group->getOutliningWidth());
-            polytope->draw(group->getPrimitive(), true);
-            glLineWidth(group->getLineWidth());
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            glDisable(GL_DEPTH_TEST);
+            polytope->draw(group->getPrimitive(), group->isShowWire());
+            glEnable(GL_DEPTH_TEST);
+
         }
         // unbind textures
         for(auto& texture : polytope->getTextures()) texture->unbind();
     }
+
+    // Set default primitive settings
+    defaultPrimitiveSettings();
 }
 
 void Renderer::drawSkyBox() {
     if(skyBox == nullptr) return;
-    skyBox->getShaderProgram()->useProgram();
+    shaderProgramSkyBox->useProgram();
     // remove translation from the view matrix
     view = glm::mat4(glm::mat3(camera->getViewMatrix())); 
-    skyBox->getShaderProgram()->uniformInt("skybox", 0);
-    skyBox->getShaderProgram()->uniformMat4("view", view);
-    skyBox->getShaderProgram()->uniformMat4("projection", projection);
+    shaderProgramSkyBox->uniformInt("skybox", 0);
+    shaderProgramSkyBox->uniformMat4("view", view);
+    shaderProgramSkyBox->uniformMat4("projection", projection);
     // Draw call
     glDepthRange(0.999,1.0);
     skyBox->draw();
@@ -176,6 +189,7 @@ void Renderer::clear() {
 void Renderer::enableBlending() {
     glEnable(GL_BLEND & GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LESS);
 }
 

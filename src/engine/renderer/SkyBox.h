@@ -13,7 +13,6 @@ private:
     std::shared_ptr<VertexArray> vertexArray;
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::vector<std::string> faces;
-    std::shared_ptr<ShaderProgram> shaderProgram;
 public:
     SkyBox() = default;
     // loads a cubemap texture from 6 individual texture faces
@@ -35,8 +34,6 @@ public:
     void unbind() override;
     void draw();
 public:
-    inline std::shared_ptr<ShaderProgram>& getShaderProgram() { return shaderProgram; }
     inline std::vector<std::string>& getFaces() { return faces; }
-
     inline std::shared_ptr<VertexArray>& getVertexArray() { return vertexArray; }
 };

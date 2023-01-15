@@ -17,8 +17,8 @@ Image readImage(const std::string& path);
 
 class Texture {
 public:
-    enum class Type {
-        None, TextureAmbient, TextureDiffuse, TextureSpecular, TextureNormal, TextureHeight
+    enum class Type : int {
+        None = -1, TextureAmbient = 0, TextureDiffuse = 1, TextureSpecular = 2, TextureNormal = 3, TextureHeight = 4
     };
     static int textureUnits;
     static unsigned int count;

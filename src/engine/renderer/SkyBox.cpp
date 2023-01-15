@@ -51,7 +51,7 @@ std::vector<Vec3f> vertices = {
 };
 
 SkyBox::SkyBox(const std::vector<std::string>& _faces) 
-    : Buffer(), faces(_faces), shaderProgram(nullptr) {
+    : Buffer(), faces(_faces) {
     initBuffer();
 }
 
@@ -60,15 +60,9 @@ SkyBox::~SkyBox() {
 }
 
 void SkyBox::initBuffer() {
-
     vertexArray = std::make_shared<VertexArray>();
     vertexBuffer = std::make_shared<VertexBuffer>(vertices);
     unbind();
-
-    Shader vertexShader(Program::getSkyBoxVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentShader(Program::getSkyBoxFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
-
     loadCubeMap();
 }
 

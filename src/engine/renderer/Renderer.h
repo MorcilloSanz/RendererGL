@@ -16,6 +16,7 @@ class Renderer {
 private:
     std::shared_ptr<ShaderProgram> shaderProgram;
     std::shared_ptr<ShaderProgram> shaderProgramLighting;
+    std::shared_ptr<ShaderProgram> shaderProgramSkyBox;
     std::shared_ptr<ShaderProgram> shaderProgramSelection;
     glm::mat4 projection;
     glm::mat4 view;
@@ -34,6 +35,7 @@ private:
     void initShaders();
     void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
     void primitiveSettings(Group* group);
+    void defaultPrimitiveSettings();
     void lightShaderUniforms();
     void lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope);
     void lightMVPuniform(const glm::mat4& model);

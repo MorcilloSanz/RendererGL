@@ -16,6 +16,7 @@ class Renderer {
 private:
     std::shared_ptr<ShaderProgram> shaderProgram;
     std::shared_ptr<ShaderProgram> shaderProgramLighting;
+    std::shared_ptr<ShaderProgram> shaderProgramSkyBox;
     std::shared_ptr<ShaderProgram> shaderProgramSelection;
     glm::mat4 projection;
     glm::mat4 view;

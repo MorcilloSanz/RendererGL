@@ -197,7 +197,7 @@ int main(void) {
     std::shared_ptr<Polytope> gridPolytope = std::make_shared<Polytope>(gridVertices);
 
     Group groupGrid(GL_LINES);
-    groupGrid.setLineWidth(0.5);
+    groupGrid.setLineWidth(0.5f);
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
 
@@ -245,10 +245,11 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
-    Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    Model model("/home/morcillosanz/Desktop/model/decoration1/deco0045.dae");
     model.setLineWidth(2.5f);
-    model.translate(glm::vec3(0.0, 0.0, 1.5));
+    model.translate(glm::vec3(0.0, 0.12, 1.5));
     //model.scale(glm::vec3(0.1, 0.1, 0.1));
+    model.rotate(180, glm::vec3(0, 1, 0));
     
     renderer.addGroup(model);
 
@@ -262,7 +263,7 @@ int main(void) {
         "/home/morcillosanz/Desktop/Yokohama3/negz.jpg"
     };
     std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
-    //renderer.setSkyBox(skyBox);
+    renderer.setSkyBox(skyBox);
 
     // Init TextureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());

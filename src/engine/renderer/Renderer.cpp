@@ -180,6 +180,8 @@ void Renderer::drawSkyBox() {
 void Renderer::render() {
     enableAntialiasing();
     enableBlending();
+    // Draw skybox
+    drawSkyBox();
     // Init transform matrices
     if(hasCamera) {
         projection = camera->getProjectionMatrix();
@@ -187,8 +189,6 @@ void Renderer::render() {
     }
     // Draw groups
     for(Group* group : groups) drawGroup(group);
-    // Draw skybox
-    drawSkyBox();
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

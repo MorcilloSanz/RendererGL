@@ -77,8 +77,8 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
                 break;
             }
         }
-        if(nDifuseMaps > 0) shaderProgram->uniformInt("hasDiffuse", true);
-        else shaderProgram->uniformInt("hasDiffuse", false);
+        shaderProgram->uniformInt("hasDiffuse", nDifuseMaps > 0);
+        shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
     }
 }
 

@@ -42,15 +42,43 @@ void Renderer::removeGroup(Group& group) {
     }
 }
 
-void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) {
-    unsigned int index = 0;
-    shaderProgram->uniformInt("nTextures", polytope->getTextures().size());
-    for(auto& texture : polytope->getTextures()) {
-        texture->bind();
-        std::vector<int> textures;
-        for(int i = 0; i < index + 1; i ++) textures.push_back(polytope->getTextures()[i]->getID() - 1);
-        shaderProgram->uniformTextureArray("textures", textures);
-        index ++;
+void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight) {
+    if(!hasLight) { // If there is no light, do not consider difuse, specular, normal maps
+        unsigned int index = 0;
+        std::vector<std::shared_ptr<Texture>> textures = polytope->getTextures();
+        if(!textures.empty()) {
+            shaderProgram->uniformInt("hasTexture", true);
+            for(auto& texture : textures) {
+                texture->bind();
+                shaderProgram->uniformInt("tex", texture->getID() - 1);
+                index ++;
+            }
+        }else shaderProgram->uniformInt("hasTexture", false);
+    }else { // As there is light, consider difuse, specular, normal maps
+        unsigned int nDifuseMaps = 0, nSpecularMaps = 0, nNormalMaps = 0, nHeightMaps = 0;
+        for(auto& texture : polytope->getTextures()) {
+            texture->bind();
+            switch(texture->getType()) {
+                case Texture::Type::TextureDiffuse:
+                    shaderProgram->uniformInt("materialMaps.diffuseMap", texture->getID() - 1);
+                    nDifuseMaps ++;
+                break;
+                case Texture::Type::TextureSpecular:
+                    shaderProgram->uniformInt("materialMaps.specularMap", texture->getID() - 1);
+                    nSpecularMaps ++;
+                break;
+                case Texture::Type::TextureNormal:
+
+                    nNormalMaps ++;
+                break;
+                case Texture::Type::TextureHeight:
+
+                    nHeightMaps ++;
+                break;
+            }
+        }
+        if(nDifuseMaps > 0) shaderProgram->uniformInt("hasDiffuse", true);
+        else shaderProgram->uniformInt("hasDiffuse", false);
     }
 }
 
@@ -106,12 +134,12 @@ void Renderer::drawGroup(Group* group) {
         // Uniforms
         if(!hasLight) {
             shaderProgram->uniformMat4("mvp", mvp);
-            textureUniform(shaderProgram, polytope);
+            textureUniform(shaderProgram, polytope, false);
         } 
-        else if(hasCamera) {
+        else if(hasCamera && hasLight) {
             lightShaderUniforms();
             lightMaterialUniforms(polytope);
-            textureUniform(shaderProgramLighting, polytope);
+            textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
         }
         // Draw polytope

@@ -26,12 +26,12 @@ Texture::Texture()
 
 Texture::Texture(const Texture& texture)
 	: path(texture.path), id(texture.id), width(texture.width), 
-	height(texture.height), bpp(texture.bpp), slot(texture.slot) {
+	height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type) {
 }
 
 Texture::Texture(Texture&& texture) noexcept
 	: path(std::move(texture.path)), id(texture.id), width(texture.width), 
-    height(texture.height), bpp(texture.bpp), slot(texture.slot) {
+    height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type) {
 }
 
 Texture::~Texture() {
@@ -47,6 +47,7 @@ Texture& Texture::operator=(const Texture& texture) {
 	bpp = texture.bpp;
     slot = texture.slot;
     path = texture.path;
+	type = texture.type;
 	return *this;
 }
 

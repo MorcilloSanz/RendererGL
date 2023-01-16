@@ -30,7 +30,7 @@ protected:
     std::string path;
     Type type;
 public:
-    Texture(const std::string& _path, const Type& _type = Type::None, bool _flip = true);
+    Texture(const std::string& _path, const Type& _type = Type::TextureDiffuse, bool _flip = true);
     Texture();
     Texture(const Texture& texture);
     Texture(Texture&& texture) noexcept;

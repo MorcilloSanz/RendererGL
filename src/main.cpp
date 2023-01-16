@@ -133,6 +133,7 @@ int main(void) {
 
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
     cubePolytope->translate(glm::vec3(4.5, 0, 0));
+    cubePolytope->setFaceCulling(Polytope::FaceCulling::NONE); // BACK default
 
     std::vector<Vec3f> cubeVertices {
         // Front square
@@ -262,10 +263,11 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
-    Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    //Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     model.setLineWidth(2.5f);
     model.translate(glm::vec3(0.0, 0.0, 2.0));
-    //model.scale(glm::vec3(0.01, 0.01, 0.01));
+    model.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model);
 
     // SkyBox
@@ -282,9 +284,6 @@ int main(void) {
 
     // Init TextureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
-
-    // Enable Rendering Features
-    renderer.enableBackFaceCulling();
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];

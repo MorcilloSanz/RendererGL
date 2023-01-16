@@ -33,7 +33,7 @@ public:
     ~Renderer() = default;
 private:
     void initShaders();
-    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
+    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight);
     void primitiveSettings(Group* group);
     void defaultPrimitiveSettings();
     void lightShaderUniforms();
@@ -53,6 +53,7 @@ public:
     void enableAntialiasing();
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
+    void disableFaceCulling();
 public:
     inline void addGroup(Group& group) { groups.push_back(&group); }
     inline void removeGroup(int index) { groups.erase(groups.begin() + index); }

@@ -10,6 +10,10 @@
 
 #include "../opengl/shader/Shader.h"
 
+#define AMBIENT_STRENGTH 0.2f 
+#define DIFFUSE_STRENGTH 0.3f
+#define SPECULAR_STRENGTH 0.5f
+
 class Light {
 private:
     glm::vec3 position;

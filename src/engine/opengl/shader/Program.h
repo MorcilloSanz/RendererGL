@@ -161,7 +161,11 @@ public:
         "    }\n"
         "    vec3 specular = vec3(1.0);\n"
         "    if(hasSpecular) {\n"
-        "       specular = light.specular * spec * vec3(texture(materialMaps.specularMap, TexCoord));\n"      
+        "       vec3 specularMapInfo = vec3(texture(materialMaps.specularMap, TexCoord));\n"
+        "       specular = light.specular * spec * specularMapInfo;\n"
+        "       if(specularMapInfo.g > 0.5) {\n"    // Emission
+        "           diffuse = vec3(1.0);\n"
+        "       }\n"
         "    }else {\n"
         "       specular = light.specular * (spec * material.specular);\n"
         "    }\n"

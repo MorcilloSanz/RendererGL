@@ -43,7 +43,7 @@ void Renderer::removeGroup(Group& group) {
 }
 
 void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight) {
-    if(!hasLight) { // If there is no light, do not consider difuse, specular, normal maps
+    if(!hasLight) { // If there is no light, do not consider diffuse, specular, normal maps
         unsigned int index = 0;
         std::vector<std::shared_ptr<Texture>> textures = polytope->getTextures();
         if(!textures.empty()) {
@@ -54,14 +54,14 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
                 index ++;
             }
         }else shaderProgram->uniformInt("hasTexture", false);
-    }else { // As there is light, consider difuse, specular, normal maps
-        unsigned int nDifuseMaps = 0, nSpecularMaps = 0, nNormalMaps = 0, nHeightMaps = 0;
+    }else { // As there is light, consider diffuse, specular, normal maps
+        unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nNormalMaps = 0, nHeightMaps = 0;
         for(auto& texture : polytope->getTextures()) {
             texture->bind();
             switch(texture->getType()) {
                 case Texture::Type::TextureDiffuse:
                     shaderProgram->uniformInt("materialMaps.diffuseMap", texture->getID() - 1);
-                    nDifuseMaps ++;
+                    nDiffuseMaps ++;
                 break;
                 case Texture::Type::TextureSpecular:
                     shaderProgram->uniformInt("materialMaps.specularMap", texture->getID() - 1);
@@ -77,7 +77,7 @@ void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std
                 break;
             }
         }
-        shaderProgram->uniformInt("hasDiffuse", nDifuseMaps > 0);
+        shaderProgram->uniformInt("hasDiffuse", nDiffuseMaps > 0);
         shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
     }
 }

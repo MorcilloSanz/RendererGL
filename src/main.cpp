@@ -262,10 +262,11 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
-    Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    //Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
+    Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     model.setLineWidth(2.5f);
     model.translate(glm::vec3(0.0, 0.0, 2.0));
-    //model.scale(glm::vec3(0.01, 0.01, 0.01));
+    model.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model);
 
     // SkyBox

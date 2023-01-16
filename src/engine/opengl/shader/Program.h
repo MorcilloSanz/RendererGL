@@ -42,7 +42,7 @@ public:
         "\n"
         "void main() {\n"
         "   vec4 color = vec4(ourColor, 1.0);\n"
-        "   color = hasTexture ? color * vec4(texture(tex, TexCoord).rgb, 1.0) : color;\n"
+        "   color = hasTexture ? color * vec4(texture(tex, TexCoord).rgba) : color;\n"
         "   FragColor = color;\n"
         "}\n";
     }
@@ -178,7 +178,7 @@ public:
         "\n"
         "    vec4 color = vec4(lightColor, 1.0);\n"
         "\n"
-        "    color = hasDiffuse ? color * vec4(texture(materialMaps.diffuseMap, TexCoord).rgb, 1.0) : color;\n"
+        "    color = hasDiffuse ? color * vec4(texture(materialMaps.diffuseMap, TexCoord).rgba) : color;\n"
         "    FragColor = color;\n"
         "\n"
         "    if(gammaCorrection) {\n"

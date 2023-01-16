@@ -142,6 +142,18 @@ void Renderer::drawGroup(Group* group) {
             textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
         }
+        // Set face culling
+        switch(polytope->getFaceCulling()) {
+            case Polytope::FaceCulling::FRONT:
+                enableFrontFaceCulling();
+            break;
+            case Polytope::FaceCulling::BACK:
+                enableBackFaceCulling();
+            break;
+            case Polytope::FaceCulling::NONE:
+                disableFaceCulling();
+            break;
+        }
         // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
         if(polytope->isSelected()) {
@@ -179,7 +191,7 @@ void Renderer::drawSkyBox() {
 
 void Renderer::render() {
     enableAntialiasing();
-    enableBlending();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Draw skybox
     drawSkyBox();
     // Init transform matrices
@@ -187,6 +199,7 @@ void Renderer::render() {
         projection = camera->getProjectionMatrix();
         view = camera->getViewMatrix();
     }
+    enableBlending();
     // Draw groups
     for(Group* group : groups) drawGroup(group);
 }
@@ -235,4 +248,8 @@ void Renderer::enableFrontFaceCulling() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW); 
+}
+
+void Renderer::disableFaceCulling() {
+    glDisable(GL_CULL_FACE);
 }

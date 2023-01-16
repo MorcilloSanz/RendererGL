@@ -53,6 +53,7 @@ public:
     void enableAntialiasing();
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
+    void disableFaceCulling();
 public:
     inline void addGroup(Group& group) { groups.push_back(&group); }
     inline void removeGroup(int index) { groups.erase(groups.begin() + index); }

@@ -133,6 +133,7 @@ int main(void) {
 
     std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
     cubePolytope->translate(glm::vec3(4.5, 0, 0));
+    cubePolytope->setFaceCulling(Polytope::FaceCulling::NONE); // BACK default
 
     std::vector<Vec3f> cubeVertices {
         // Front square
@@ -283,9 +284,6 @@ int main(void) {
 
     // Init TextureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
-
-    // Enable Rendering Features
-    renderer.enableBackFaceCulling();
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];

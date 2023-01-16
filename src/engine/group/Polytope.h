@@ -16,11 +16,15 @@
 
 #include "../texture/Texture.h"
 
-#define MATERIAL_DIFFUSE glm::vec3(1.0f, 1.0f, 1.0f)
-#define MATERIAL_SPECULAR glm::vec3(1.0f, 1.0f, 1.0f)
+#define MATERIAL_DIFFUSE glm::vec3(1.0f)
+#define MATERIAL_SPECULAR glm::vec3(1.0f)
 #define MATERIAL_SHININESS 32.f
 
 class Polytope {
+public:
+    enum class FaceCulling {
+        NONE, FRONT, BACK
+    };
 protected:
     std::shared_ptr<VertexArray> vertexArray;
     std::shared_ptr<VertexBuffer> vertexBuffer;
@@ -29,6 +33,7 @@ protected:
     Material material;
     glm::mat4 modelMatrix;
     bool selected;
+    FaceCulling faceCulling;
 public:
     Polytope(size_t length);
     Polytope(std::vector<Vec3f>& vertices);
@@ -76,4 +81,7 @@ public:
 
     inline bool isSelected() const { return selected; }
     inline void setSelected(bool selected) { this->selected = selected; }
+
+    inline void setFaceCulling(const FaceCulling& faceCulling) { this->faceCulling = faceCulling; }
+    inline FaceCulling& getFaceCulling() { return faceCulling; }
 };

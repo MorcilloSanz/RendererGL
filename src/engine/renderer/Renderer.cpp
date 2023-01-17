@@ -191,7 +191,7 @@ void Renderer::drawSkyBox() {
 
 void Renderer::render() {
     enableAntialiasing();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    enableBlending();
     // Draw skybox
     drawSkyBox();
     // Init transform matrices
@@ -199,7 +199,6 @@ void Renderer::render() {
         projection = camera->getProjectionMatrix();
         view = camera->getViewMatrix();
     }
-    enableBlending();
     // Draw groups
     for(Group* group : groups) drawGroup(group);
 }

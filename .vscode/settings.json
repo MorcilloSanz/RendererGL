@@ -46,6 +46,7 @@
         "numeric": "cpp",
         "random": "cpp",
         "fstream": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "map": "cpp"
     }
 }

@@ -168,8 +168,13 @@ int main(void) {
     cubePolytope2->translate(glm::vec3(2.5f, 1.5f, -1.5f));
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
-    std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/texture2.png");
-    cubePolytope2->addTexture(texture); // vertices2's colors are all white, thats why the texture looks like texture2.png
+
+    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/container.png", Texture::Type::TextureDiffuse);
+    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/container.png", Texture::Type::TextureSpecular);
+    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/emission.jpg", Texture::Type::TextureEmission);
+    cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
+    cubePolytope2->addTexture(textureSpecular);
+    cubePolytope2->addTexture(textureEmission);
 
     // Cubes group
     Group group;
@@ -301,7 +306,7 @@ int main(void) {
         textureRenderer.renderToDefault();
 
         // Rotate cubePolytope2
-        cubePolytope2->rotate(1, glm::vec3(1, 0, 1));
+        cubePolytope2->rotate(0.15, glm::vec3(1, 0, 1));
 
         // Update vertex from cubePolytope
         cubePolytopeIndices->updateVertex(0, firstVertex);

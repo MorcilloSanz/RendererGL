@@ -33,6 +33,8 @@ public:
     ~Renderer() = default;
 private:
     void initShaders();
+    void textureUniformDefault(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
+    void textureUniformLighting(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
     void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight);
     void primitiveSettings(Group* group);
     void defaultPrimitiveSettings();

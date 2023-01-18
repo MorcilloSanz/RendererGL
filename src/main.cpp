@@ -89,11 +89,11 @@ int main(void) {
     std::vector<Vec3f> vertices = {
         // Back face
         Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // Bottom-left
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // top-right
-        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // bottom-right         
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // top-right
+        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f), // top-right
+        Vec3f( 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f), // bottom-right         
+        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f), // top-right
         Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // bottom-left
-        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f), // top-left
+        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f), // top-left
         // Front face
         Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f), // bottom-left
         Vec3f( 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f), // bottom-right
@@ -109,11 +109,11 @@ int main(void) {
         Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 1.0f, 1.0f), // bottom-right
         Vec3f(-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, 0.0f, 1.0f), // top-right
         // Right face
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // top-left
-        Vec3f( 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // top-right         
-        Vec3f( 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // top-left
+        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f), // top-left
+        Vec3f( 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f), // top-right         
+        Vec3f( 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f), // top-left
         Vec3f( 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f), // bottom-left     
         // Bottom face
         Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f), // top-right
@@ -123,11 +123,11 @@ int main(void) {
         Vec3f(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f), // bottom-right
         Vec3f(-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f), // top-right
         // Top face
-        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // top-left
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // bottom-right
-        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // top-right     
-        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // bottom-right
-        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f), // top-left
+        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
+        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f( 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f), // top-right     
+        Vec3f( 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
         Vec3f(-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f) // bottom-left
     };
 
@@ -169,9 +169,9 @@ int main(void) {
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
 
-    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/container.png", Texture::Type::TextureDiffuse);
-    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/container.png", Texture::Type::TextureSpecular);
-    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/emission.jpg", Texture::Type::TextureEmission);
+    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-diffuse.png", Texture::Type::TextureDiffuse);
+    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-specular.png", Texture::Type::TextureSpecular);
+    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-emission.png", Texture::Type::TextureEmission);
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
     cubePolytope2->addTexture(textureEmission);
@@ -404,14 +404,20 @@ int main(void) {
                 static float ambientStrength = light.getAmbientStrength();
                 ImGui::SliderFloat("Ambient strength", &ambientStrength, 0.f, 1.f);
                 light.setAmbientStrength(ambientStrength);
+                light2.setAmbientStrength(ambientStrength);
+                light3.setAmbientStrength(ambientStrength);
 
                 static float diffuseStrength = light.getDiffuseStrength();
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
                 light.setDiffuseStrength(diffuseStrength);
+                light2.setDiffuseStrength(diffuseStrength);
+                light3.setDiffuseStrength(diffuseStrength);
 
                 static float specularStrength = light.getSpecularStrength();
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
                 light.setSpecularStrength(specularStrength);
+                light2.setSpecularStrength(specularStrength);
+                light3.setSpecularStrength(specularStrength);
 
                 static float color[3] = {1, 1, 1};
                 ImGui::ColorEdit3("Light color", color, 0);

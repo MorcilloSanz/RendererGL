@@ -18,7 +18,7 @@
 
 #define MATERIAL_DIFFUSE glm::vec3(1.0f)
 #define MATERIAL_SPECULAR glm::vec3(1.0f)
-#define MATERIAL_SHININESS 32.f
+#define MATERIAL_SHININESS 64.f
 
 class Polytope {
 public:

@@ -169,9 +169,9 @@ int main(void) {
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
 
-    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-diffuse.png", Texture::Type::TextureDiffuse);
-    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-specular.png", Texture::Type::TextureSpecular);
-    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/skeleton-emission.png", Texture::Type::TextureEmission);
+    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/diffuse.png", Texture::Type::TextureDiffuse);
+    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/specular.png", Texture::Type::TextureSpecular);
+    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/emission.png", Texture::Type::TextureEmission);
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
     cubePolytope2->addTexture(textureEmission);

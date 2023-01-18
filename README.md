@@ -53,7 +53,11 @@ Blinn-Phong Lighting and Gamma Correction
 
 Mouse Ray Casting
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.png)  
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.gif)  
+
+Emission
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)  
 
 Screenshots
 

@@ -15,35 +15,30 @@
 #define SPECULAR_STRENGTH 0.5f
 
 class Light {
-private:
+protected:
     glm::vec3 position;
     glm::vec3 color;
-    float ambientStrength, diffuseStrength, specularStrength;
+    glm::vec3 ambient, diffuse, specular;
 public:
     static bool blinn, gammaCorrection;
 public:
     Light(const glm::vec3& position);
-    Light(const glm::vec3& position, const glm::vec3& color);
-    Light(const glm::vec3& _position, const glm::vec3& _color, float _ambientStrength, float _diffuseStrength, float _specularStrength);
+    Light(const glm::vec3& _position, const glm::vec3& _color);
     Light() = default;
-    ~Light() = default;
+    virtual ~Light() = default;
 public:
-    inline void setPosition(const glm::vec3 position) { this->position = position; }
+    inline void setPosition(const glm::vec3& position) { this->position = position; }
     inline glm::vec3& getPosition() { return position; }
 
     inline void setColor(const glm::vec3& color) { this->color = color; }
     inline glm::vec3& getColor() { return color; }
 
-    inline void setAmbientStrength(float ambientStrength) { this->ambientStrength = ambientStrength; }
-    inline float getAmbientStrength() const { return ambientStrength; }
+    inline void setAmbient(const glm::vec3& ambient) { this->ambient = ambient; }
+    inline glm::vec3 getAmbient() { return ambient; }
 
-    inline void setDiffuseStrength(float diffuseStrength) { this->diffuseStrength = diffuseStrength; }
-    inline float getDiffuseStrength() const { return diffuseStrength; }
+    inline void setDiffuse(const glm::vec3& diffuse) { this->diffuse = diffuse; }
+    inline glm::vec3 getDiffuse() { return diffuse; }
 
-    inline void setSpecularStrength(const float specularStrength) { this->specularStrength = specularStrength; }
-    inline float getSpecularStrength() const { return specularStrength; }
-
-    inline glm::vec3 getDiffuseColor() { return color * glm::vec3(diffuseStrength); }
-    inline glm::vec3 getAmbientColor() { return getDiffuseColor() * glm::vec3(ambientStrength); }
-    inline glm::vec3 getSpecularColor() { return color * glm::vec3(specularStrength); }
+    inline void setSpecular(const glm::vec3& specular) { this->specular = specular; }
+    inline glm::vec3 getSpecular() { return specular; }
 };

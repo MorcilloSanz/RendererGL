@@ -35,6 +35,8 @@ set(HEADERS
         src/engine/renderer/SkyBox.h
         src/engine/renderer/MouseRayCasting.h
         src/engine/lighting/Light.h
+        src/engine/lighting/DirectionalLight.h
+        src/engine/lighting/PointLight.h
         src/engine/texture/vendor/stb_image.h
         src/engine/texture/Texture.h
         src/engine/model/Model.h
@@ -67,6 +69,8 @@ set(SOURCES
         src/engine/renderer/SkyBox.cpp
         src/engine/renderer/MouseRayCasting.cpp
         src/engine/lighting/Light.cpp
+        src/engine/lighting/DirectionalLight.cpp
+        src/engine/lighting/PointLight.cpp
         src/engine/texture/Texture.cpp
         src/engine/model/Model.cpp
 )

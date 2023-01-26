@@ -393,6 +393,30 @@ src/engine/group/Polytope.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/group/Polytope.cpp.s
 .PHONY : src/engine/group/Polytope.cpp.s
 
+src/engine/lighting/DirectionalLight.o: src/engine/lighting/DirectionalLight.cpp.o
+.PHONY : src/engine/lighting/DirectionalLight.o
+
+# target to build an object file
+src/engine/lighting/DirectionalLight.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.o
+.PHONY : src/engine/lighting/DirectionalLight.cpp.o
+
+src/engine/lighting/DirectionalLight.i: src/engine/lighting/DirectionalLight.cpp.i
+.PHONY : src/engine/lighting/DirectionalLight.i
+
+# target to preprocess a source file
+src/engine/lighting/DirectionalLight.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.i
+.PHONY : src/engine/lighting/DirectionalLight.cpp.i
+
+src/engine/lighting/DirectionalLight.s: src/engine/lighting/DirectionalLight.cpp.s
+.PHONY : src/engine/lighting/DirectionalLight.s
+
+# target to generate assembly for a file
+src/engine/lighting/DirectionalLight.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.s
+.PHONY : src/engine/lighting/DirectionalLight.cpp.s
+
 src/engine/lighting/Light.o: src/engine/lighting/Light.cpp.o
 .PHONY : src/engine/lighting/Light.o
 
@@ -416,6 +440,30 @@ src/engine/lighting/Light.s: src/engine/lighting/Light.cpp.s
 src/engine/lighting/Light.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.s
 .PHONY : src/engine/lighting/Light.cpp.s
+
+src/engine/lighting/PointLight.o: src/engine/lighting/PointLight.cpp.o
+.PHONY : src/engine/lighting/PointLight.o
+
+# target to build an object file
+src/engine/lighting/PointLight.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o
+.PHONY : src/engine/lighting/PointLight.cpp.o
+
+src/engine/lighting/PointLight.i: src/engine/lighting/PointLight.cpp.i
+.PHONY : src/engine/lighting/PointLight.i
+
+# target to preprocess a source file
+src/engine/lighting/PointLight.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.i
+.PHONY : src/engine/lighting/PointLight.cpp.i
+
+src/engine/lighting/PointLight.s: src/engine/lighting/PointLight.cpp.s
+.PHONY : src/engine/lighting/PointLight.s
+
+# target to generate assembly for a file
+src/engine/lighting/PointLight.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.s
+.PHONY : src/engine/lighting/PointLight.cpp.s
 
 src/engine/model/Model.o: src/engine/model/Model.cpp.o
 .PHONY : src/engine/model/Model.o
@@ -795,9 +843,15 @@ help:
 	@echo "... src/engine/group/Polytope.o"
 	@echo "... src/engine/group/Polytope.i"
 	@echo "... src/engine/group/Polytope.s"
+	@echo "... src/engine/lighting/DirectionalLight.o"
+	@echo "... src/engine/lighting/DirectionalLight.i"
+	@echo "... src/engine/lighting/DirectionalLight.s"
 	@echo "... src/engine/lighting/Light.o"
 	@echo "... src/engine/lighting/Light.i"
 	@echo "... src/engine/lighting/Light.s"
+	@echo "... src/engine/lighting/PointLight.o"
+	@echo "... src/engine/lighting/PointLight.i"
+	@echo "... src/engine/lighting/PointLight.s"
 	@echo "... src/engine/model/Model.o"
 	@echo "... src/engine/model/Model.i"
 	@echo "... src/engine/model/Model.s"

@@ -8,7 +8,10 @@
 #include "../opengl/shader/Shader.h"
 
 #include "Camera.h"
+
 #include "../lighting/Light.h"
+#include "../lighting/DirectionalLight.h"
+#include "../lighting/PointLight.h"
 
 #include "SkyBox.h"
 

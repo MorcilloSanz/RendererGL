@@ -4,6 +4,11 @@
 
 #include "../opengl/shader/Program.h"
 
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+   return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
 Renderer::Renderer() 
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)) {
@@ -110,9 +115,9 @@ void Renderer::lightShaderUniforms() {
         std::string lightUniform = "lights[" + std::to_string(i) + "]";
         shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
         shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor());
-        shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbientColor());
-        shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuseColor());
-        shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecularColor());
+        shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
+        shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
+        shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
     }
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);

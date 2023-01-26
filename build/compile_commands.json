@@ -121,6 +121,16 @@
 },
 {
   "directory": "/home/morcillosanz/Desktop/GitHub/RendererGL/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/DirectionalLight.cpp",
+  "file": "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/DirectionalLight.cpp"
+},
+{
+  "directory": "/home/morcillosanz/Desktop/GitHub/RendererGL/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/PointLight.cpp",
+  "file": "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/PointLight.cpp"
+},
+{
+  "directory": "/home/morcillosanz/Desktop/GitHub/RendererGL/build",
   "command": "/usr/bin/c++   -g -o CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.cpp",
   "file": "/home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.cpp"
 },

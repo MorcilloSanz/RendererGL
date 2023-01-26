@@ -72,14 +72,14 @@ int main(void) {
     fpsCamera.setSensitivity(sensitivity / 10);
 
     // Lighting
-    Light light(glm::vec3(0, 4, 0));
+    DirectionalLight light(glm::vec3(0, 4, 0));
     renderer.addLight(light);
 
-    Light light2(glm::vec3(4, -2, 0));
+    DirectionalLight light2(glm::vec3(4, -2, 0));
     light2.setColor(glm::vec3(1, 0, 0));
     renderer.addLight(light2);
 
-    Light light3(glm::vec3(0, 2, -4));
+    DirectionalLight light3(glm::vec3(0, 2, -4));
     light3.setColor(glm::vec3(0, 0, 1));
     renderer.addLight(light3);
 
@@ -401,23 +401,23 @@ int main(void) {
                 ImGui::Checkbox("Gamma correction", &gammaCorrection);
                 Light::gammaCorrection = gammaCorrection;
 
-                static float ambientStrength = light.getAmbientStrength();
+                static float ambientStrength = light.getAmbient()[0];
                 ImGui::SliderFloat("Ambient strength", &ambientStrength, 0.f, 1.f);
-                light.setAmbientStrength(ambientStrength);
-                light2.setAmbientStrength(ambientStrength);
-                light3.setAmbientStrength(ambientStrength);
+                light.setAmbient(glm::vec3(ambientStrength));
+                light2.setAmbient(glm::vec3(ambientStrength));
+                light3.setAmbient(glm::vec3(ambientStrength));
 
-                static float diffuseStrength = light.getDiffuseStrength();
+                static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
-                light.setDiffuseStrength(diffuseStrength);
-                light2.setDiffuseStrength(diffuseStrength);
-                light3.setDiffuseStrength(diffuseStrength);
+                light.setDiffuse(glm::vec3(diffuseStrength));
+                light2.setDiffuse(glm::vec3(diffuseStrength));
+                light3.setDiffuse(glm::vec3(diffuseStrength));
 
-                static float specularStrength = light.getSpecularStrength();
+                static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
-                light.setSpecularStrength(specularStrength);
-                light2.setSpecularStrength(specularStrength);
-                light3.setSpecularStrength(specularStrength);
+                light.setSpecular(glm::vec3(specularStrength));
+                light2.setSpecular(glm::vec3(specularStrength));
+                light3.setSpecular(glm::vec3(specularStrength));
 
                 static float color[3] = {1, 1, 1};
                 ImGui::ColorEdit3("Light color", color, 0);

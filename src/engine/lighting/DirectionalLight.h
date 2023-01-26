@@ -10,7 +10,7 @@ public:
     DirectionalLight(const glm::vec3& direction);
     DirectionalLight(const glm::vec3& direction, const glm::vec3& color);
     DirectionalLight() = default;
-    ~DirectionalLight() = default;
+    virtual ~DirectionalLight() = default;
 public:
     void setDirection(const glm::vec3& direction);
 public:

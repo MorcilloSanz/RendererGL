@@ -72,16 +72,20 @@ int main(void) {
     fpsCamera.setSensitivity(sensitivity / 10);
 
     // Lighting
-    DirectionalLight light(glm::vec3(0, 4, 0));
+    PointLight light(glm::vec3(0, 4, 0));
     renderer.addLight(light);
 
-    DirectionalLight light2(glm::vec3(4, -2, 0));
+    PointLight light2(glm::vec3(4, -2, 0));
     light2.setColor(glm::vec3(1, 0, 0));
     renderer.addLight(light2);
 
-    DirectionalLight light3(glm::vec3(0, 2, -4));
+    PointLight light3(glm::vec3(0, 2, -4));
     light3.setColor(glm::vec3(0, 0, 1));
     renderer.addLight(light3);
+
+    DirectionalLight light4(glm::vec3(50, 50, -50));
+    light4.setColor(glm::vec3(1.0, 1.0, 0.0));
+    renderer.addLight(light4);
 
     renderer.disableLight();
     

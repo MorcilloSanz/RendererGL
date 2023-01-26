@@ -118,6 +118,13 @@ void Renderer::lightShaderUniforms() {
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
+        if(instanceof<PointLight>(lights[i])) {
+            PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+            shaderProgramLighting->uniformInt("isPointLight", true);
+            shaderProgramLighting->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
+            shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
+            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
+        }else shaderProgramLighting->uniformInt("isPointLight", false);
     }
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);

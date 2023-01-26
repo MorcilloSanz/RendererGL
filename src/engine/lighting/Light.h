@@ -25,7 +25,7 @@ public:
     Light(const glm::vec3& position);
     Light(const glm::vec3& _position, const glm::vec3& _color);
     Light() = default;
-    ~Light() = default;
+    virtual ~Light() = default;
 public:
     inline void setPosition(const glm::vec3& position) { this->position = position; }
     inline glm::vec3& getPosition() { return position; }

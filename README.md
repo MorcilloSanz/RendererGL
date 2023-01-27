@@ -28,6 +28,7 @@ Features:
 * Texture Renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting
 * Gamma correction
+* Emission
 * Skybox
 * Mouse ray casting
 * Object selection

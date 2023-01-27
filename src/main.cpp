@@ -291,7 +291,7 @@ int main(void) {
         "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
     };
     std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
-    //renderer.setSkyBox(skyBox);
+    renderer.setSkyBox(skyBox);
 
     // Init TextureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());

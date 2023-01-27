@@ -10,8 +10,8 @@
 
 #include "../opengl/shader/Shader.h"
 
-#define AMBIENT_STRENGTH 0.2f 
-#define DIFFUSE_STRENGTH 0.3f
+#define AMBIENT_STRENGTH 0.5f 
+#define DIFFUSE_STRENGTH 0.5f
 #define SPECULAR_STRENGTH 0.5f
 
 class Light {

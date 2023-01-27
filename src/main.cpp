@@ -73,6 +73,8 @@ int main(void) {
 
     // Lighting
     PointLight light(glm::vec3(0, 4, 0));
+    light.setSpecular(glm::vec3(0.3));
+    light.setColor(glm::vec3(0, 1, 0));
     renderer.addLight(light);
 
     PointLight light2(glm::vec3(4, -2, 0));
@@ -83,8 +85,8 @@ int main(void) {
     light3.setColor(glm::vec3(0, 0, 1));
     renderer.addLight(light3);
 
-    DirectionalLight light4(glm::vec3(50, 50, -50));
-    light4.setColor(glm::vec3(1.0, 1.0, 0.0));
+    DirectionalLight light4(glm::vec3(10, 10, -10));
+    light4.setColor(glm::vec3(1.0, 1.0, 1.0));
     renderer.addLight(light4);
 
     renderer.disableLight();
@@ -410,22 +412,25 @@ int main(void) {
                 light.setAmbient(glm::vec3(ambientStrength));
                 light2.setAmbient(glm::vec3(ambientStrength));
                 light3.setAmbient(glm::vec3(ambientStrength));
+                light4.setAmbient(glm::vec3(ambientStrength));
 
                 static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
                 light.setDiffuse(glm::vec3(diffuseStrength));
                 light2.setDiffuse(glm::vec3(diffuseStrength));
                 light3.setDiffuse(glm::vec3(diffuseStrength));
+                light4.setDiffuse(glm::vec3(diffuseStrength));
 
                 static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
                 light.setSpecular(glm::vec3(specularStrength));
                 light2.setSpecular(glm::vec3(specularStrength));
                 light3.setSpecular(glm::vec3(specularStrength));
+                light4.setSpecular(glm::vec3(specularStrength));
 
-                static float color[3] = {1, 1, 1};
-                ImGui::ColorEdit3("Light color", color, 0);
                 glm::vec3 lightColor = light.getColor();
+                static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };
+                ImGui::ColorEdit3("Light color", color, 0);
 
                 static std::shared_ptr<Polytope> lightPolytope = lightsGroup.getPolytopes()[0];
 

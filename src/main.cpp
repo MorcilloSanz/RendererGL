@@ -382,6 +382,13 @@ int main(void) {
                 ImGui::Checkbox("Show grid", &showGrid);
                 groupGrid.setVisible(showGrid);
 
+                ImGui::SameLine();
+
+                static bool showSkyBox = true;
+                ImGui::Checkbox("Skybox", &showSkyBox);
+                if(!showSkyBox) renderer.setSkyBox(nullptr);
+                else renderer.setSkyBox(skyBox);
+
                 ImGui::Separator();
 
                 glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();

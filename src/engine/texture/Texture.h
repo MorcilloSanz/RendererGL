@@ -32,14 +32,16 @@ protected:
     Type type;
 public:
     Texture(const std::string& _path, const Type& _type = Type::TextureDiffuse, bool _flip = true);
-    Texture();
+    Texture(unsigned char* buffer, const Type& _type = Type::TextureDiffuse);
     Texture(const Texture& texture);
     Texture(Texture&& texture) noexcept;
+    Texture();
     ~Texture();
     Texture& operator=(const Texture& texture);
-private:
+protected:
     inline void initTextureUnits() { glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &Texture::textureUnits); }
-    void generateTexture();
+    void generateTextureFromFile(const std::string& path);
+    void generateTextureFromBuffer(unsigned char* buffer);
 public:
     virtual void bind();
     virtual void unbind();

@@ -51,6 +51,7 @@ public:
     void updateIndices(std::vector<unsigned int>& indices);
     void bindTexture();
     void unbindTexture();
+    void removeTexture(const std::shared_ptr<Texture>& texture);
     void draw(unsigned int primitive, bool showWire = false);
 public:
     inline void translate(const glm::vec3& v) { modelMatrix = glm::translate(modelMatrix, v); }
@@ -62,6 +63,7 @@ public:
     inline std::shared_ptr<IndexBuffer>& getIndexBuffer() { return vertexBuffer->getIndexBuffer(); }
 
     inline void addTexture(const std::shared_ptr<Texture>& texture) { textures.push_back(texture); }
+    inline void removeTexture(int index) { textures.erase(textures.begin() + index); }
     inline std::vector<std::shared_ptr<Texture>>& getTextures() { return textures; }
 
     inline unsigned int getVertexLength() const { return vertexLength; }

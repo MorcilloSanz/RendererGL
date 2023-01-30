@@ -70,6 +70,17 @@ void Polytope::updateIndices(std::vector<unsigned int>& indices) {
     }
 }
 
+void Polytope::removeTexture(const std::shared_ptr<Texture>& texture) {
+    unsigned int index = 0;
+    for(auto& t : textures) {
+        if(t.get() == texture.get()) {
+            removeTexture(index);
+            break;
+        }
+        index ++;
+    }
+}
+
 void Polytope::draw(unsigned int primitive, bool showWire) {
     bind();
     if(!showWire)   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

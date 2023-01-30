@@ -365,12 +365,30 @@ int main(void) {
 
                 ImGui::Separator();
 
-                if (ImGui::Button("Visible")) group.setVisible(!group.isVisible());
+                static bool groupVisible = group.isVisible();
+                ImGui::Checkbox("Show group", &groupVisible);
+                group.setVisible(groupVisible);
+
                 ImGui::SameLine();
-                if (ImGui::Button("Show wire")) {
-                    group.setShowWire(!group.isShowWire());
-                    model.setShowWire(!model.isShowWire());
-                }
+
+                static bool showWire = group.isShowWire();
+                ImGui::Checkbox("Show wire", &showWire);
+                group.setShowWire(showWire);
+                model.setShowWire(showWire);
+
+                ImGui::SameLine();
+
+                static bool showGrid = groupGrid.isVisible();
+                ImGui::Checkbox("Show grid", &showGrid);
+                groupGrid.setVisible(showGrid);
+
+                ImGui::SameLine();
+
+                static bool showSkyBox = true;
+                ImGui::Checkbox("Skybox", &showSkyBox);
+                if(!showSkyBox) renderer.setSkyBox(nullptr);
+                else renderer.setSkyBox(skyBox);
+
                 ImGui::Separator();
 
                 glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();
@@ -779,11 +797,14 @@ int main(void) {
         window.update();
     }
 
+    // Destroy imgui 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    // Destroy window
     window.terminate();
+
     return 0;
 }
 

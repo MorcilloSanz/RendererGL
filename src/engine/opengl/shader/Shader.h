@@ -11,6 +11,8 @@
 #include "../../../../glm/mat4x4.hpp"
 #include "../../../../glm/gtc/type_ptr.hpp"
 
+#include "../../ptr.h"
+
 class Shader {
 public:
     enum class ShaderType {
@@ -39,24 +41,15 @@ public:
         return Shader(code, shaderType);
     }
 
-    inline void deleteShader() {
-        glDeleteShader(shaderID);
-    }
+    inline void deleteShader() { glDeleteShader(shaderID); }
 public:
-    inline std::string& getCode() {
-        return code;
-    }
-
-    inline unsigned int getShaderID() const {
-        return shaderID;
-    }
-
-    inline ShaderType& getShaderType() {
-        return shaderType;
-    }
+    inline std::string& getCode() { return code; }
+    inline unsigned int getShaderID() const { return shaderID; }
+    inline ShaderType& getShaderType() { return shaderType; }
 };
 
 class ShaderProgram {
+    GENERATE_PTR(ShaderProgram)
 private:
     unsigned int shaderProgramID;
     Shader vertexShader, fragmentShader;
@@ -76,19 +69,9 @@ public:
     void uniformMat4(const std::string& uniform, const glm::mat4& mat);
     void uniformTextureArray(const std::string& uniform, std::vector<int>& textures);
 public:
-    inline void useProgram() {
-        glUseProgram(shaderProgramID);
-    }
-
-    inline unsigned int getShaderProgramID() const {
-        return shaderProgramID;
-    }
-
-    inline Shader& getVertexShader() {
-        return vertexShader;
-    }
-
-    inline Shader& getFragmentShader() {
-        return fragmentShader;
-    }
+    inline void useProgram() { glUseProgram(shaderProgramID); }
+    inline unsigned int getShaderProgramID() const { return shaderProgramID; }
+    
+    inline Shader& getVertexShader() { return vertexShader; }
+    inline Shader& getFragmentShader() { return fragmentShader; }
 };

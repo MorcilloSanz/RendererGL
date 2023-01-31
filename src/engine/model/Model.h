@@ -15,7 +15,7 @@
 class Model : public Group {
 private:
     std::string directory, path;
-    std::vector<std::shared_ptr<Texture>> texturesLoaded;
+    std::vector<Texture::Ptr> texturesLoaded;
     bool gammaCorrection;
 public:
     Model(const std::string& _path, bool _gammaCorrection = false);
@@ -23,6 +23,6 @@ public:
 private:
     void loadModel();
     void processNode(aiNode *node, const aiScene *scene);
-    std::shared_ptr<Polytope> processMesh(aiMesh *mesh, const aiScene *scene);
-    std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string& typeName);
+    Polytope::Ptr processMesh(aiMesh *mesh, const aiScene *scene);
+    std::vector<Texture::Ptr> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string& typeName);
 };

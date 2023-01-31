@@ -175,6 +175,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o: \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/Buffer.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/../../../../glew/glew.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h \
+ /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/../../ptr.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/VertexBuffer.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/IndexBuffer.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/buffer/../../Vec3.h \

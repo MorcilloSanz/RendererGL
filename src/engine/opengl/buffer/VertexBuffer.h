@@ -10,8 +10,9 @@
 #include "../../Vec3.h"
 
 class VertexBuffer : public Buffer {
+    GENERATE_PTR(VertexBuffer)
 private:
-    std::shared_ptr<IndexBuffer> indexBuffer;
+    IndexBuffer::Ptr indexBuffer;
     bool hasIndexBuffer;
     size_t length;
 public:
@@ -34,7 +35,7 @@ public:
     void bind() override;
     void unbind() override;
 public:
-    inline std::shared_ptr<IndexBuffer>& getIndexBuffer() { return indexBuffer; }
+    inline IndexBuffer::Ptr& getIndexBuffer() { return indexBuffer; }
     inline bool HasIndexBuffer() const { return hasIndexBuffer; }
     inline void setLength(size_t length) { this->length = length; }
     inline size_t getLength() const { return length; }

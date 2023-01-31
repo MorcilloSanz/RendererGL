@@ -2,6 +2,8 @@
 
 #include "../../../../glew/glew.h"
 
+#include "../../ptr.h"
+
 class Buffer {
 protected:
     unsigned int id;

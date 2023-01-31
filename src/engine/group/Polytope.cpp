@@ -21,22 +21,22 @@ Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indi
 *  TODO: Refractor, repeated code
 */
 void Polytope::initPolytope(size_t length) {
-    vertexArray = std::make_shared<VertexArray>();
-    vertexBuffer = std::make_shared<VertexBuffer>(length);
+    vertexArray = VertexArray::New();
+    vertexBuffer = VertexBuffer::New(length);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
 void Polytope::initPolytope(std::vector<Vec3f>& vertices) {
-    vertexArray = std::make_shared<VertexArray>();
-    vertexBuffer = std::make_shared<VertexBuffer>(vertices);
+    vertexArray = VertexArray::New();
+    vertexBuffer = VertexBuffer::New(vertices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
 void Polytope::initPolytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) {
-    vertexArray = std::make_shared<VertexArray>();
-    vertexBuffer = std::make_shared<VertexBuffer>(vertices, indices);
+    vertexArray = VertexArray::New();
+    vertexBuffer = VertexBuffer::New(vertices, indices);
     material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
@@ -70,7 +70,7 @@ void Polytope::updateIndices(std::vector<unsigned int>& indices) {
     }
 }
 
-void Polytope::removeTexture(const std::shared_ptr<Texture>& texture) {
+void Polytope::removeTexture(const Texture::Ptr& texture) {
     unsigned int index = 0;
     for(auto& t : textures) {
         if(t.get() == texture.get()) {

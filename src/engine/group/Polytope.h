@@ -16,19 +16,22 @@
 
 #include "../texture/Texture.h"
 
+#include "../ptr.h"
+
 #define MATERIAL_DIFFUSE glm::vec3(1.0f)
 #define MATERIAL_SPECULAR glm::vec3(1.0f)
 #define MATERIAL_SHININESS 64.f
 
 class Polytope {
+    GENERATE_PTR(Polytope)
 public:
     enum class FaceCulling {
         NONE, FRONT, BACK
     };
 protected:
-    std::shared_ptr<VertexArray> vertexArray;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::vector<std::shared_ptr<Texture>> textures;
+    VertexArray::Ptr vertexArray;
+    VertexBuffer::Ptr vertexBuffer;
+    std::vector<Texture::Ptr> textures;
     unsigned int vertexLength, indicesLength;
     Material material;
     glm::mat4 modelMatrix;
@@ -49,30 +52,28 @@ public:
     void updateVertices(std::vector<Vec3f>& vertices);
     void updateVertex(int pos, Vec3f newVertex);
     void updateIndices(std::vector<unsigned int>& indices);
-    void bindTexture();
-    void unbindTexture();
-    void removeTexture(const std::shared_ptr<Texture>& texture);
+    void removeTexture(const Texture::Ptr& texture);
     void draw(unsigned int primitive, bool showWire = false);
 public:
     inline void translate(const glm::vec3& v) { modelMatrix = glm::translate(modelMatrix, v); }
     inline void rotate(float degrees, const glm::vec3& axis) { modelMatrix = glm::rotate(modelMatrix, glm::radians(degrees), axis); }
     inline void scale(const glm::vec3& s) { modelMatrix = glm::scale(modelMatrix, s); }
 
-    inline std::shared_ptr<VertexArray>& getVertexArray() { return vertexArray; }
-    inline std::shared_ptr<VertexBuffer>& getVertexBuffer() { return vertexBuffer; }
-    inline std::shared_ptr<IndexBuffer>& getIndexBuffer() { return vertexBuffer->getIndexBuffer(); }
+    inline VertexArray::Ptr& getVertexArray() { return vertexArray; }
+    inline VertexBuffer::Ptr& getVertexBuffer() { return vertexBuffer; }
+    inline IndexBuffer::Ptr& getIndexBuffer() { return vertexBuffer->getIndexBuffer(); }
 
-    inline void addTexture(const std::shared_ptr<Texture>& texture) { textures.push_back(texture); }
+    inline void addTexture(const Texture::Ptr& texture) { textures.push_back(texture); }
     inline void removeTexture(int index) { textures.erase(textures.begin() + index); }
-    inline std::vector<std::shared_ptr<Texture>>& getTextures() { return textures; }
+    inline std::vector<Texture::Ptr>& getTextures() { return textures; }
 
     inline unsigned int getVertexLength() const { return vertexLength; }
 
     inline void setModelMatrix(const glm::mat4& modelMatrix) { this->modelMatrix = modelMatrix; }
     inline glm::mat4& getModelMatrix() { return modelMatrix; }
 
-    inline void setVetexArray(const std::shared_ptr<VertexArray>& vertexArray) { this->vertexArray = vertexArray; }
-    inline void setVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) { this->vertexBuffer = vertexBuffer; }
+    inline void setVetexArray(const VertexArray::Ptr& vertexArray) { this->vertexArray = vertexArray; }
+    inline void setVertexBuffer(const VertexBuffer::Ptr& vertexBuffer) { this->vertexBuffer = vertexBuffer; }
     inline void setVertexLength(unsigned int vertexLength) { this->vertexLength = vertexLength; }
 
     inline void setMaterial(const Material& material) { this->material = material; }

@@ -10,7 +10,7 @@ Group::Group()
     pointSize(POINT_SIZE), lineWidth(LINE_WIDTH), outliningWidth(OUTLINING_WIDTH) {
 }
 
-void Group::removePolytope(std::shared_ptr<Polytope>& polytope) {
+void Group::removePolytope(Polytope::Ptr& polytope) {
     unsigned int index = 0;
     for(auto& p : polytopes) {
         if(p.get() == polytope.get()) {

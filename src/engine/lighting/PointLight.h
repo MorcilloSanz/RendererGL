@@ -7,6 +7,7 @@
 #define QUADRATIC 0.032f
 
 class PointLight : public Light {
+    GENERATE_PTR(PointLight)
 private:
     float constant;
     float linear;

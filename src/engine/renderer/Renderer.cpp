@@ -21,19 +21,19 @@ void Renderer::initShaders() {
     // Default shader program
     Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgram = std::make_shared<ShaderProgram>(vertexShader, fragmentShader);
+    shaderProgram = ShaderProgram::New(vertexShader, fragmentShader);
     // Lighting shader program
     Shader vertexLightingShader(Program::getPhongVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentLightingShader(Program::getPhongFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgramLighting = std::make_shared<ShaderProgram>(vertexLightingShader, fragmentLightingShader);
+    shaderProgramLighting = ShaderProgram::New(vertexLightingShader, fragmentLightingShader);
     // SkyBox shader program
     Shader vertexSkyBoxShader(Program::getSkyBoxVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentSkyBoxShader(Program::getSkyBoxFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgramSkyBox = std::make_shared<ShaderProgram>(vertexSkyBoxShader, fragmentSkyBoxShader);
+    shaderProgramSkyBox = ShaderProgram::New(vertexSkyBoxShader, fragmentSkyBoxShader);
     // Selection shader program
     Shader vertexSelectionShader(Program::getOutlineVertexShaderCode(), Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader(Program::getOutlineFragmentShaderCode(), Shader::ShaderType::Fragment);
-    shaderProgramSelection = std::make_shared<ShaderProgram>(vertexSelectionShader, fragmentSelectionShader);
+    shaderProgramSelection = ShaderProgram::New(vertexSelectionShader, fragmentSelectionShader);
 }
 
 void Renderer::removeGroup(Group& group) {
@@ -47,9 +47,9 @@ void Renderer::removeGroup(Group& group) {
     }
 }
 
-void Renderer::textureUniformDefault(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
     unsigned int index = 0;
-    std::vector<std::shared_ptr<Texture>> textures = polytope->getTextures();
+    std::vector<Texture::Ptr> textures = polytope->getTextures();
     if(!textures.empty()) {
         for(auto& texture : textures) {
             if(texture->getType() == Texture::Type::TextureDiffuse) {
@@ -62,7 +62,7 @@ void Renderer::textureUniformDefault(std::shared_ptr<ShaderProgram>& shaderProgr
     }else shaderProgram->uniformInt("hasTexture", false);
 }
 
-void Renderer::textureUniformLighting(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
     unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nEmissionMap = 0, nNormalMaps = 0, nHeightMaps = 0;
     for(auto& texture : polytope->getTextures()) {
         texture->bind();
@@ -94,7 +94,7 @@ void Renderer::textureUniformLighting(std::shared_ptr<ShaderProgram>& shaderProg
     shaderProgram->uniformInt("hasEmission", nEmissionMap > 0);
 }
 
-void Renderer::textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight) {
+void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight) {
     if(!hasLight) textureUniformDefault(shaderProgram, polytope);
     else textureUniformLighting(shaderProgram, polytope);
 }

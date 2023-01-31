@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-#include <memory>
 
 #include "../group/Group.h"
 #include "../opengl/shader/Shader.h"
@@ -17,10 +16,10 @@
 
 class Renderer {
 private:
-    std::shared_ptr<ShaderProgram> shaderProgram;
-    std::shared_ptr<ShaderProgram> shaderProgramLighting;
-    std::shared_ptr<ShaderProgram> shaderProgramSkyBox;
-    std::shared_ptr<ShaderProgram> shaderProgramSelection;
+    ShaderProgram::Ptr shaderProgram;
+    ShaderProgram::Ptr shaderProgramLighting;
+    ShaderProgram::Ptr shaderProgramSkyBox;
+    ShaderProgram::Ptr shaderProgramSelection;
     glm::mat4 projection;
     glm::mat4 view;
     std::vector<Group*> groups;
@@ -30,19 +29,19 @@ private:
     unsigned int nLights;
     bool hasLight;
     glm::vec3 backgroundColor;
-    std::shared_ptr<SkyBox> skyBox;
+    SkyBox::Ptr skyBox;
 public:
     Renderer();
     ~Renderer() = default;
 private:
     void initShaders();
-    void textureUniformDefault(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
-    void textureUniformLighting(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope);
-    void textureUniform(std::shared_ptr<ShaderProgram>& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight);
+    void textureUniformDefault(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
+    void textureUniformLighting(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
+    void textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope, bool hasLight);
     void primitiveSettings(Group* group);
     void defaultPrimitiveSettings();
     void lightShaderUniforms();
-    void lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope);
+    void lightMaterialUniforms(const Polytope::Ptr& polytope);
     void lightMVPuniform(const glm::mat4& model);
     void drawGroup(Group* group);
     void drawSkyBox();
@@ -71,11 +70,11 @@ public:
     inline void disableLight() { hasLight = false; } 
     inline void setLightEnabled(bool enable) { hasLight = enable; }
 
-    inline std::shared_ptr<ShaderProgram>& getShaderProgram() { return shaderProgram; }
+    inline ShaderProgram::Ptr& getShaderProgram() { return shaderProgram; }
 
     inline glm::vec3& getBackgroundColor() { return backgroundColor; }
 
-    inline void setSkyBox(const std::shared_ptr<SkyBox>& skyBox) { this->skyBox = skyBox; }
+    inline void setSkyBox(const SkyBox::Ptr& skyBox) { this->skyBox = skyBox; }
 
     inline std::vector<Light*>& getLights() { return lights; }
 };

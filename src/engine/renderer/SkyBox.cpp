@@ -60,8 +60,8 @@ SkyBox::~SkyBox() {
 }
 
 void SkyBox::initBuffer() {
-    vertexArray = std::make_shared<VertexArray>();
-    vertexBuffer = std::make_shared<VertexBuffer>(vertices);
+    vertexArray = VertexArray::New();
+    vertexBuffer = VertexBuffer::New(vertices);
     unbind();
     loadCubeMap();
 }

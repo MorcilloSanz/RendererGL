@@ -18,6 +18,7 @@ set(HEADERS
         # Source
         src/ImguiStyles.h
         src/engine/Vec3.h
+        src/engine/ptr.h
         src/engine/window/Window.h
         src/engine/opengl/buffer/Buffer.h
         src/engine/opengl/buffer/VertexArray.h

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 #include <cmath>
 
 #include "engine/window/Window.h"
@@ -137,7 +136,7 @@ int main(void) {
         Vec3f(-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f) // bottom-left
     };
 
-    std::shared_ptr<Polytope> cubePolytope = std::make_shared<Polytope>(vertices);
+    Polytope::Ptr cubePolytope = Polytope::New(vertices);
     cubePolytope->translate(glm::vec3(4.5, 0, 0));
     cubePolytope->setFaceCulling(Polytope::FaceCulling::NONE); // BACK default
 
@@ -163,24 +162,25 @@ int main(void) {
 		3, 7, 4,  1, 0, 4,  6, 7, 3 
     };
 
-    std::shared_ptr<Polytope> cubePolytopeIndices = std::make_shared<Polytope>(cubeVertices, cubeIndices);
+    Polytope::Ptr cubePolytopeIndices = Polytope::New(cubeVertices, cubeIndices);
     cubePolytopeIndices->translate(glm::vec3(0, 0, 0));
 
     // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color in cubePolytope2
     for(auto& vec : vertices) vec.r = vec.g = vec.b = 1;
 
     // Cube Polytope 2 
-    std::shared_ptr<Polytope> cubePolytope2 = std::make_shared<Polytope>(vertices);
+    Polytope::Ptr cubePolytope2 = Polytope::New(vertices);
     cubePolytope2->translate(glm::vec3(2.5f, 1.5f, -1.5f));
     cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
     cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
 
-    std::shared_ptr<Texture> textureDiffuse = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
-    std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
-    std::shared_ptr<Texture> textureEmission = std::make_shared<Texture>("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
+    Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
+    Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureEmission2 = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
-    cubePolytope2->addTexture(textureEmission);
+    cubePolytope2->addTexture(textureEmission2);
 
     // Cubes group
     Group group;
@@ -207,7 +207,7 @@ int main(void) {
         gridVertices.push_back(Vec3f(b, 0, c, 0.3, 0.3, 0.3));
         c += dz;
     }
-    std::shared_ptr<Polytope> gridPolytope = std::make_shared<Polytope>(gridVertices);
+    Polytope::Ptr gridPolytope = Polytope::New(gridVertices);
 
     Group groupGrid(GL_LINES);
     groupGrid.add(gridPolytope);
@@ -224,7 +224,7 @@ int main(void) {
             vec.g = lightColor.g;
             vec.b = lightColor.b;
         }
-        std::shared_ptr<Polytope> lightPolytope = std::make_shared<Polytope>(cubeVertices, cubeIndices);
+        Polytope::Ptr lightPolytope = Polytope::New(cubeVertices, cubeIndices);
         lightPolytope->translate(light->getPosition());
         lightPolytope->scale(glm::vec3(0.25, 0.25, 0.25));
         lightsGroup.add(lightPolytope);
@@ -234,13 +234,13 @@ int main(void) {
 
     // Axis polytope
     std::vector<Vec3f> xAxis = { Vec3f(0, 0, 0, 1, 0, 0), Vec3f(1, 0, 0, 1, 0, 0)};
-    std::shared_ptr<Polytope> xAxisPolytope = std::make_shared<Polytope>(xAxis);
+    Polytope::Ptr xAxisPolytope = Polytope::New(xAxis);
 
     std::vector<Vec3f> yAxis = { Vec3f(0, 0, 0, 0, 1, 0), Vec3f(0, 1, 0, 0, 1, 0) };
-    std::shared_ptr<Polytope> yAxisPolytope = std::make_shared<Polytope>(yAxis);
+    Polytope::Ptr yAxisPolytope = Polytope::New(yAxis);
 
     std::vector<Vec3f> zAxis = { Vec3f(0, 0, 0, 0, 0, 1), Vec3f(0, 0, 1, 0, 0, 1) };
-    std::shared_ptr<Polytope> zAxisPolytope = std::make_shared<Polytope>(zAxis);
+    Polytope::Ptr zAxisPolytope = Polytope::New(zAxis);
 
     Group axisGroup(GL_LINES);
     axisGroup.setLineWidth(3.0f);
@@ -251,7 +251,7 @@ int main(void) {
 
     // Dynamic Polytope
     size_t length = 5000;
-    std::shared_ptr<DynamicPolytope> dynamicPolytope = std::make_shared<DynamicPolytope>(length);
+    DynamicPolytope::Ptr dynamicPolytope = DynamicPolytope::New(length);
 
     Group groupDynamic(GL_LINE_STRIP);
     groupDynamic.setLineWidth(2.f);
@@ -260,14 +260,14 @@ int main(void) {
     renderer.addGroup(groupDynamic);
 
     // Dynamic Polytope for mouse picking (ray casting)
-    std::shared_ptr<DynamicPolytope> mousePickingPolytope = std::make_shared<DynamicPolytope>(length);
+    DynamicPolytope::Ptr mousePickingPolytope = DynamicPolytope::New(length);
     Group groupMousePicking(GL_POINTS);
     groupMousePicking.setPointSize(8.f);
     groupMousePicking.add(mousePickingPolytope);
     renderer.addGroup(groupMousePicking);
 
     // Dynamic Polytope for ray casting drawing
-    std::shared_ptr<DynamicPolytope> raysPolytope = std::make_shared<DynamicPolytope>(length);
+    DynamicPolytope::Ptr raysPolytope = DynamicPolytope::New(length);
     Group raysGroup(GL_LINES);
     raysGroup.setLineWidth(2.f);
     raysGroup.add(raysPolytope);
@@ -382,12 +382,33 @@ int main(void) {
                 ImGui::Checkbox("Show grid", &showGrid);
                 groupGrid.setVisible(showGrid);
 
-                ImGui::SameLine();
-
+                
                 static bool showSkyBox = true;
                 ImGui::Checkbox("Skybox", &showSkyBox);
                 if(!showSkyBox) renderer.setSkyBox(nullptr);
                 else renderer.setSkyBox(skyBox);
+
+                ImGui::SameLine();
+
+                static bool emission = true;
+                bool tempEmission = emission;
+                ImGui::Checkbox("Emission", &emission);
+                if(tempEmission != emission) {
+                    if(!emission) textureEmission->setType(Texture::Type::None);
+                    else textureEmission->setType(Texture::Type::TextureEmission);
+                }
+
+                ImGui::SameLine();
+
+
+                static bool changeEmissionType = false;
+                bool tempEmissionType = changeEmissionType;
+                ImGui::Checkbox("Emission type", &changeEmissionType);
+                if(tempEmissionType != changeEmissionType) {
+                    auto temp = textureEmission;
+                    textureEmission = textureEmission2;
+                    textureEmission2 = temp;
+                }
 
                 ImGui::Separator();
 
@@ -450,7 +471,7 @@ int main(void) {
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };
                 ImGui::ColorEdit3("Light color", color, 0);
 
-                static std::shared_ptr<Polytope> lightPolytope = lightsGroup.getPolytopes()[0];
+                static Polytope::Ptr lightPolytope = lightsGroup.getPolytopes()[0];
 
                 if(color[0] != lightColor.r || color[1] != lightColor.g || color[2] != lightColor.b) {
                     light.setColor(glm::vec3(color[0], color[1], color[2]));
@@ -715,7 +736,7 @@ int main(void) {
                             return false;
                         };
 
-                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group& group, std::shared_ptr<Polytope>& polytope) {
+                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group& group, Polytope::Ptr& polytope) {
                             for(int i = 0; i < points.size(); i += 3) {
 
                                 glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);

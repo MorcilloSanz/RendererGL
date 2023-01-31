@@ -4,6 +4,7 @@
 
 // Its the same as Light, but replacing position by direction. JUST NOTATION
 class DirectionalLight : public Light {
+    GENERATE_PTR(DirectionalLight)
 private:
     glm::vec3 direction;
 public:

@@ -6,6 +6,7 @@
     TODO: Resize if needed
 */
 class DynamicPolytope : public Polytope {
+    GENERATE_PTR(DynamicPolytope)
 private:
     size_t pos;
 public:

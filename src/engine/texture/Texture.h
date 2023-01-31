@@ -1,8 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include "../../../glew/glew.h"
+
+#include "../ptr.h"
 
 struct Image {
     unsigned char* data;
@@ -16,6 +19,7 @@ struct Image {
 Image readImage(const std::string& path);
 
 class Texture {
+    GENERATE_PTR(Texture)
 public:
     enum class Type : int {
         None = -1, TextureAmbient = 0, TextureDiffuse = 1, TextureSpecular = 2, 
@@ -30,6 +34,7 @@ protected:
     bool flip;
     std::string path;
     Type type;
+    bool freeGPU;
 public:
     Texture(const std::string& _path, const Type& _type = Type::TextureDiffuse, bool _flip = true);
     Texture(unsigned char* buffer, const Type& _type = Type::TextureDiffuse);
@@ -57,6 +62,9 @@ public:
 
     inline void setType(const Type& type) { this->type = type; }
     inline Type& getType() { return type; }
+
+    inline void setFreeGPU(bool freeGPU) { this-> freeGPU; }
+    inline bool isFreeGPU() const { return freeGPU; }
 
     static unsigned int getCount() { return count; }
 };

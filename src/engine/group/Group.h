@@ -7,13 +7,16 @@
 #include "Polytope.h"
 #include "DynamicPolytope.h"
 
+#include "../ptr.h"
+
 #define POINT_SIZE 1.0
 #define LINE_WIDTH 1.0
 #define OUTLINING_WIDTH 3.0
 
 class Group {
+    GENERATE_PTR(Group)
 private:
-    std::vector<std::shared_ptr<Polytope>> polytopes;
+    std::vector<Polytope::Ptr> polytopes;
     unsigned int primitive;
     float pointSize, lineWidth, outliningWidth;
     bool showWire, visible;
@@ -23,7 +26,7 @@ public:
     Group();
     ~Group() = default;
 public:
-    void removePolytope(std::shared_ptr<Polytope>& polytope);
+    void removePolytope(Polytope::Ptr& polytope);
     bool isSelected();
     void setSelected(bool selected);
 public:
@@ -31,8 +34,8 @@ public:
     inline void rotate(float degrees, const glm::vec3& axis) { modelMatrix = glm::rotate(modelMatrix, glm::radians(degrees), axis); }
     inline void scale(const glm::vec3& s) { modelMatrix = glm::scale(modelMatrix, s); }
 
-    inline void add(const std::shared_ptr<Polytope>& polytope) { polytopes.push_back(polytope); }
-    inline std::vector<std::shared_ptr<Polytope>>& getPolytopes() { return polytopes; }
+    inline void add(const Polytope::Ptr& polytope) { polytopes.push_back(polytope); }
+    inline std::vector<Polytope::Ptr>& getPolytopes() { return polytopes; }
 
     inline void removePolytope(int index) { polytopes.erase(polytopes.begin() + index); }
 

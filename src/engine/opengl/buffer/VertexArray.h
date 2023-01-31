@@ -3,6 +3,7 @@
 #include "Buffer.h"
 
 class VertexArray : public Buffer {
+    GENERATE_PTR(VertexArray)
 public:
     VertexArray();
     VertexArray(const VertexArray& vertexArray);

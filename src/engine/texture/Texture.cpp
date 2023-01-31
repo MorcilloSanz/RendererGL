@@ -13,37 +13,42 @@ Image readImage(const std::string& path) {
 }
 
 Texture::Texture(const std::string& _path, const Type& _type, bool _flip) 
-	: path(_path), id(0), width(0), height(0), bpp(0), slot(0), type(_type), flip(_flip) {
+	: path(_path), id(0), width(0), height(0), bpp(0), slot(0), type(_type), 
+	flip(_flip), freeGPU(true) {
 	initTextureUnits();
 	//if(count < textureUnits) generateTexture();
 	generateTextureFromFile(path);
 }
 
 Texture::Texture(unsigned char *buffer, const Type &_type)
-	: id(0), width(0), height(0), bpp(0), slot(0), type(_type) {
+	: path(""), id(0), width(0), height(0), bpp(0), slot(0), type(_type),
+	flip(false), freeGPU(true) {
 	initTextureUnits();
 	generateTextureFromBuffer(buffer);
 }
 
 Texture::Texture() 
-	: id(0), width(0), height(0), bpp(0), path(""), slot(0), type(Type::None) {
+	: id(0), width(0), height(0), bpp(0), path(""), slot(0), type(Type::None), 
+	flip(false), freeGPU(true) {
 	initTextureUnits();
 }
 
 Texture::Texture(const Texture& texture)
 	: path(texture.path), id(texture.id), width(texture.width), 
-	height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type) {
+	height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type),
+	freeGPU(false) {
 }
 
 Texture::Texture(Texture&& texture) noexcept
 	: path(std::move(texture.path)), id(texture.id), width(texture.width), 
-    height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type) {
+    height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type),
+	freeGPU(true) {
 }
 
 Texture::~Texture() {
 	unbind();
 	glActiveTexture(0);
-	glDeleteTextures(1, &id);
+	if(freeGPU) glDeleteTextures(1, &id);
 }
 
 Texture& Texture::operator=(const Texture& texture) {
@@ -54,6 +59,7 @@ Texture& Texture::operator=(const Texture& texture) {
     slot = texture.slot;
     path = texture.path;
 	type = texture.type;
+	freeGPU = false;
 	return *this;
 }
 

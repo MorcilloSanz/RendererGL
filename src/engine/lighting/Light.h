@@ -10,11 +10,14 @@
 
 #include "../opengl/shader/Shader.h"
 
+#include "../ptr.h"
+
 #define AMBIENT_STRENGTH 0.5f 
 #define DIFFUSE_STRENGTH 0.5f
 #define SPECULAR_STRENGTH 0.5f
 
 class Light {
+    GENERATE_PTR(Light)
 protected:
     glm::vec3 position;
     glm::vec3 color;

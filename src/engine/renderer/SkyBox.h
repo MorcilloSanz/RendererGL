@@ -9,9 +9,10 @@
 #include "../opengl/shader/Shader.h"
 
 class SkyBox : public Buffer {
+    GENERATE_PTR(SkyBox)
 private:
-    std::shared_ptr<VertexArray> vertexArray;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
+    VertexArray::Ptr vertexArray;
+    VertexBuffer::Ptr vertexBuffer;
     std::vector<std::string> faces;
 public:
     SkyBox() = default;
@@ -35,5 +36,5 @@ public:
     void draw();
 public:
     inline std::vector<std::string>& getFaces() { return faces; }
-    inline std::shared_ptr<VertexArray>& getVertexArray() { return vertexArray; }
+    inline VertexArray::Ptr& getVertexArray() { return vertexArray; }
 };

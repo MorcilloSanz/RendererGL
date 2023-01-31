@@ -42,7 +42,7 @@ Texture::Texture(const Texture& texture)
 Texture::Texture(Texture&& texture) noexcept
 	: path(std::move(texture.path)), id(texture.id), width(texture.width), 
     height(texture.height), bpp(texture.bpp), slot(texture.slot), type(texture.type),
-	freeGPU(false) {
+	freeGPU(true) {
 }
 
 Texture::~Texture() {

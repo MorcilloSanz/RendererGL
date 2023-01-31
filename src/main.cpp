@@ -177,10 +177,11 @@ int main(void) {
     Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
     Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
     Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
-    Texture::Ptr textureEmission2 = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
+    
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
-    cubePolytope2->addTexture(textureEmission2);
+    cubePolytope2->addTexture(textureEmission);
 
     // Cubes group
     Group group;
@@ -290,7 +291,7 @@ int main(void) {
         "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveZ.tga",
         "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
     };
-    std::shared_ptr<SkyBox> skyBox = std::make_shared<SkyBox>(faces);
+    SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer.setSkyBox(skyBox);
 
     // Init TextureRenderer
@@ -382,32 +383,57 @@ int main(void) {
                 ImGui::Checkbox("Show grid", &showGrid);
                 groupGrid.setVisible(showGrid);
 
-                
+                ImGui::SameLine();
+
                 static bool showSkyBox = true;
                 ImGui::Checkbox("Skybox", &showSkyBox);
                 if(!showSkyBox) renderer.setSkyBox(nullptr);
                 else renderer.setSkyBox(skyBox);
 
-                ImGui::SameLine();
-
                 static bool emission = true;
                 bool tempEmission = emission;
                 ImGui::Checkbox("Emission", &emission);
                 if(tempEmission != emission) {
-                    if(!emission) textureEmission->setType(Texture::Type::None);
-                    else textureEmission->setType(Texture::Type::TextureEmission);
+                    if(!emission) {
+                        textureEmission->setType(Texture::Type::None);
+                        textureEmissionRed->setType(Texture::Type::None);
+                    }
+                    else {
+                        textureEmission->setType(Texture::Type::TextureEmission);
+                        textureEmissionRed->setType(Texture::Type::TextureEmission);
+                    }
                 }
 
                 ImGui::SameLine();
 
+                if(ImGui::Button("Red emission")) {
+                    cubePolytope2->removeTexture(textureEmission);
+                    cubePolytope2->addTexture(textureEmissionRed);
+                }
 
-                static bool changeEmissionType = false;
-                bool tempEmissionType = changeEmissionType;
-                ImGui::Checkbox("Emission type", &changeEmissionType);
-                if(tempEmissionType != changeEmissionType) {
-                    auto temp = textureEmission;
-                    textureEmission = textureEmission2;
-                    textureEmission2 = temp;
+                ImGui::SameLine();
+
+                if(ImGui::Button("White emission")) {
+                    cubePolytope2->removeTexture(textureEmissionRed);
+                    cubePolytope2->addTexture(textureEmission);
+                }
+
+                ImGui::SameLine();
+
+                if(ImGui::Button("Swap")) {
+                    cubePolytope2->removeTexture(textureEmission);
+                    cubePolytope2->removeTexture(textureEmissionRed);
+
+                    Texture::Ptr temp = textureEmission;
+                    textureEmission = textureEmissionRed;
+                    textureEmissionRed = temp;
+
+                    // IMPORTANT: set FreeGPU to true if the textures were copies
+                    textureEmission->setFreeGPU(true);
+                    textureEmissionRed->setFreeGPU(true);
+
+                    cubePolytope2->addTexture(textureEmission);
+                    cubePolytope2->addTexture(textureEmissionRed);
                 }
 
                 ImGui::Separator();

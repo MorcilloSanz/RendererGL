@@ -63,15 +63,7 @@ Texture& Texture::operator=(const Texture& texture) {
 	return *this;
 }
 
-void Texture::generateTextureFromFile(const std::string& path) {
-	stbi_set_flip_vertically_on_load(flip);
-	unsigned char* data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
-	generateTextureFromBuffer(data);
-	if (data) stbi_image_free(data);
-}
-    
-void Texture::generateTextureFromBuffer(unsigned char* buffer) {
-	glGenTextures(1, &id);
+void Texture::loadTexture(unsigned char* buffer) {
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -82,9 +74,20 @@ void Texture::generateTextureFromBuffer(unsigned char* buffer) {
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glGenerateMipmap(GL_TEXTURE_2D);
+}
 
+void Texture::generateTextureFromBuffer(unsigned char* buffer) {
+	glGenTextures(1, &id);
+	loadTexture(buffer);
 	slot = 0x84C0 + count;
 	count++;
+}
+
+void Texture::generateTextureFromFile(const std::string& path) {
+	stbi_set_flip_vertically_on_load(flip);
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+	generateTextureFromBuffer(data);
+	if (data) stbi_image_free(data);
 }
 
 void Texture::bind() {
@@ -94,4 +97,11 @@ void Texture::bind() {
 
 void Texture::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::changeTexture(const std::string& path) {
+	stbi_set_flip_vertically_on_load(flip);
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+	loadTexture(data);
+	if (data) stbi_image_free(data);
 }

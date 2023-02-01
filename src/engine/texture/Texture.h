@@ -45,12 +45,16 @@ public:
     Texture& operator=(const Texture& texture);
 protected:
     inline void initTextureUnits() { glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &Texture::textureUnits); }
-    void generateTextureFromFile(const std::string& path);
+    void loadTexture(unsigned char* buffer);
     void generateTextureFromBuffer(unsigned char* buffer);
+    void generateTextureFromFile(const std::string& path);
 public:
     virtual void bind();
     virtual void unbind();
+    void changeTexture(const std::string& path);
 public:
+    inline void changeTexture(unsigned char* buffer) { loadTexture(buffer); }
+
     inline void setID(unsigned int id) { this->id = id; }
     inline unsigned int getID() const { return id; }
 

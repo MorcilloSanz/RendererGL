@@ -90,7 +90,6 @@ int main(void) {
 
     DirectionalLight light4(glm::vec3(10, 10, -10));
     light4.setColor(glm::vec3(1.0, 1.0, 1.0));
-    renderer.addLight(light4);
 
     renderer.disableLight();
     
@@ -497,7 +496,7 @@ int main(void) {
 
                 ImGui::SameLine();
 
-                static bool enableDirectionalLight = true;
+                static bool enableDirectionalLight = false;
                 bool previousDirectionalLight = enableDirectionalLight;
                 ImGui::Checkbox("Directional", &enableDirectionalLight);
                 if(enableDirectionalLight != previousDirectionalLight) {

@@ -208,7 +208,7 @@ public:
         "       lightColor += getLightColor(lights[i]);\n"
         "    }\n"
         "\n"
-        "    vec4 color = vec4(lightColor, 1.0) * vec4(ourColor, 1);\n"
+        "    vec4 color = vec4(lightColor, 1.0);\n"
         "    FragColor = color;\n"
         "\n"
         "    if(gammaCorrection) {\n"

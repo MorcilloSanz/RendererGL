@@ -11,6 +11,7 @@
 #include "../lighting/Light.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
+#include "../lighting/SpotLight.h"
 
 #include "SkyBox.h"
 
@@ -47,6 +48,7 @@ private:
     void drawSkyBox();
 public:
     void removeGroup(Group& group);
+    void removeLight(Light& light);
     void render();
     void setBackgroundColor(float r, float g, float b);
     void setCamera(Camera& camera);
@@ -58,6 +60,7 @@ public:
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
     void disableFaceCulling();
+    void setFaceCulling(const Polytope::Ptr& polytope);
 public:
     inline void addGroup(Group& group) { groups.push_back(&group); }
     inline void removeGroup(int index) { groups.erase(groups.begin() + index); }
@@ -69,6 +72,9 @@ public:
     inline void enableLight() { hasLight = true; }
     inline void disableLight() { hasLight = false; } 
     inline void setLightEnabled(bool enable) { hasLight = enable; }
+    inline void removeLight(int index) { lights.erase(lights.begin() + index); nLights --; }
+    inline Light* getLight(int index) { return lights[index]; }
+    inline std::vector<Light*>& getLights() { return lights; }
 
     inline ShaderProgram::Ptr& getShaderProgram() { return shaderProgram; }
 
@@ -76,5 +82,4 @@ public:
 
     inline void setSkyBox(const SkyBox::Ptr& skyBox) { this->skyBox = skyBox; }
 
-    inline std::vector<Light*>& getLights() { return lights; }
 };

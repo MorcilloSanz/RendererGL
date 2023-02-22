@@ -99,9 +99,9 @@ Loading a 3D model with a skybox and ilumination
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
 
-Mouse Ray Casting
+Multiple point lights
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/mouseRayCasting.gif)  
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)  
 
 Emission
 

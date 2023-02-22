@@ -37,11 +37,11 @@ public:
     inline glm::vec3& getColor() { return color; }
 
     inline void setAmbient(const glm::vec3& ambient) { this->ambient = ambient; }
-    inline glm::vec3 getAmbient() { return ambient; }
+    inline glm::vec3& getAmbient() { return ambient; }
 
     inline void setDiffuse(const glm::vec3& diffuse) { this->diffuse = diffuse; }
-    inline glm::vec3 getDiffuse() { return diffuse; }
+    inline glm::vec3& getDiffuse() { return diffuse; }
 
     inline void setSpecular(const glm::vec3& specular) { this->specular = specular; }
-    inline glm::vec3 getSpecular() { return specular; }
+    inline glm::vec3& getSpecular() { return specular; }
 };

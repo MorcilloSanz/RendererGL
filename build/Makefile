@@ -465,6 +465,30 @@ src/engine/lighting/PointLight.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.s
 .PHONY : src/engine/lighting/PointLight.cpp.s
 
+src/engine/lighting/SpotLight.o: src/engine/lighting/SpotLight.cpp.o
+.PHONY : src/engine/lighting/SpotLight.o
+
+# target to build an object file
+src/engine/lighting/SpotLight.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o
+.PHONY : src/engine/lighting/SpotLight.cpp.o
+
+src/engine/lighting/SpotLight.i: src/engine/lighting/SpotLight.cpp.i
+.PHONY : src/engine/lighting/SpotLight.i
+
+# target to preprocess a source file
+src/engine/lighting/SpotLight.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.i
+.PHONY : src/engine/lighting/SpotLight.cpp.i
+
+src/engine/lighting/SpotLight.s: src/engine/lighting/SpotLight.cpp.s
+.PHONY : src/engine/lighting/SpotLight.s
+
+# target to generate assembly for a file
+src/engine/lighting/SpotLight.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RendererGL.dir/build.make CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.s
+.PHONY : src/engine/lighting/SpotLight.cpp.s
+
 src/engine/model/Model.o: src/engine/model/Model.cpp.o
 .PHONY : src/engine/model/Model.o
 
@@ -852,6 +876,9 @@ help:
 	@echo "... src/engine/lighting/PointLight.o"
 	@echo "... src/engine/lighting/PointLight.i"
 	@echo "... src/engine/lighting/PointLight.s"
+	@echo "... src/engine/lighting/SpotLight.o"
+	@echo "... src/engine/lighting/SpotLight.i"
+	@echo "... src/engine/lighting/SpotLight.s"
 	@echo "... src/engine/model/Model.o"
 	@echo "... src/engine/model/Model.i"
 	@echo "... src/engine/model/Model.s"

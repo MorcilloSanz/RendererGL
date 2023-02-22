@@ -47,6 +47,17 @@ void Renderer::removeGroup(Group& group) {
     }
 }
 
+void Renderer::removeLight(Light& light) {
+    unsigned int index = 0;
+    for(Light* l : lights) {
+        if(l == &light) {
+            removeLight(index);
+            break;
+        }
+        index ++;
+    }
+}
+
 void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
     unsigned int index = 0;
     std::vector<Texture::Ptr> textures = polytope->getTextures();
@@ -112,12 +123,14 @@ void Renderer::defaultPrimitiveSettings() {
 void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("nLights", nLights);
     for(int i = 0; i < nLights; i ++) {
+        // Directional Light
         std::string lightUniform = "lights[" + std::to_string(i) + "]";
         shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
         shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor());
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
+        // Point Light
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
             shaderProgramLighting->uniformInt("isPointLight", true);
@@ -125,6 +138,17 @@ void Renderer::lightShaderUniforms() {
             shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
             shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
         }else shaderProgramLighting->uniformInt("isPointLight", false);
+        // Spot Light
+        if(instanceof<SpotLight>(lights[i])) {
+            SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
+            shaderProgramLighting->uniformInt("isSpotLight", true);
+            shaderProgramLighting->uniformFloat(lightUniform + ".constant", spotLight->getConstant());
+            shaderProgramLighting->uniformFloat(lightUniform + ".linear", spotLight->getLinear());
+            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", spotLight->getQuadratic());
+            shaderProgramLighting->uniformVec3(lightUniform + ".direction", spotLight->getDirection());
+            shaderProgramLighting->uniformFloat(lightUniform + ".cutOff", spotLight->getCutOff());
+            shaderProgramLighting->uniformFloat(lightUniform + ".outerCutOff", spotLight->getOuterCutOff());
+        }else shaderProgramLighting->uniformInt("isSpotLight", false);
     }
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
@@ -141,6 +165,20 @@ void Renderer::lightMVPuniform(const glm::mat4& model) {
     shaderProgramLighting->uniformMat4("model", model);
     shaderProgramLighting->uniformMat4("view", view);
     shaderProgramLighting->uniformMat4("projection", projection);
+}
+
+void Renderer::setFaceCulling(const Polytope::Ptr& polytope) {
+    switch(polytope->getFaceCulling()) {
+        case Polytope::FaceCulling::FRONT:
+            enableFrontFaceCulling();
+        break;
+        case Polytope::FaceCulling::BACK:
+            enableBackFaceCulling();
+        break;
+        case Polytope::FaceCulling::NONE:
+            disableFaceCulling();
+        break;
+    }
 }
 
 void Renderer::drawGroup(Group* group) {
@@ -167,17 +205,7 @@ void Renderer::drawGroup(Group* group) {
             lightMVPuniform(model);
         }
         // Set face culling
-        switch(polytope->getFaceCulling()) {
-            case Polytope::FaceCulling::FRONT:
-                enableFrontFaceCulling();
-            break;
-            case Polytope::FaceCulling::BACK:
-                enableBackFaceCulling();
-            break;
-            case Polytope::FaceCulling::NONE:
-                disableFaceCulling();
-            break;
-        }
+        setFaceCulling(polytope);
         // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
         if(polytope->isSelected()) {
@@ -187,7 +215,6 @@ void Renderer::drawGroup(Group* group) {
             glDisable(GL_DEPTH_TEST);
             polytope->draw(group->getPrimitive(), group->isShowWire());
             glEnable(GL_DEPTH_TEST);
-
         }
         // unbind textures
         for(auto& texture : polytope->getTextures()) texture->unbind();

@@ -33,13 +33,66 @@ Features:
 * Mouse ray casting
 * Object selection
 
-# Dependencies
-```
-GLFW
-GLEW    (included)
-GLM     (included)
-IMGUI   (included)
-ASSIMP  (only for reading 3D models)
+# Code
+
+Simple cube example:
+
+```cpp
+Window window("Cube example", 1280, 800);
+
+Renderer renderer;
+
+TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
+camera.zoom(-5.5);
+renderer.setCamera(camera);
+
+// x y z r g b
+std::vector<Vec3f> cubeVertices {
+    // Front square
+    Vec3f(-0.5, -0.5,  0.5,   0.0f, 0.0f, 1.0f),
+    Vec3f( 0.5, -0.5,  0.5,   1.0f, 0.0f, 1.0f),
+    Vec3f( 0.5,  0.5,  0.5,   0.0f, 1.0f, 1.0f),
+    Vec3f(-0.5,  0.5,  0.5,   0.0f, 1.0f, 0.5f),
+    // Back square
+    Vec3f(-0.5, -0.5, -0.5,   0.0f, 0.0f, 1.0f),
+    Vec3f( 0.5, -0.5, -0.5,   1.0f, 0.0f, 1.0f),
+    Vec3f( 0.5,  0.5, -0.5,   0.0f, 1.0f, 1.0f),
+    Vec3f(-0.5,  0.5, -0.5,   0.0f, 1.0f, 0.5f)
+};
+
+std::vector<unsigned int> cubeIndices {
+    //front   //right   //back
+    0, 1, 2,  1, 5, 6,  7, 6, 5,
+    2, 3, 0,  6, 2, 1,  5, 4, 7,
+    //left    //bottom  //top
+    4, 0, 3,  4, 5, 1,  3, 2, 6,
+    3, 7, 4,  1, 0, 4,  6, 7, 3 
+};
+
+Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
+
+Group group;
+group.setLineWidth(2.f);
+group.translate(glm::vec3(-2.5, 0.5, 0));
+group.add(polytopeCube);
+
+renderer.addGroup(group);
+
+while (!window.windowShouldClose()) {
+
+    // Rotate cube
+    polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
+
+    // Clear
+    renderer.clear();
+
+    // Render
+    renderer.render();
+
+    // Swap buffers
+    window.update();
+}
 ```
 
 # Screenshots
@@ -62,4 +115,12 @@ Screenshots
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)  
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)  
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)
+
+# Dependencies
+
+* [GLFW](https://github.com/glfw/glfw)
+* [GLEW](https://github.com/nigels-com/glew)
+* [GLM](https://github.com/g-truc/glm)
+* [IMGUI](https://github.com/ocornut/imgui)
+* [ASSIMP](https://github.com/assimp/assimp)

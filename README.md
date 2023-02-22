@@ -86,10 +86,8 @@ while (!window.windowShouldClose()) {
 
     // Clear
     renderer.clear();
-
     // Render
     renderer.render();
-
     // Swap buffers
     window.update();
 }

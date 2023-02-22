@@ -27,6 +27,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o.d"
+  "CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o"
+  "CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
   "CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o.d"
   "CMakeFiles/RendererGL.dir/src/engine/opengl/buffer/IndexBuffer.cpp.o"

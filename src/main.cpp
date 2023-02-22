@@ -7,7 +7,6 @@
 #include "engine/renderer/TrackballCamera.h"
 #include "engine/renderer/FPSCamera.h"
 #include "engine/renderer/TextureRenderer.h"
-#include "engine/renderer/SkyBox.h"
 #include "engine/renderer/MouseRayCasting.h"
 #include "engine/model/Model.h"
 
@@ -76,13 +75,18 @@ int main(void) {
     light.setColor(glm::vec3(0, 1, 0));
     renderer.addLight(light);
 
-    PointLight light2(glm::vec3(4, -2, 0));
+    PointLight light2(glm::vec3(4, 2, 0));
     light2.setColor(glm::vec3(1, 0, 0));
     renderer.addLight(light2);
 
     PointLight light3(glm::vec3(0, 2, -4));
     light3.setColor(glm::vec3(0, 0, 1));
     renderer.addLight(light3);
+
+    // Fix needed
+    SpotLight spotLight(glm::vec3(6, 2, 6), glm::vec3(-6, -2, -6));
+    spotLight.setColor(glm::vec3(1, 1, 1));
+    //renderer.addLight(spotLight);
 
     DirectionalLight light4(glm::vec3(10, 10, -10));
     light4.setColor(glm::vec3(1.0, 1.0, 1.0));
@@ -196,8 +200,8 @@ int main(void) {
 
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
-    float a = -10; float b = -a;
-    float c = -10; float d = -c;
+    float a = -20; float b = -a;
+    float c = -20; float d = -c;
     float dx = 0.5f; float dz = dx;
     while(a <= b) {
         gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
@@ -215,6 +219,23 @@ int main(void) {
     Group groupGrid(GL_LINES);
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
+
+    // Floor polytope
+    float floorSide = 15.f;
+    std::vector<Vec3f> floorVertices = {
+        Vec3f(-floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
+        Vec3f( floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f( floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f), // top-right     
+        Vec3f( floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
+        Vec3f(-floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
+        Vec3f(-floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f) // bottom-left  
+    };
+    Polytope::Ptr floorPolytope = Polytope::New(floorVertices);
+    floorPolytope->setFaceCulling(Polytope::FaceCulling::NONE);
+
+    Group groupFloor;
+    groupFloor.add(floorPolytope);
+    renderer.addGroup(groupFloor);
 
     // Light polytopes
     Group lightsGroup;
@@ -458,7 +479,7 @@ int main(void) {
                 ImGui::Text("Controls for your custom application");
 
                 static bool enable = false;
-                ImGui::Checkbox("Enable lighting", &enable);
+                ImGui::Checkbox("Enable", &enable);
                 renderer.setLightEnabled(enable);
                 lightsGroup.setVisible(enable);
 
@@ -474,12 +495,24 @@ int main(void) {
                 ImGui::Checkbox("Gamma correction", &gammaCorrection);
                 Light::gammaCorrection = gammaCorrection;
 
+                ImGui::SameLine();
+
+                static bool enableDirectionalLight = true;
+                bool previousDirectionalLight = enableDirectionalLight;
+                ImGui::Checkbox("Directional", &enableDirectionalLight);
+                if(enableDirectionalLight != previousDirectionalLight) {
+                    if(enableDirectionalLight) renderer.addLight(light4);
+                    else renderer.removeLight(light4);
+                    previousDirectionalLight = enableDirectionalLight;
+                }
+
                 static float ambientStrength = light.getAmbient()[0];
                 ImGui::SliderFloat("Ambient strength", &ambientStrength, 0.f, 1.f);
                 light.setAmbient(glm::vec3(ambientStrength));
                 light2.setAmbient(glm::vec3(ambientStrength));
                 light3.setAmbient(glm::vec3(ambientStrength));
                 light4.setAmbient(glm::vec3(ambientStrength));
+                spotLight.setAmbient(glm::vec3(ambientStrength));
 
                 static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
@@ -487,6 +520,7 @@ int main(void) {
                 light2.setDiffuse(glm::vec3(diffuseStrength));
                 light3.setDiffuse(glm::vec3(diffuseStrength));
                 light4.setDiffuse(glm::vec3(diffuseStrength));
+                spotLight.setDiffuse(glm::vec3(diffuseStrength));
 
                 static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
@@ -494,6 +528,7 @@ int main(void) {
                 light2.setSpecular(glm::vec3(specularStrength));
                 light3.setSpecular(glm::vec3(specularStrength));
                 light4.setSpecular(glm::vec3(specularStrength));
+                spotLight.setSpecular(glm::vec3(specularStrength));
 
                 glm::vec3 lightColor = light.getColor();
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };

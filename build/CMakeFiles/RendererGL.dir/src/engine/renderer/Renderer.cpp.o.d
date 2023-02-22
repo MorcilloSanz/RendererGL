@@ -399,6 +399,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../lighting/Light.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../lighting/DirectionalLight.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../lighting/PointLight.h \
+ /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../lighting/SpotLight.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/SkyBox.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../../../glew/glew.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/../opengl/shader/Program.h

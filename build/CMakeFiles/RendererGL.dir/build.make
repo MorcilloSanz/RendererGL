@@ -433,10 +433,24 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/PointLight.cpp -o CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.s
 
+CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o: CMakeFiles/RendererGL.dir/flags.make
+CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o: ../src/engine/lighting/SpotLight.cpp
+CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/SpotLight.cpp
+
+CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/SpotLight.cpp > CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.i
+
+CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/SpotLight.cpp -o CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.s
+
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: ../src/engine/texture/Texture.cpp
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.i: cmake_force
@@ -450,7 +464,7 @@ CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.s: cmake_force
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: CMakeFiles/RendererGL.dir/flags.make
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: ../src/engine/model/Model.cpp
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o: CMakeFiles/RendererGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o -MF CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o.d -o CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o -c /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/model/Model.cpp
 
 CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.i: cmake_force
@@ -489,6 +503,7 @@ RendererGL_OBJECTS = \
 "CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o" \
+"CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o" \
 "CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o"
 
@@ -521,11 +536,12 @@ RendererGL: CMakeFiles/RendererGL.dir/src/engine/renderer/MouseRayCasting.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/lighting/DirectionalLight.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o
+RendererGL: CMakeFiles/RendererGL.dir/src/engine/lighting/SpotLight.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/texture/Texture.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/src/engine/model/Model.cpp.o
 RendererGL: CMakeFiles/RendererGL.dir/build.make
 RendererGL: CMakeFiles/RendererGL.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Linking CXX executable RendererGL"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/morcillosanz/Desktop/GitHub/RendererGL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Linking CXX executable RendererGL"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RendererGL.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

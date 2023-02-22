@@ -26,16 +26,16 @@ Features:
 * Depth testing, blending, face culling...
 * Anti aliasing
 * Texture Renderer (capture FrameBuffer and create a texture)
-* Blinn-Phong lighting
+* Blinn-Phong lighting (directional, point and spot)
 * Gamma correction
 * Emission
 * Skybox
 * Mouse ray casting
 * Object selection
 
-# Code
+## Cube example
 
-Simple cube example:
+Simple rotating cube example:
 
 ```cpp
 Window window("Cube example", 1280, 800);

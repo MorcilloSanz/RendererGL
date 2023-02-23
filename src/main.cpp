@@ -70,16 +70,16 @@ int main(void) {
     fpsCamera.setSensitivity(sensitivity / 10);
 
     // Lighting
-    PointLight light(glm::vec3(0, 4, 0));
+    PointLight light(glm::vec3(0, 3, 0));
     light.setSpecular(glm::vec3(0.3));
     light.setColor(glm::vec3(0, 1, 0));
     renderer.addLight(light);
 
-    PointLight light2(glm::vec3(4, 2, 0));
+    PointLight light2(glm::vec3(3, 2, 0));
     light2.setColor(glm::vec3(1, 0, 0));
     renderer.addLight(light2);
 
-    PointLight light3(glm::vec3(0, 2, -4));
+    PointLight light3(glm::vec3(0, 2, -3));
     light3.setColor(glm::vec3(0, 0, 1));
     renderer.addLight(light3);
 
@@ -255,34 +255,8 @@ int main(void) {
 
     renderer.addGroup(lightsGroup);
 
-    // Axis polytope
-    std::vector<Vec3f> xAxis = { Vec3f(0, 0, 0, 1, 0, 0), Vec3f(1, 0, 0, 1, 0, 0)};
-    Polytope::Ptr xAxisPolytope = Polytope::New(xAxis);
-
-    std::vector<Vec3f> yAxis = { Vec3f(0, 0, 0, 0, 1, 0), Vec3f(0, 1, 0, 0, 1, 0) };
-    Polytope::Ptr yAxisPolytope = Polytope::New(yAxis);
-
-    std::vector<Vec3f> zAxis = { Vec3f(0, 0, 0, 0, 0, 1), Vec3f(0, 0, 1, 0, 0, 1) };
-    Polytope::Ptr zAxisPolytope = Polytope::New(zAxis);
-
-    Group axisGroup(GL_LINES);
-    axisGroup.setLineWidth(3.0f);
-    axisGroup.add(xAxisPolytope);
-    axisGroup.add(yAxisPolytope);
-    axisGroup.add(zAxisPolytope);
-    renderer.addGroup(axisGroup);
-
-    // Dynamic Polytope
-    size_t length = 5000;
-    DynamicPolytope::Ptr dynamicPolytope = DynamicPolytope::New(length);
-
-    Group groupDynamic(GL_LINE_STRIP);
-    groupDynamic.setLineWidth(2.f);
-    groupDynamic.translate(glm::vec3(-1, 0, 0));
-    groupDynamic.add(dynamicPolytope);
-    renderer.addGroup(groupDynamic);
-
     // Dynamic Polytope for mouse picking (ray casting)
+    unsigned int length = 5000;
     DynamicPolytope::Ptr mousePickingPolytope = DynamicPolytope::New(length);
     Group groupMousePicking(GL_POINTS);
     groupMousePicking.setPointSize(8.f);
@@ -297,12 +271,20 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
-    //Model model("/home/morcillosanz/Desktop/model/Bulbasaur/model.obj");
     Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     model.setLineWidth(2.5f);
-    model.translate(glm::vec3(0.0, 0.0, 2.0));
+    model.translate(glm::vec3(2.0, 0.0, 2.0));
     model.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model);
+
+    Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
+    model2.scale(glm::vec3(0.1, 0.1, 0.1));
+    renderer.addGroup(model2);
+
+    Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
+    model3.translate(glm::vec3(-2.0, 0.0, -1.0));
+    model3.scale(glm::vec3(0.1, 0.1, 0.1));
+    renderer.addGroup(model3);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -340,35 +322,6 @@ int main(void) {
         // Update vertex from cubePolytope
         cubePolytopeIndices->updateVertex(0, firstVertex);
         firstVertex.z += 0.001;
-
-        // Add vertices to dynamicPolytope
-        {
-            static size_t numVertices = 0;
-
-            static float radius = 0.5f;
-            static float theta = 0.0f;
-            static float height = 0.1f;
-
-            const float dTheta = 0.01f;
-            const float dZ = 0.001f;
-            
-            if(numVertices < dynamicPolytope->getVertexLength()) {
-
-                float x = radius * cos(theta);
-                float y = height;
-                float z = radius * sin(theta);
-
-                float r = (float)numVertices / dynamicPolytope->getVertexLength();
-                float g = 1 - r;
-                float b = 0.5f;
-
-                dynamicPolytope->addVertex(Vec3f(x, y, z, r, g, b));
-
-                theta += dTheta;
-                height += dZ;
-                numVertices ++;
-            }
-        }
 
         // ImGUI
         {

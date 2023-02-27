@@ -56,21 +56,22 @@ uniform bool hasEmission;
 uniform bool blinn;
 uniform bool gammaCorrection;
 
-vec3 getLightColor(Light light) {
-
-   // Calculate ambient lighting
+vec3 calculateAmbient(Light light) {
    vec3 ambient = vec3(1.0);
+
    if(hasDiffuse) {
       ambient = light.ambient * light.color * vec3(texture(materialMaps.diffuseMap, TexCoord));
    }else {
       ambient = light.ambient * light.color * ourColor;
    }
 
-   // Calculate diffuse lighting
-   vec3 norm = normalize(Normal);
-   vec3 lightDir = normalize(light.position - FragPos);
-   float diff = max(dot(norm, lightDir), 0.0);
+   return ambient;
+}
+
+vec3 calculateDiffuse(Light light, vec3 normal, vec3 lightDir) {
    vec3 diffuse = vec3(1.0);
+   float diff = max(dot(normal, lightDir), 0.0);
+
    if(hasDiffuse) {
       vec4 textureDiffuse = texture(materialMaps.diffuseMap, TexCoord);
       if(textureDiffuse.a < 0.5) {
@@ -80,18 +81,23 @@ vec3 getLightColor(Light light) {
    }else {
       diffuse = light.diffuse * (diff * material.diffuse);
    }
- 
-   // Calculate specular lighting
+
+   return diffuse;
+}
+
+vec3 calculateSpecular(Light light, vec3 normal, vec3 lightDir) {
+   vec3 specular = vec3(1.0);
    vec3 viewDir = normalize(viewPos - FragPos);
-   vec3 reflectDir = reflect(-lightDir, norm);
+   vec3 reflectDir = reflect(-lightDir, normal);
    float spec = 0.0;
+
    if(blinn) {
       vec3 halfwayDir = normalize(lightDir + viewDir);
-      spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
+      spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
    } else {
       spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
    }
-   vec3 specular = vec3(1.0);
+
    if(hasSpecular) {
       vec3 specularMapInfo = vec3(texture(materialMaps.specularMap, TexCoord));
       specular = light.specular * spec * specularMapInfo;
@@ -99,10 +105,31 @@ vec3 getLightColor(Light light) {
       specular = light.specular * (spec * material.specular);
    }
 
+   return specular;
+}
+
+vec3 calculateEmission() {
    vec3 emission = vec3(0.0);
    if(hasEmission) {
        emission = texture(materialMaps.emissionMap, TexCoord).rgb;
    }
+   return emission;
+}
+
+vec3 getLightColor(Light light) {
+
+   // Calculate ambient
+   vec3 ambient = calculateAmbient(light);
+
+   // Calculate diffuse and specular lighting
+   vec3 norm = normalize(Normal);
+   vec3 lightDir = normalize(light.position - FragPos);
+
+   vec3 diffuse = calculateDiffuse(light, norm, lightDir);
+   vec3 specular = calculateSpecular(light, norm, lightDir);
+
+   // Calculate emission
+   vec3 emission = calculateEmission();
 
    // Calculate cut off (Spot Light)
    if(isSpotLight) {
@@ -117,7 +144,6 @@ vec3 getLightColor(Light light) {
    if(isPointLight || isSpotLight) {
        float distance    = length(light.position - FragPos);
        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
        ambient  *= attenuation;
        diffuse  *= attenuation;
        specular *= attenuation;
@@ -139,6 +165,6 @@ void main() {
 
    if(gammaCorrection) {
       float gamma = 2.2;
-      FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
+      FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));
    }
 }

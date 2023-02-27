@@ -3340,7 +3340,6 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o
  /usr/include/GL/gl.h
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/ptr.h
  /home/morcillosanz/Desktop/GitHub/RendererGL/glew/glew.h
- /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/opengl/shader/Program.h
 
 CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/PointLight.cpp
@@ -7212,7 +7211,6 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/SpotLight.h
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/SkyBox.h
  /home/morcillosanz/Desktop/GitHub/RendererGL/glew/glew.h
- /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/opengl/shader/Program.h
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/SkyBox.cpp
@@ -7651,7 +7649,6 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o
  /home/morcillosanz/Desktop/GitHub/RendererGL/glm/gtc/type_ptr.inl
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/texture/Texture.h
  /home/morcillosanz/Desktop/GitHub/RendererGL/glew/glew.h
- /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/opengl/shader/Program.h
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/renderer/TrackballCamera.cpp

@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.12)
+set (CMAKE_CXX_STANDARD 17)
 
 project(RendererGL
         VERSION 0.1
         DESCRIPTION "OpenGL renderer"
         LANGUAGES CXX)
 
+# Header Files
 set(HEADERS 
         glew/glew.h
-        # ImGui
+
         imgui/imgui.h
         imgui/backends/imgui_impl_glfw.h
         imgui/backends/imgui_impl_opengl3.h
@@ -15,7 +17,7 @@ set(HEADERS
         imgui/imstb_rectpack.h
         imgui/imstb_textedit.h
         imgui/imstb_truetype.h
-        # Source
+
         src/ImguiStyles.h
         src/engine/Vec3.h
         src/engine/ptr.h
@@ -44,9 +46,10 @@ set(HEADERS
         src/engine/model/Model.h
 )
 
+# CPP files
 set(SOURCES
         glew/glew.cpp
-        # ImGui
+
         imgui/imgui.cpp
         imgui/backends/imgui_impl_glfw.cpp
         imgui/backends/imgui_impl_opengl3.cpp
@@ -54,7 +57,7 @@ set(SOURCES
         imgui/imgui_draw.cpp
         imgui/imgui_tables.cpp
         imgui/imgui_widgets.cpp
-        # Source
+
         src/main.cpp
         src/engine/window/Window.cpp
         src/engine/opengl/buffer/VertexArray.cpp
@@ -78,5 +81,15 @@ set(SOURCES
         src/engine/model/Model.cpp
 )
 
+# Copy shaders into build folder
+set(SHADERS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/opengl/glsl")
+file(GLOB shaderFiles ${SHADERS_PATH}/*.frag ${SHADERS_PATH}/*.vert)
+foreach(filename ${shaderFiles} )
+    file(COPY ${filename} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/glsl)
+endforeach()
+
+# Compile files
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Link libraries
 target_link_libraries(${PROJECT_NAME} assimp GL dl X11 glfw)

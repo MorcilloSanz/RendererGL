@@ -3326,8 +3326,7 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: ../src/engine/lightin
   /usr/include/GL/glu.h \
   /usr/include/GL/gl.h \
   ../src/engine/ptr.h \
-  ../glew/glew.h \
-  ../src/engine/opengl/shader/Program.h
+  ../glew/glew.h
 
 CMakeFiles/RendererGL.dir/src/engine/lighting/PointLight.cpp.o: ../src/engine/lighting/PointLight.cpp \
   /usr/include/stdc-predef.h \
@@ -7187,8 +7186,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/Renderer.cpp.o: ../src/engine/rend
   ../src/engine/lighting/PointLight.h \
   ../src/engine/lighting/SpotLight.h \
   ../src/engine/renderer/SkyBox.h \
-  ../glew/glew.h \
-  ../src/engine/opengl/shader/Program.h
+  ../glew/glew.h
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o: ../src/engine/renderer/SkyBox.cpp \
   /usr/include/stdc-predef.h \
@@ -7625,8 +7623,7 @@ CMakeFiles/RendererGL.dir/src/engine/renderer/SkyBox.cpp.o: ../src/engine/render
   /usr/include/strings.h \
   ../glm/gtc/type_ptr.inl \
   ../src/engine/texture/Texture.h \
-  ../glew/glew.h \
-  ../src/engine/opengl/shader/Program.h
+  ../glew/glew.h
 
 CMakeFiles/RendererGL.dir/src/engine/renderer/TrackballCamera.cpp.o: ../src/engine/renderer/TrackballCamera.cpp \
   /usr/include/stdc-predef.h \
@@ -9113,8 +9110,6 @@ CMakeFiles/RendererGL.dir/src/main.cpp.o: ../src/main.cpp \
 ../src/engine/lighting/SpotLight.h:
 
 ../src/engine/lighting/PointLight.cpp:
-
-../src/engine/opengl/shader/Program.h:
 
 ../src/engine/opengl/shader/Shader.h:
 

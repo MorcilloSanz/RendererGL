@@ -2,8 +2,6 @@
 
 #include "../texture/Texture.h"
 
-#include "../opengl/shader/Program.h"
-
 #include "../Vec3.h"
 
 std::vector<Vec3f> vertices = {        

@@ -383,5 +383,4 @@ CMakeFiles/RendererGL.dir/src/engine/lighting/Light.cpp.o: \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/../opengl/shader/../../../../glew/glew.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h \
  /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/../opengl/shader/../../ptr.h \
- /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/../../../glew/glew.h \
- /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/../opengl/shader/Program.h
+ /home/morcillosanz/Desktop/GitHub/RendererGL/src/engine/lighting/../../../glew/glew.h

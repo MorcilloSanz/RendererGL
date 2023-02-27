@@ -2,8 +2,6 @@
 
 #include "../../../glew/glew.h"
 
-#include "../opengl/shader/Program.h"
-
 bool Light::blinn = true;
 bool Light::gammaCorrection = false;
 

@@ -47,6 +47,7 @@
         "random": "cpp",
         "fstream": "cpp",
         "cinttypes": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "chrono": "cpp"
     }
 }

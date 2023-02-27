@@ -2,8 +2,6 @@
 
 #include "../../../glew/glew.h"
 
-#include "../opengl/shader/Program.h"
-
 template<typename Base, typename T>
 inline bool instanceof(const T *ptr) {
    return dynamic_cast<const Base*>(ptr) != nullptr;
@@ -19,20 +17,20 @@ Renderer::Renderer()
 
 void Renderer::initShaders() {
     // Default shader program
-    Shader vertexShader(Program::getVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentShader(Program::getFragmentShaderCode(), Shader::ShaderType::Fragment);
+    Shader vertexShader = Shader::fromFile("glsl/Default.vert", Shader::ShaderType::Vertex);
+    Shader fragmentShader = Shader::fromFile("glsl/Default.frag", Shader::ShaderType::Fragment);
     shaderProgram = ShaderProgram::New(vertexShader, fragmentShader);
     // Lighting shader program
-    Shader vertexLightingShader(Program::getPhongVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentLightingShader(Program::getPhongFragmentShaderCode(), Shader::ShaderType::Fragment);
+    Shader vertexLightingShader = Shader::fromFile("glsl/BlinnPhong.vert", Shader::ShaderType::Vertex);
+    Shader fragmentLightingShader = Shader::fromFile("glsl/BlinnPhong.frag", Shader::ShaderType::Fragment);
     shaderProgramLighting = ShaderProgram::New(vertexLightingShader, fragmentLightingShader);
     // SkyBox shader program
-    Shader vertexSkyBoxShader(Program::getSkyBoxVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentSkyBoxShader(Program::getSkyBoxFragmentShaderCode(), Shader::ShaderType::Fragment);
+    Shader vertexSkyBoxShader = Shader::fromFile("glsl/SkyBox.vert", Shader::ShaderType::Vertex);
+    Shader fragmentSkyBoxShader = Shader::fromFile("glsl/SkyBox.frag", Shader::ShaderType::Fragment);
     shaderProgramSkyBox = ShaderProgram::New(vertexSkyBoxShader, fragmentSkyBoxShader);
     // Selection shader program
-    Shader vertexSelectionShader(Program::getOutlineVertexShaderCode(), Shader::ShaderType::Vertex);
-    Shader fragmentSelectionShader(Program::getOutlineFragmentShaderCode(), Shader::ShaderType::Fragment);
+    Shader vertexSelectionShader = Shader::fromFile("glsl/Selection.vert", Shader::ShaderType::Vertex);
+    Shader fragmentSelectionShader = Shader::fromFile("glsl/Selection.frag", Shader::ShaderType::Fragment);
     shaderProgramSelection = ShaderProgram::New(vertexSelectionShader, fragmentSelectionShader);
 }
 
@@ -130,7 +128,7 @@ void Renderer::lightShaderUniforms() {
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
-        // Point Light
+        // Point Light (Spot Light is also a Point Light)
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
             shaderProgramLighting->uniformInt("isPointLight", true);
@@ -142,9 +140,6 @@ void Renderer::lightShaderUniforms() {
         if(instanceof<SpotLight>(lights[i])) {
             SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
             shaderProgramLighting->uniformInt("isSpotLight", true);
-            shaderProgramLighting->uniformFloat(lightUniform + ".constant", spotLight->getConstant());
-            shaderProgramLighting->uniformFloat(lightUniform + ".linear", spotLight->getLinear());
-            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", spotLight->getQuadratic());
             shaderProgramLighting->uniformVec3(lightUniform + ".direction", spotLight->getDirection());
             shaderProgramLighting->uniformFloat(lightUniform + ".cutOff", spotLight->getCutOff());
             shaderProgramLighting->uniformFloat(lightUniform + ".outerCutOff", spotLight->getOuterCutOff());

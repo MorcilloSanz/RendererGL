@@ -130,7 +130,7 @@ void Renderer::lightShaderUniforms() {
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
-        // Point Light
+        // Point Light (Spot Light is also a Point Light)
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
             shaderProgramLighting->uniformInt("isPointLight", true);
@@ -142,9 +142,6 @@ void Renderer::lightShaderUniforms() {
         if(instanceof<SpotLight>(lights[i])) {
             SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
             shaderProgramLighting->uniformInt("isSpotLight", true);
-            shaderProgramLighting->uniformFloat(lightUniform + ".constant", spotLight->getConstant());
-            shaderProgramLighting->uniformFloat(lightUniform + ".linear", spotLight->getLinear());
-            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", spotLight->getQuadratic());
             shaderProgramLighting->uniformVec3(lightUniform + ".direction", spotLight->getDirection());
             shaderProgramLighting->uniformFloat(lightUniform + ".cutOff", spotLight->getCutOff());
             shaderProgramLighting->uniformFloat(lightUniform + ".outerCutOff", spotLight->getOuterCutOff());

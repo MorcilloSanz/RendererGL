@@ -255,6 +255,18 @@ int main(void) {
 
     renderer.addGroup(lightsGroup);
 
+    // Directional light polytope
+    for(auto& vec : cubeVertices) {
+        glm::vec3 lightColor = light4.getColor();
+        vec.r = lightColor.r;
+        vec.g = lightColor.g;
+        vec.b = lightColor.b;
+    }
+
+    Polytope::Ptr directionalPolytope = Polytope::New(cubeVertices, cubeIndices);
+    directionalPolytope->translate(light4.getPosition());
+    directionalPolytope->scale(glm::vec3(0.25, 0.25, 0.25));
+
     // Dynamic Polytope for mouse picking (ray casting)
     unsigned int length = 5000;
     DynamicPolytope::Ptr mousePickingPolytope = DynamicPolytope::New(length);
@@ -365,6 +377,12 @@ int main(void) {
                 if(!showSkyBox) renderer.setSkyBox(nullptr);
                 else renderer.setSkyBox(skyBox);
 
+                static bool showLights = lightsGroup.isVisible();
+                ImGui::Checkbox("Show lights", &showLights);
+                lightsGroup.setVisible(showLights);
+
+                ImGui::SameLine();
+
                 static bool emission = true;
                 bool tempEmission = emission;
                 ImGui::Checkbox("Emission", &emission);
@@ -433,7 +451,6 @@ int main(void) {
                 static bool enable = false;
                 ImGui::Checkbox("Enable", &enable);
                 renderer.setLightEnabled(enable);
-                lightsGroup.setVisible(enable);
 
                 ImGui::SameLine();
 
@@ -453,8 +470,14 @@ int main(void) {
                 bool previousDirectionalLight = enableDirectionalLight;
                 ImGui::Checkbox("Directional", &enableDirectionalLight);
                 if(enableDirectionalLight != previousDirectionalLight) {
-                    if(enableDirectionalLight) renderer.addLight(light4);
-                    else renderer.removeLight(light4);
+                    if(enableDirectionalLight) {
+                        renderer.addLight(light4);
+                        lightsGroup.add(directionalPolytope);
+                    }
+                    else {
+                        renderer.removeLight(light4);
+                        lightsGroup.removePolytope(directionalPolytope);
+                    }
                     previousDirectionalLight = enableDirectionalLight;
                 }
 

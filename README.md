@@ -107,11 +107,15 @@ Emission
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)  
 
-Screenshots
+Call of Duty Ghost soldier
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)  
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)  
+Call of Duty Ghost dog
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
+
+Multiple 3D models, directional and point lighting and skybox
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)
 
@@ -122,3 +126,4 @@ Screenshots
 * [GLM](https://github.com/g-truc/glm)
 * [IMGUI](https://github.com/ocornut/imgui)
 * [ASSIMP](https://github.com/assimp/assimp)
+* [STB](https://github.com/nothings/stb)

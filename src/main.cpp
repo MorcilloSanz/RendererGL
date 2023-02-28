@@ -283,20 +283,31 @@ int main(void) {
     renderer.addGroup(raysGroup);
 
     // 3D model from file
+    Model modelMap("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
+    modelMap.translate(glm::vec3(0, -5, 0));
+    modelMap.scale(glm::vec3(0.001, 0.001, 0.001));
+    renderer.addGroup(modelMap);
+
     Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     model.setLineWidth(2.5f);
-    model.translate(glm::vec3(2.0, 0.0, 2.0));
+    model.translate(glm::vec3(2.0, 0.0, 0.0));
     model.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model);
 
     Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
+    model2.translate(glm::vec3(0, 0, -1.0));
     model2.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model2);
 
     Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
-    model3.translate(glm::vec3(-2.0, 0.0, -1.0));
+    model3.translate(glm::vec3(-2.0, 0.0, 0.0));
     model3.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model3);
+
+    Model model4("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
+    model4.translate(glm::vec3(0, 0, 2));
+    model4.scale(glm::vec3(0.1, 0.1, 0.1));
+    renderer.addGroup(model4);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -429,7 +440,11 @@ int main(void) {
                     cubePolytope2->addTexture(textureEmissionRed);
                 }
 
-                ImGui::Separator();
+                static bool showFloor = groupFloor.isVisible();
+                ImGui::Checkbox("Show floor", &showFloor);
+                groupFloor.setVisible(showFloor);
+
+                ImGui::SameLine();
 
                 glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();
                 static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};

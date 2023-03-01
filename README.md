@@ -115,7 +115,7 @@ Call of Duty Ghost dog
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
 
-Multiple 3D models, directional and point lighting and skybox
+Multiple 3D models
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)
 

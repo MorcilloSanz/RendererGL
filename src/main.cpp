@@ -305,7 +305,7 @@ int main(void) {
     renderer.addGroup(model3);
 
     Model model4("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
-    model4.translate(glm::vec3(0, 0, 2));
+    model4.translate(glm::vec3(0, 0, -4));
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer.addGroup(model4);
 

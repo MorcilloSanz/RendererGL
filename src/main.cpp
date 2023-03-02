@@ -140,7 +140,7 @@ int main(void) {
     };
 
     Polytope::Ptr cubePolytope = Polytope::New(vertices);
-    cubePolytope->translate(glm::vec3(4.5, 0, 0));
+    cubePolytope->translate(glm::vec3(0, 0, 3));
     cubePolytope->setFaceCulling(Polytope::FaceCulling::NONE); // BACK default
 
     std::vector<Vec3f> cubeVertices {
@@ -166,16 +166,14 @@ int main(void) {
     };
 
     Polytope::Ptr cubePolytopeIndices = Polytope::New(cubeVertices, cubeIndices);
-    cubePolytopeIndices->translate(glm::vec3(0, 0, 0));
+    cubePolytopeIndices->translate(glm::vec3(-5.5, 0, -5));
 
     // Make vertices white in order to see the texture instead of an interpolation between the texture and the vertex color in cubePolytope2
     for(auto& vec : vertices) vec.r = vec.g = vec.b = 1;
 
     // Cube Polytope 2 
     Polytope::Ptr cubePolytope2 = Polytope::New(vertices);
-    cubePolytope2->translate(glm::vec3(2.5f, 1.5f, -1.5f));
-    cubePolytope2->rotate(45, glm::vec3(0, 0, 1));
-    cubePolytope2->scale(glm::vec3(0.5, 0.5, 0.5));
+    cubePolytope2->translate(glm::vec3(-5, 0.25, 5));
 
     Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
     Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
@@ -191,7 +189,7 @@ int main(void) {
     // Cubes group
     Group group;
     group.setLineWidth(2.f);
-    group.translate(glm::vec3(-2.5, 0.5, 0));
+    group.translate(glm::vec3(0, 0.5, 0));
     group.add(cubePolytope);
     group.add(cubePolytopeIndices);
     group.add(cubePolytope2);
@@ -218,23 +216,6 @@ int main(void) {
     Group groupGrid(GL_LINES);
     groupGrid.add(gridPolytope);
     renderer.addGroup(groupGrid);
-
-    // Floor polytope
-    float floorSide = 15.f;
-    std::vector<Vec3f> floorVertices = {
-        Vec3f(-floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
-        Vec3f( floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
-        Vec3f( floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f), // top-right     
-        Vec3f( floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f), // bottom-right
-        Vec3f(-floorSide / 2,  0.f, -floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f), // top-left
-        Vec3f(-floorSide / 2,  0.f,  floorSide / 2,  0.5, 0.5, 0.5,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f) // bottom-left  
-    };
-    Polytope::Ptr floorPolytope = Polytope::New(floorVertices);
-    floorPolytope->setFaceCulling(Polytope::FaceCulling::NONE);
-
-    Group groupFloor;
-    groupFloor.add(floorPolytope);
-    renderer.addGroup(groupFloor);
 
     // Light polytopes
     Group lightsGroup;
@@ -340,7 +321,7 @@ int main(void) {
         textureRenderer.renderToDefault();
 
         // Rotate cubePolytope2
-        cubePolytope2->rotate(0.15, glm::vec3(1, 0, 1));
+        //cubePolytope2->rotate(0.15, glm::vec3(1, 0, 1));
 
         // Update vertex from cubePolytope
         cubePolytopeIndices->updateVertex(0, firstVertex);
@@ -439,12 +420,6 @@ int main(void) {
                     cubePolytope2->addTexture(textureEmission);
                     cubePolytope2->addTexture(textureEmissionRed);
                 }
-
-                static bool showFloor = groupFloor.isVisible();
-                ImGui::Checkbox("Show floor", &showFloor);
-                groupFloor.setVisible(showFloor);
-
-                ImGui::SameLine();
 
                 glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();
                 static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};

@@ -101,15 +101,11 @@ Loading a 3D model with a skybox and ilumination
 
 Multiple point lights
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)  
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)
 
 Emission
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)  
-
-Call of Duty Ghost soldier
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)
 
 Call of Duty Ghost dog
 
@@ -118,6 +114,10 @@ Call of Duty Ghost dog
 Multiple 3D models
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)
+
+Call of Duty Ghost soldier
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)
 
 # Dependencies
 

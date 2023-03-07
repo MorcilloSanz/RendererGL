@@ -48,6 +48,11 @@
         "fstream": "cpp",
         "cinttypes": "cpp",
         "map": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp",
+        "iomanip": "cpp",
+        "sstream": "cpp"
     }
 }

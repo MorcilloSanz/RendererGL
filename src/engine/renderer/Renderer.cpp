@@ -7,12 +7,18 @@ inline bool instanceof(const T *ptr) {
    return dynamic_cast<const Base*>(ptr) != nullptr;
 }
 
-Renderer::Renderer() 
+Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight) 
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
-    projection(glm::mat4(1.f)), view(glm::mat4(1.f)) {
+    projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
+    depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight) {
     initShaders();
     enableBlending();
     enableAntialiasing();
+    initShadowMapping();
+}
+
+Renderer::Renderer() 
+    : Renderer(0, 0) {
 }
 
 void Renderer::initShaders() {
@@ -24,6 +30,10 @@ void Renderer::initShaders() {
     Shader vertexLightingShader = Shader::fromFile("glsl/BlinnPhong.vert", Shader::ShaderType::Vertex);
     Shader fragmentLightingShader = Shader::fromFile("glsl/BlinnPhong.frag", Shader::ShaderType::Fragment);
     shaderProgramLighting = ShaderProgram::New(vertexLightingShader, fragmentLightingShader);
+    // Depth Map shader program
+    Shader vertexDepthMapShader = Shader::fromFile("glsl/SimpleDepth.vert", Shader::ShaderType::Vertex);
+    Shader fragmentDepthMapShader = Shader::fromFile("glsl/SimpleDepth.frag", Shader::ShaderType::Fragment);
+    shaderProgramDepthMap = ShaderProgram::New(vertexDepthMapShader, fragmentDepthMapShader);
     // SkyBox shader program
     Shader vertexSkyBoxShader = Shader::fromFile("glsl/SkyBox.vert", Shader::ShaderType::Vertex);
     Shader fragmentSkyBoxShader = Shader::fromFile("glsl/SkyBox.frag", Shader::ShaderType::Fragment);
@@ -176,8 +186,63 @@ void Renderer::setFaceCulling(const Polytope::Ptr& polytope) {
     }
 }
 
+void Renderer::setViewport(unsigned int viewportWidth, unsigned int viewportHeight) {
+    this->viewportWidth = viewportWidth;
+    this->viewportHeight = viewportHeight;
+}
+
+void Renderer::initShadowMapping() {
+
+    glGenFramebuffers(1, &depthMapFBO);  
+
+    depthMap = DepthTexture::New(viewportWidth, viewportWidth);
+    depthMap->bind();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap->getID(), 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::renderToDepthMap(Group* group) {
+    if(!hasLight || !group->isVisible()) return;
+
+    int previousFBO;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+
+    glViewport(0, 0, viewportWidth, viewportWidth);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+
+    // Shaders
+    float nearPlane = 1.f, farPlane = 7.5f;
+    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+    glm::mat4 lightView = glm::lookAt(glm::vec3(-2.0f, 4.0f, -1.0f), glm::vec3( 0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
+    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+
+    shaderProgramDepthMap->useProgram();
+    shaderProgramDepthMap->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+    // Draw
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    for(auto& polytope : group->getPolytopes()) {
+
+        glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+        shaderProgramDepthMap->uniformMat4("model", model);
+
+        glCullFace(GL_FRONT);
+        polytope->draw(group->getPrimitive());
+        glCullFace(GL_BACK);
+    }
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
+}
+
 void Renderer::drawGroup(Group* group) {
     if(!group->isVisible()) return;
+
+    glViewport(0, 0, viewportWidth, viewportHeight);
 
     primitiveSettings(group);
     
@@ -198,11 +263,15 @@ void Renderer::drawGroup(Group* group) {
             lightMaterialUniforms(polytope);
             textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
+            // Shadow Mapping
+            depthMap->bind();
+            shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
         }
         // Set face culling
         setFaceCulling(polytope);
         // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
+        // Draw selected polytope if selected
         if(polytope->isSelected()) {
             shaderProgramSelection->useProgram();
             shaderProgramSelection->uniformMat4("mvp", mvp);
@@ -224,7 +293,7 @@ void Renderer::drawSkyBox() {
     shaderProgramSkyBox->useProgram();
     // remove translation from the view matrix
     view = glm::mat4(glm::mat3(camera->getViewMatrix())); 
-    shaderProgramSkyBox->uniformInt("skybox", 0);
+    shaderProgramSkyBox->uniformInt("skybox", 0); 
     shaderProgramSkyBox->uniformMat4("view", view);
     shaderProgramSkyBox->uniformMat4("projection", projection);
     // Draw call
@@ -246,7 +315,10 @@ void Renderer::render() {
         view = camera->getViewMatrix();
     }
     // Draw groups
-    for(Group* group : groups) drawGroup(group);
+    for(Group* group : groups) {
+        renderToDepthMap(group);
+        drawGroup(group);
+    }
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

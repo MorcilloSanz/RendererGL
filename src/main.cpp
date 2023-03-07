@@ -28,10 +28,13 @@ void updateFPSCamera(double xpos, double ypos);
 Window window;
 
 // Texture renderer
-TextureRenderer textureRenderer; // DO NOT INSTANCIATE AGAIN, that would destroy the current object and delete TextureRenderer's buffers which ends up in OpenGL errors
+TextureRenderer textureRenderer; // DO NOT INSTANCIATE AGAIN, that would destroy the current object and delete textureRenderer's buffers which ends up in OpenGL errors
 
 // TrackBallCamera 
 TrackballCamera camera;
+
+// Renderer
+Renderer::Ptr renderer;
 
 // FPS camera
 FPSCamera fpsCamera;
@@ -57,13 +60,13 @@ int main(void) {
     initImGui(io);
 
     // Renderer
-    Renderer renderer;
+    renderer = Renderer::New(window.getWidth(), window.getHeight());
 
     // Trackball Camera
     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
     camera.zoom(-5.5);
-    renderer.setCamera(camera);
+    renderer->setCamera(camera);
 
     // First Person Shooter Camera
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
@@ -73,25 +76,25 @@ int main(void) {
     PointLight light(glm::vec3(0, 3, 0));
     light.setSpecular(glm::vec3(0.3));
     light.setColor(glm::vec3(0, 1, 0));
-    renderer.addLight(light);
+    renderer->addLight(light);
 
     PointLight light2(glm::vec3(3, 2, 0));
     light2.setColor(glm::vec3(1, 0, 0));
-    renderer.addLight(light2);
+    renderer->addLight(light2);
 
     PointLight light3(glm::vec3(0, 2, -3));
     light3.setColor(glm::vec3(0, 0, 1));
-    renderer.addLight(light3);
+    renderer->addLight(light3);
 
     // Fix needed
     SpotLight spotLight(glm::vec3(6, 2, 6), glm::vec3(-6, -2, -6));
     spotLight.setColor(glm::vec3(1, 1, 1));
-    //renderer.addLight(spotLight);
+    //renderer->addLight(spotLight);
 
     DirectionalLight light4(glm::vec3(10, 10, -10));
     light4.setColor(glm::vec3(1.0, 1.0, 1.0));
 
-    renderer.disableLight();
+    renderer->disableLight();
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -193,7 +196,7 @@ int main(void) {
     group.add(cubePolytope);
     group.add(cubePolytopeIndices);
     group.add(cubePolytope2);
-    renderer.addGroup(group);
+    renderer->addGroup(group);
 
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
@@ -215,13 +218,13 @@ int main(void) {
 
     Group groupGrid(GL_LINES);
     groupGrid.add(gridPolytope);
-    renderer.addGroup(groupGrid);
+    renderer->addGroup(groupGrid);
 
     // Light polytopes
     Group lightsGroup;
     lightsGroup.setVisible(false);
 
-    for(Light* light : renderer.getLights()) {
+    for(Light* light : renderer->getLights()) {
         for(auto& vec : cubeVertices) {
             glm::vec3 lightColor = light->getColor();
             vec.r = lightColor.r;
@@ -234,7 +237,7 @@ int main(void) {
         lightsGroup.add(lightPolytope);
     }
 
-    renderer.addGroup(lightsGroup);
+    renderer->addGroup(lightsGroup);
 
     // Directional light polytope
     for(auto& vec : cubeVertices) {
@@ -254,41 +257,41 @@ int main(void) {
     Group groupMousePicking(GL_POINTS);
     groupMousePicking.setPointSize(8.f);
     groupMousePicking.add(mousePickingPolytope);
-    renderer.addGroup(groupMousePicking);
+    renderer->addGroup(groupMousePicking);
 
     // Dynamic Polytope for ray casting drawing
     DynamicPolytope::Ptr raysPolytope = DynamicPolytope::New(length);
     Group raysGroup(GL_LINES);
     raysGroup.setLineWidth(2.f);
     raysGroup.add(raysPolytope);
-    renderer.addGroup(raysGroup);
+    renderer->addGroup(raysGroup);
 
     // 3D model from file
     Model modelMap("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
     modelMap.translate(glm::vec3(0, -5, 0));
     modelMap.scale(glm::vec3(0.001, 0.001, 0.001));
-    renderer.addGroup(modelMap);
+    renderer->addGroup(modelMap);
 
     Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
     model.setLineWidth(2.5f);
     model.translate(glm::vec3(2.0, 0.0, 0.0));
     model.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer.addGroup(model);
+    renderer->addGroup(model);
 
     Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
     model2.translate(glm::vec3(0, 0, -1.0));
     model2.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer.addGroup(model2);
+    renderer->addGroup(model2);
 
     Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
     model3.translate(glm::vec3(-2.0, 0.0, 0.0));
     model3.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer.addGroup(model3);
+    renderer->addGroup(model3);
 
     Model model4("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
     model4.translate(glm::vec3(0, 0, -4));
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer.addGroup(model4);
+    renderer->addGroup(model4);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -300,9 +303,9 @@ int main(void) {
         "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
     };
     SkyBox::Ptr skyBox = SkyBox::New(faces);
-    renderer.setSkyBox(skyBox);
+    renderer->setSkyBox(skyBox);
 
-    // Init TextureRenderer
+    // Init textureRenderer
     textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
 
     // Get First Vertex from cubePolytopeIndices
@@ -312,11 +315,11 @@ int main(void) {
     while (!window.windowShouldClose()) {
 
         // Clear
-        renderer.clear();
+        renderer->clear();
         // Draw to texture instead of default
         textureRenderer.renderToTexture();
         // Render
-        renderer.render();
+        renderer->render();
         // Go back to default
         textureRenderer.renderToDefault();
 
@@ -366,8 +369,8 @@ int main(void) {
 
                 static bool showSkyBox = true;
                 ImGui::Checkbox("Skybox", &showSkyBox);
-                if(!showSkyBox) renderer.setSkyBox(nullptr);
-                else renderer.setSkyBox(skyBox);
+                if(!showSkyBox) renderer->setSkyBox(nullptr);
+                else renderer->setSkyBox(skyBox);
 
                 static bool showLights = lightsGroup.isVisible();
                 ImGui::Checkbox("Show lights", &showLights);
@@ -440,7 +443,7 @@ int main(void) {
 
                 static bool enable = false;
                 ImGui::Checkbox("Enable", &enable);
-                renderer.setLightEnabled(enable);
+                renderer->setLightEnabled(enable);
 
                 ImGui::SameLine();
 
@@ -461,11 +464,11 @@ int main(void) {
                 ImGui::Checkbox("Directional", &enableDirectionalLight);
                 if(enableDirectionalLight != previousDirectionalLight) {
                     if(enableDirectionalLight) {
-                        renderer.addLight(light4);
+                        renderer->addLight(light4);
                         lightsGroup.add(directionalPolytope);
                     }
                     else {
-                        renderer.removeLight(light4);
+                        renderer->removeLight(light4);
                         lightsGroup.removePolytope(directionalPolytope);
                     }
                     previousDirectionalLight = enableDirectionalLight;
@@ -584,11 +587,11 @@ int main(void) {
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Trackball camera")) {
-                    renderer.setCamera(camera);
+                    renderer->setCamera(camera);
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("FPS camera")) {
-                    renderer.setCamera(fpsCamera);
+                    renderer->setCamera(fpsCamera);
                     glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
@@ -956,6 +959,7 @@ void resizeFun(GLFWwindow* w, int width, int height) {
     textureRenderer.updateViewPort(width, height);
     window.setWidth(width);
     window.setHeight(height);
+    renderer->setViewport(width, height);
 }
 
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {

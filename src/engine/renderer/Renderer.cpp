@@ -225,6 +225,9 @@ void Renderer::renderToDepthMap(Group* group) {
     glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3( 0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
+    shaderProgramLighting->useProgram();
+    shaderProgramLighting->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+
     shaderProgramDepthMap->useProgram();
     shaderProgramDepthMap->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 

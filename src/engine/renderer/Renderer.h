@@ -39,8 +39,10 @@ private:
     bool hasLight;
 
     unsigned int depthMapFBO;
-    //unsigned int depthMap;
     DepthTexture::Ptr depthMap;
+
+    glm::vec3 shadowLightPos;
+    bool shadowMapping;
 
     glm::vec3 backgroundColor;
     SkyBox::Ptr skyBox;
@@ -94,6 +96,12 @@ public:
     inline void removeLight(int index) { lights.erase(lights.begin() + index); nLights --; }
     inline Light* getLight(int index) { return lights[index]; }
     inline std::vector<Light*>& getLights() { return lights; }
+
+    inline void setShadowLightPos(const glm::vec3& shadowLightPos) { this->shadowLightPos = shadowLightPos; }
+    inline glm::vec3& getShadowLightPos() { return shadowLightPos; }
+
+    inline void setShadowMapping(bool shadowMapping) { this->shadowMapping = shadowMapping; }
+    inline bool isShadowMapping() const { return shadowMapping; }
 
     inline ShaderProgram::Ptr& getShaderProgram() { return shaderProgram; }
 

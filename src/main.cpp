@@ -95,6 +95,10 @@ int main(void) {
     light4.setColor(glm::vec3(1.0, 1.0, 1.0));
 
     renderer->disableLight();
+
+    // Shadow mapping
+    renderer->setShadowMapping(true);
+    renderer->setShadowLightPos(glm::vec3(-5, 5, -5)); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {

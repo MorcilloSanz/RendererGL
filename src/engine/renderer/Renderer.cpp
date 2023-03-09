@@ -10,7 +10,8 @@ inline bool instanceof(const T *ptr) {
 Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight) 
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
-    depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight) {
+    depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
+    shadowLightPos(0, 0, 0), shadowMapping(false) {
     initShaders();
     enableBlending();
     enableAntialiasing();
@@ -218,11 +219,9 @@ void Renderer::renderToDepthMap(Group* group) {
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
     // Shaders
-    glm::vec3 lightPos(2.0, 4.0, -1.0);
-
     float nearPlane = 1.f, farPlane = 7.5f;
-    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-    glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3( 0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
+    glm::mat4 lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, nearPlane, farPlane);
+    glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
     shaderProgramLighting->useProgram();
@@ -324,7 +323,7 @@ void Renderer::render() {
     }
     // Draw groups
     for(Group* group : groups) {
-        renderToDepthMap(group);
+        if(shadowMapping) renderToDepthMap(group);
         drawGroup(group);
     }
 }

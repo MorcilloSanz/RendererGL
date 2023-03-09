@@ -221,7 +221,7 @@ void Renderer::renderToDepthMap(Group* group) {
     // Shaders
     float nearPlane = 1.f, farPlane = 7.5f;
     glm::mat4 lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, nearPlane, farPlane);
-    glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
+    glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
     shaderProgramLighting->useProgram();
@@ -270,9 +270,7 @@ void Renderer::drawGroup(Group* group) {
             lightMaterialUniforms(polytope);
             textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
-            // Shadow Mapping
-            glm::vec3 lightPos(2.0, 4.0, -1.0);
-            shaderProgramLighting->uniformVec3("lightPos", lightPos);
+            if(shadowMapping) shaderProgramLighting->uniformVec3("lightPos", shadowLightPos);
         }
         // Set face culling
         setFaceCulling(polytope);

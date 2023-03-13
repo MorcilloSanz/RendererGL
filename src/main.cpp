@@ -49,7 +49,7 @@ float rayLong = 100;
 int main(void) {
 
     // Create window
-    window = Window("RendererGL", 1280, 800);
+    window = Window("RendererGL", 1280, 900);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
@@ -623,15 +623,18 @@ int main(void) {
                 // Resize window
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
+
                     // Restart trackball camera
                     float theta = camera.getTheta(), phi = camera.getPhi();
                     glm::vec3 center = camera.getCenter(), up = camera.getUp();
                     float radius = camera.getRadius();
+
                     // Update camera aspect ratio
                     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
                     camera.setRadius(radius);
+
                     // Restart fps camera
                     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                 }
@@ -841,6 +844,12 @@ int main(void) {
                         }
                         checkPolytopeSelection(pointsIndices, group, cubePolytopeIndices);
                     }
+                }
+                {
+                    ImGui::Begin("Depth map");
+                    renderer->getDepthMap()->bind();
+                    ImGui::Image((void*)(intptr_t)renderer->getDepthMap()->getID(), ImGui::GetWindowSize());
+                    ImGui::End();
                 }
 
                 ImGui::End();

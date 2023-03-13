@@ -240,7 +240,7 @@ void Renderer::renderToDepthMap(Group* group) {
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
     // Shaders
-    float nearPlane = 1.f, farPlane = 17.5f;
+    float nearPlane = 1.f, farPlane = 27.5f;
     glm::mat4 lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, nearPlane, farPlane);
     glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
@@ -299,6 +299,7 @@ void Renderer::drawGroup(Group* group) {
 
         // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
+
         // Draw selected polytope if selected
         if(polytope->isSelected()) {
             shaderProgramSelection->useProgram();

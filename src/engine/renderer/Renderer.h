@@ -116,4 +116,6 @@ public:
 
     inline void setViewportHeight(unsigned int viewportHeight) { this->viewportHeight = viewportHeight; }
     inline unsigned int getViewportHeight() const { return viewportHeight; }
+
+    inline DepthTexture::Ptr& getDepthMap() { return depthMap; }
 };

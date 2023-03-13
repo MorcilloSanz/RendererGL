@@ -222,10 +222,7 @@ void Renderer::renderToDepthMap(Group* group) {
     float nearPlane = 1.f, farPlane = 7.5f;
     glm::mat4 lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, nearPlane, farPlane);
     glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
-
-    shaderProgramLighting->useProgram();
-    shaderProgramLighting->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+    lightSpaceMatrix = lightProjection * lightView;
 
     shaderProgramDepthMap->useProgram();
     shaderProgramDepthMap->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -239,7 +236,7 @@ void Renderer::renderToDepthMap(Group* group) {
         shaderProgramDepthMap->uniformMat4("model", model);
 
         glCullFace(GL_FRONT);
-        polytope->draw(group->getPrimitive());
+        polytope->draw(group->getPrimitive(), group->isShowWire());
         glCullFace(GL_BACK);
     }
 
@@ -270,7 +267,13 @@ void Renderer::drawGroup(Group* group) {
             lightMaterialUniforms(polytope);
             textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
-            if(shadowMapping) shaderProgramLighting->uniformVec3("lightPos", shadowLightPos);
+            // Shadow mapping
+            if(shadowMapping) {
+                shaderProgramLighting->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+                shaderProgramLighting->uniformVec3("lightPos", shadowLightPos);
+                depthMap->bind();
+                shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
+            }
         }
         // Set face culling
         setFaceCulling(polytope);

@@ -42,7 +42,7 @@ public:
     Polytope(std::vector<Vec3f>& vertices);
     Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
     Polytope() = default;
-    ~Polytope() = default;
+    virtual ~Polytope() = default;
 public:
     void initPolytope(size_t length);
     void initPolytope(std::vector<Vec3f>& vertices);

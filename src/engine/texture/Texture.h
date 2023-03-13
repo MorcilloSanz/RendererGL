@@ -23,7 +23,7 @@ class Texture {
 public:
     enum class Type : int {
         None = -1, TextureAmbient = 0, TextureDiffuse = 1, TextureSpecular = 2, 
-        TextureNormal = 3, TextureHeight = 4, TextureEmission = 5
+        TextureNormal = 3, TextureHeight = 4, TextureEmission = 5, TextureDepth = 6
     };
     static int textureUnits;
     static unsigned int count;
@@ -41,7 +41,7 @@ public:
     Texture(const Texture& texture);
     Texture(Texture&& texture) noexcept;
     Texture();
-    ~Texture();
+    virtual ~Texture();
     Texture& operator=(const Texture& texture);
 protected:
     inline void initTextureUnits() { glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &Texture::textureUnits); }

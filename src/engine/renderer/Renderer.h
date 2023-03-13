@@ -40,6 +40,7 @@ private:
 
     unsigned int depthMapFBO;
     DepthTexture::Ptr depthMap;
+
     glm::mat4 lightSpaceMatrix;
     glm::vec3 shadowLightPos;
     bool shadowMapping;

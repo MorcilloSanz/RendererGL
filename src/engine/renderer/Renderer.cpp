@@ -2,6 +2,9 @@
 
 #include "../../../glew/glew.h"
 
+#define SHADOW_MAP_WIDTH 1024
+#define SHADOW_MAP_HEIGHT 1024
+
 template<typename Base, typename T>
 inline bool instanceof(const T *ptr) {
    return dynamic_cast<const Base*>(ptr) != nullptr;
@@ -23,22 +26,27 @@ Renderer::Renderer()
 }
 
 void Renderer::initShaders() {
+
     // Default shader program
     Shader vertexShader = Shader::fromFile("glsl/Default.vert", Shader::ShaderType::Vertex);
     Shader fragmentShader = Shader::fromFile("glsl/Default.frag", Shader::ShaderType::Fragment);
     shaderProgram = ShaderProgram::New(vertexShader, fragmentShader);
+
     // Lighting shader program
     Shader vertexLightingShader = Shader::fromFile("glsl/BlinnPhong.vert", Shader::ShaderType::Vertex);
     Shader fragmentLightingShader = Shader::fromFile("glsl/BlinnPhong.frag", Shader::ShaderType::Fragment);
     shaderProgramLighting = ShaderProgram::New(vertexLightingShader, fragmentLightingShader);
+
     // Depth Map shader program
     Shader vertexDepthMapShader = Shader::fromFile("glsl/SimpleDepth.vert", Shader::ShaderType::Vertex);
     Shader fragmentDepthMapShader = Shader::fromFile("glsl/SimpleDepth.frag", Shader::ShaderType::Fragment);
     shaderProgramDepthMap = ShaderProgram::New(vertexDepthMapShader, fragmentDepthMapShader);
+
     // SkyBox shader program
     Shader vertexSkyBoxShader = Shader::fromFile("glsl/SkyBox.vert", Shader::ShaderType::Vertex);
     Shader fragmentSkyBoxShader = Shader::fromFile("glsl/SkyBox.frag", Shader::ShaderType::Fragment);
     shaderProgramSkyBox = ShaderProgram::New(vertexSkyBoxShader, fragmentSkyBoxShader);
+
     // Selection shader program
     Shader vertexSelectionShader = Shader::fromFile("glsl/Selection.vert", Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader = Shader::fromFile("glsl/Selection.frag", Shader::ShaderType::Fragment);
@@ -130,8 +138,10 @@ void Renderer::defaultPrimitiveSettings() {
 }
 
 void Renderer::lightShaderUniforms() {
+
     shaderProgramLighting->uniformInt("nLights", nLights);
     for(int i = 0; i < nLights; i ++) {
+
         // Directional Light
         std::string lightUniform = "lights[" + std::to_string(i) + "]";
         shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
@@ -139,6 +149,7 @@ void Renderer::lightShaderUniforms() {
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
+
         // Point Light (Spot Light is also a Point Light)
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
@@ -147,6 +158,7 @@ void Renderer::lightShaderUniforms() {
             shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
             shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
         }else shaderProgramLighting->uniformInt("isPointLight", false);
+
         // Spot Light
         if(instanceof<SpotLight>(lights[i])) {
             SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
@@ -156,6 +168,7 @@ void Renderer::lightShaderUniforms() {
             shaderProgramLighting->uniformFloat(lightUniform + ".outerCutOff", spotLight->getOuterCutOff());
         }else shaderProgramLighting->uniformInt("isSpotLight", false);
     }
+    
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
     shaderProgramLighting->uniformVec3("viewPos", camera->getEye());
@@ -204,7 +217,7 @@ void Renderer::initShadowMapping() {
 
     glGenFramebuffers(1, &depthMapFBO);  
 
-    depthMap = DepthTexture::New(viewportWidth, viewportWidth);
+    depthMap = DepthTexture::New(SHADOW_MAP_WIDTH, SHADOW_MAP_WIDTH);
     depthMap->bind();
 
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -223,7 +236,7 @@ void Renderer::renderToDepthMap(Group* group) {
     int previousFBO;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
 
-    glViewport(0, 0, viewportWidth, viewportWidth);
+    glViewport(0, 0, SHADOW_MAP_WIDTH, SHADOW_MAP_WIDTH);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
     // Shaders
@@ -243,9 +256,9 @@ void Renderer::renderToDepthMap(Group* group) {
         glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
         shaderProgramDepthMap->uniformMat4("model", model);
 
-        //glCullFace(GL_FRONT);
+        glCullFace(GL_BACK);
         polytope->draw(group->getPrimitive(), group->isShowWire());
-        //glCullFace(GL_BACK);
+        glCullFace(GL_FRONT);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
@@ -259,12 +272,15 @@ void Renderer::drawGroup(Group* group) {
     primitiveSettings(group);
     
     for(auto& polytope : group->getPolytopes()) {
+
         // Compute model matrix from polytope and group
         glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
         glm::mat4 mvp = projection * view * model;
+
         // Use shader programs
         if(!hasLight)   shaderProgram->useProgram();
         else            shaderProgramLighting->useProgram();
+
         // Uniforms
         if(!hasLight) {
             shaderProgram->uniformMat4("mvp", mvp);
@@ -277,8 +293,10 @@ void Renderer::drawGroup(Group* group) {
             lightMVPuniform(model);
             shadowMappingUniforms();
         }
+
         // Set face culling
         setFaceCulling(polytope);
+
         // Draw polytope
         polytope->draw(group->getPrimitive(), group->isShowWire());
         // Draw selected polytope if selected
@@ -290,6 +308,7 @@ void Renderer::drawGroup(Group* group) {
             polytope->draw(group->getPrimitive(), group->isShowWire());
             glEnable(GL_DEPTH_TEST);
         }
+
         // unbind textures
         for(auto& texture : polytope->getTextures()) texture->unbind();
     }
@@ -299,32 +318,36 @@ void Renderer::drawGroup(Group* group) {
 }
 
 void Renderer::drawSkyBox() {
+
     if(skyBox == nullptr) return;
     shaderProgramSkyBox->useProgram();
+
     // remove translation from the view matrix
     view = glm::mat4(glm::mat3(camera->getViewMatrix())); 
     shaderProgramSkyBox->uniformInt("skybox", 0); 
     shaderProgramSkyBox->uniformMat4("view", view);
     shaderProgramSkyBox->uniformMat4("projection", projection);
+
     // Draw call
     glDepthRange(0.999,1.0);
     skyBox->draw();
     glDepthRange(0.0,1.0);
+
     // set depth function back to default
     glDepthFunc(GL_LESS);
 }
 
 void Renderer::render() {
+
     enableAntialiasing();
     enableBlending();
-    // Draw skybox
     drawSkyBox();
-    // Init transform matrices
+
     if(hasCamera) {
         projection = camera->getProjectionMatrix();
         view = camera->getViewMatrix();
     }
-    // Draw groups
+
     for(Group* group : groups) {
         if(shadowMapping) renderToDepthMap(group);
         drawGroup(group);

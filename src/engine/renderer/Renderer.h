@@ -63,6 +63,7 @@ private:
     void lightShaderUniforms();
     void lightMaterialUniforms(const Polytope::Ptr& polytope);
     void lightMVPuniform(const glm::mat4& model);
+    void shadowMappingUniforms();
     void renderToDepthMap(Group* group);
     void drawGroup(Group* group);
     void drawSkyBox();

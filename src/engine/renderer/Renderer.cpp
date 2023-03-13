@@ -173,6 +173,14 @@ void Renderer::lightMVPuniform(const glm::mat4& model) {
     shaderProgramLighting->uniformMat4("projection", projection);
 }
 
+void Renderer::shadowMappingUniforms() {
+    if(!shadowMapping) return;
+    depthMap->bind();
+    shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
+    shaderProgramLighting->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+    shaderProgramLighting->uniformVec3("lightPos", shadowLightPos);
+}
+
 void Renderer::setFaceCulling(const Polytope::Ptr& polytope) {
     switch(polytope->getFaceCulling()) {
         case Polytope::FaceCulling::FRONT:
@@ -219,7 +227,7 @@ void Renderer::renderToDepthMap(Group* group) {
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
     // Shaders
-    float nearPlane = 1.f, farPlane = 7.5f;
+    float nearPlane = 1.f, farPlane = 17.5f;
     glm::mat4 lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, nearPlane, farPlane);
     glm::mat4 lightView = glm::lookAt(shadowLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
@@ -235,9 +243,9 @@ void Renderer::renderToDepthMap(Group* group) {
         glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
         shaderProgramDepthMap->uniformMat4("model", model);
 
-        glCullFace(GL_FRONT);
+        //glCullFace(GL_FRONT);
         polytope->draw(group->getPrimitive(), group->isShowWire());
-        glCullFace(GL_BACK);
+        //glCullFace(GL_BACK);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
@@ -267,13 +275,7 @@ void Renderer::drawGroup(Group* group) {
             lightMaterialUniforms(polytope);
             textureUniform(shaderProgramLighting, polytope, true);
             lightMVPuniform(model);
-            // Shadow mapping
-            if(shadowMapping) {
-                shaderProgramLighting->uniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-                shaderProgramLighting->uniformVec3("lightPos", shadowLightPos);
-                depthMap->bind();
-                shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
-            }
+            shadowMappingUniforms();
         }
         // Set face culling
         setFaceCulling(polytope);

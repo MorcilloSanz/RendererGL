@@ -299,12 +299,12 @@ int main(void) {
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveX.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeX.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveY.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeY.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveZ.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveX.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeX.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveY.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeY.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveZ.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeZ.tga"
     };
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);

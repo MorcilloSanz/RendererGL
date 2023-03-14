@@ -230,8 +230,8 @@ void Renderer::initShadowMapping() {
     shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
 }
 
-void Renderer::renderToDepthMap(Group* group) {
-    if(!hasLight || !group->isVisible()) return;
+void Renderer::renderToDepthMap() {
+    if(!hasLight) return;
 
     int previousFBO;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
@@ -251,14 +251,19 @@ void Renderer::renderToDepthMap(Group* group) {
     // Draw
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    for(auto& polytope : group->getPolytopes()) {
+    for(Group* group : groups) {
 
-        glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
-        shaderProgramDepthMap->uniformMat4("model", model);
+        if(!group->isVisible()) continue;
 
-        glCullFace(GL_BACK);
-        polytope->draw(group->getPrimitive(), group->isShowWire());
-        glCullFace(GL_FRONT);
+        for(auto& polytope : group->getPolytopes()) {
+            
+            glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+            shaderProgramDepthMap->uniformMat4("model", model);
+
+            glCullFace(GL_BACK);
+            polytope->draw(group->getPrimitive(), group->isShowWire());
+            glCullFace(GL_FRONT);
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
@@ -349,10 +354,9 @@ void Renderer::render() {
         view = camera->getViewMatrix();
     }
 
-    for(Group* group : groups) {
-        if(shadowMapping) renderToDepthMap(group);
-        drawGroup(group);
-    }
+    if(shadowMapping) renderToDepthMap();
+
+    for(Group* group : groups) drawGroup(group);
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

@@ -27,6 +27,7 @@ Features:
 * Anti aliasing
 * Texture Renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting (directional, point and spot)
+* Shadow Mapping
 * Gamma correction
 * Emission
 * Skybox
@@ -103,6 +104,10 @@ Multiple point lights
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)
 
+Shadows
+
+![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/shadows.png)
+
 Emission
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)
@@ -110,10 +115,6 @@ Emission
 Call of Duty Ghost dog
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
-
-Multiple 3D models
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/3.png)
 
 Call of Duty Ghost soldier
 

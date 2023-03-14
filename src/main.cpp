@@ -98,7 +98,7 @@ int main(void) {
 
     // Shadow mapping
     renderer->setShadowMapping(true);
-    renderer->setShadowLightPos(glm::vec3(-5, 7, 5)); // Directional light pos
+    renderer->setShadowLightPos(glm::vec3(-4, 7, 5.5)); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -283,12 +283,12 @@ int main(void) {
     renderer->addGroup(model);
 
     Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
-    model2.translate(glm::vec3(0, 0, -1.0));
+    model2.translate(glm::vec3(-0.25, 0, -1.0));
     model2.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model2);
 
     Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
-    model3.translate(glm::vec3(-2.0, 0.0, 0.0));
+    model3.translate(glm::vec3(-3, 0.30, 3.0));
     model3.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model3);
 

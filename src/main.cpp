@@ -49,7 +49,7 @@ float rayLong = 100;
 int main(void) {
 
     // Create window
-    window = Window("RendererGL", 1280, 800);
+    window = Window("RendererGL", 1280, 900);
     window.setResizeFun(resizeFun);
     window.setKeyFun(keyFun);
 
@@ -98,7 +98,7 @@ int main(void) {
 
     // Shadow mapping
     renderer->setShadowMapping(true);
-    renderer->setShadowLightPos(glm::vec3(-5, 7, 5)); // Directional light pos
+    renderer->setShadowLightPos(glm::vec3(-4, 7, 5.5)); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -283,12 +283,12 @@ int main(void) {
     renderer->addGroup(model);
 
     Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
-    model2.translate(glm::vec3(0, 0, -1.0));
+    model2.translate(glm::vec3(-0.25, 0, -1.0));
     model2.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model2);
 
     Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
-    model3.translate(glm::vec3(-2.0, 0.0, 0.0));
+    model3.translate(glm::vec3(-3, 0.30, 3.0));
     model3.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model3);
 
@@ -299,12 +299,12 @@ int main(void) {
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveX.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeX.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveY.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeY.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_PositiveZ.tga",
-        "/home/morcillosanz/Desktop/tilted/GalaxyTex_NegativeZ.tga"
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveX.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeX.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveY.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeY.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveZ.tga",
+        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeZ.tga"
     };
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);
@@ -623,15 +623,18 @@ int main(void) {
                 // Resize window
                 static ImVec2 previousSize(0, 0);
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
+
                     // Restart trackball camera
                     float theta = camera.getTheta(), phi = camera.getPhi();
                     glm::vec3 center = camera.getCenter(), up = camera.getUp();
                     float radius = camera.getRadius();
+
                     // Update camera aspect ratio
                     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
                     camera.setRadius(radius);
+
                     // Restart fps camera
                     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
                 }
@@ -841,6 +844,12 @@ int main(void) {
                         }
                         checkPolytopeSelection(pointsIndices, group, cubePolytopeIndices);
                     }
+                }
+                {
+                    ImGui::Begin("Depth map");
+                    renderer->getDepthMap()->bind();
+                    ImGui::Image((void*)(intptr_t)renderer->getDepthMap()->getID(), ImGui::GetWindowSize());
+                    ImGui::End();
                 }
 
                 ImGui::End();

@@ -65,7 +65,7 @@ private:
     void lightMaterialUniforms(const Polytope::Ptr& polytope);
     void lightMVPuniform(const glm::mat4& model);
     void shadowMappingUniforms();
-    void renderToDepthMap(Group* group);
+    void renderToDepthMap();
     void drawGroup(Group* group);
     void drawSkyBox();
 public:
@@ -116,4 +116,6 @@ public:
 
     inline void setViewportHeight(unsigned int viewportHeight) { this->viewportHeight = viewportHeight; }
     inline unsigned int getViewportHeight() const { return viewportHeight; }
+
+    inline DepthTexture::Ptr& getDepthMap() { return depthMap; }
 };

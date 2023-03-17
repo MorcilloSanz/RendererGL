@@ -116,10 +116,6 @@ Call of Duty Ghost dog
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
 
-Call of Duty Ghost soldier
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/1.png)
-
 # Dependencies
 
 * [GLFW](https://github.com/glfw/glfw)

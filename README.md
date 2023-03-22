@@ -1,6 +1,6 @@
 # RendererGL
 
-RendererGL is a basic 3D engine written in C++ and OpenGL
+RendererGL is a 3D renderer written in C++ and OpenGL
 
 The file:
 
@@ -10,20 +10,15 @@ main.cpp
 
 is a template using ImGui and RendererGL
 
-## Engine
+## Features
 
-Features:
-
-* Create a window, handle its events and create an OpenGL context (GLFW)
-* ImGui as user interface
 * Trackball and First Person Shooter camera
 * Polytopes and Groups in order to create a 3D scene
 * Dynamic Polytopes
-* Linear transforms
-* Get and Set data directly from GPU
+* Get and set data directly from GPU
 * Textures
 * Load 3D models
-* Depth testing, blending, face culling...
+* Depth testing and blending
 * Anti aliasing
 * Texture Renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting (directional, point and spot)
@@ -96,23 +91,19 @@ while (!window.windowShouldClose()) {
 
 # Screenshots
 
-Loading a 3D model with a skybox and ilumination
-
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/skybox.gif)  
-
-Multiple point lights
+**Multiple point lights**
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)
 
-Shadows
+**Shadows**
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/shadows.png)
 
-Emission
+**Emission**
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)
 
-Call of Duty Ghost dog
+**Call of Duty Ghost dog**
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
 

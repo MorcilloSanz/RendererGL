@@ -75,6 +75,8 @@ int main(void) {
     // Lighting
     PointLight light(glm::vec3(0, 3, 0));
     light.setSpecular(glm::vec3(0.3));
+    light.setLinear(0.04);
+    light.setQuadratic(0.016);
     light.setColor(glm::vec3(0, 1, 0));
     renderer->addLight(light);
 
@@ -91,8 +93,8 @@ int main(void) {
     spotLight.setColor(glm::vec3(1, 1, 1));
     //renderer->addLight(spotLight);
 
-    DirectionalLight light4(glm::vec3(10, 10, -10));
-    light4.setColor(glm::vec3(1.0, 1.0, 1.0));
+    DirectionalLight light4(glm::vec3(-4, 7, 5.5));
+    light4.setColor(glm::vec3(1.0, 1.0, 0.95));
 
     renderer->disableLight();
 
@@ -296,12 +298,6 @@ int main(void) {
     model4.translate(glm::vec3(0, 0, -4));
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model4);
-
-    Model model5("/home/morcillosanz/Desktop/model/FlyGuy/Model.dae");
-    model5.translate(glm::vec3(-3.5, 1.0, -4.5));
-    model5.rotate(30, glm::vec3(0, 1, 0));
-    model5.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer->addGroup(model5);
 
     // SkyBox
     std::vector<std::string> faces = {

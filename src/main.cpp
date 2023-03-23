@@ -297,6 +297,12 @@ int main(void) {
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model4);
 
+    Model model5("/home/morcillosanz/Desktop/model/FlyGuy/Model.dae");
+    model5.translate(glm::vec3(-3.5, 1.0, -4.5));
+    model5.rotate(30, glm::vec3(0, 1, 0));
+    model5.scale(glm::vec3(0.1, 0.1, 0.1));
+    renderer->addGroup(model5);
+
     // SkyBox
     std::vector<std::string> faces = {
         "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveX.tga",
@@ -844,12 +850,6 @@ int main(void) {
                         }
                         checkPolytopeSelection(pointsIndices, group, cubePolytopeIndices);
                     }
-                }
-                {
-                    ImGui::Begin("Depth map");
-                    renderer->getDepthMap()->bind();
-                    ImGui::Image((void*)(intptr_t)renderer->getDepthMap()->getID(), ImGui::GetWindowSize());
-                    ImGui::End();
                 }
 
                 ImGui::End();

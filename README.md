@@ -8,21 +8,21 @@ The file:
 main.cpp
 ```
 
-is a template using ImGui and RendererGL
+is an example file using ImGui and RendererGL
 
 ## Features
 
-* Trackball and First Person Shooter camera
-* Polytopes and Groups in order to create a 3D scene
-* Dynamic Polytopes
-* Get and set data directly from GPU
-* Textures
-* Load 3D models
+* Trackball and first person shooter camera
+* Polytopes and groups in order to create a 3D scene
+* Polytope face culling
 * Depth testing and blending
 * Anti aliasing
-* Texture Renderer (capture FrameBuffer and create a texture)
+* Dynamic polytopes
+* Textures
+* Load 3D models
+* Texture renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting (directional, point and spot)
-* Shadow Mapping
+* Shadow Mapping (percentage closer filtering)
 * Gamma correction
 * Emission
 * Skybox
@@ -34,6 +34,10 @@ is a template using ImGui and RendererGL
 Simple rotating cube example:
 
 ```cpp
+#include "engine/window/Window.h"
+#include "engine/renderer/Renderer.h"
+#include "engine/renderer/TrackballCamera.h"
+
 Window window("Cube example", 1280, 800);
 
 Renderer renderer;
@@ -66,26 +70,33 @@ std::vector<unsigned int> cubeIndices {
     3, 7, 4,  1, 0, 4,  6, 7, 3 
 };
 
-Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
+int main() {
 
-Group group;
-group.setLineWidth(2.f);
-group.translate(glm::vec3(-2.5, 0.5, 0));
-group.add(polytopeCube);
+    Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
 
-renderer.addGroup(group);
+    Group group;
+    group.setLineWidth(2.f);
+    group.translate(glm::vec3(-2.5, 0.5, 0));
+    group.add(polytopeCube);
 
-while (!window.windowShouldClose()) {
+    renderer.addGroup(group);
 
-    // Rotate cube
-    polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
+    while (!window.windowShouldClose()) {
 
-    // Clear
-    renderer.clear();
-    // Render
-    renderer.render();
-    // Swap buffers
-    window.update();
+        // Rotate cube
+        polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
+
+        // Clear
+        renderer.clear();
+
+        // Render
+        renderer.render();
+
+        // Swap buffers
+        window.update();
+    }
+
+    return 0;
 }
 ```
 

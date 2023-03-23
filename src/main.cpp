@@ -287,8 +287,8 @@ int main(void) {
     model2.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model2);
 
-    Model model3("/home/morcillosanz/Desktop/model/BowserKart/Bowser.dae");
-    model3.translate(glm::vec3(-3, 0.30, 3.0));
+    Model model3("/home/morcillosanz/Desktop/model/PeachTennis/Model.dae");
+    model3.translate(glm::vec3(-1.5, 0, 0.8));
     model3.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model3);
 

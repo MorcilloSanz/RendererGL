@@ -53,6 +53,7 @@ uniform MaterialMaps materialMaps;
 uniform bool hasDiffuse;
 uniform bool hasSpecular;
 uniform bool hasEmission;
+uniform float emissionStrength;
 
 uniform bool blinn;
 uniform bool gammaCorrection;
@@ -115,7 +116,7 @@ vec4 calculateSpecular(Light light, vec3 normal, vec3 lightDir) {
 vec4 calculateEmission() {
    vec4 emission = vec4(0.0);
    if(hasEmission) emission = texture(materialMaps.emissionMap, TexCoord);
-   return emission;
+   return emission * emissionStrength;
 }
 
 float calculateShadow(vec4 fragPosLightSpace) {

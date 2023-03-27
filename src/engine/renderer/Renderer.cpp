@@ -178,6 +178,7 @@ void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) 
     shaderProgramLighting->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
     shaderProgramLighting->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
     shaderProgramLighting->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
+    shaderProgramLighting->uniformFloat("emissionStrength", polytope->getEmissionStrength());
 }
 
 void Renderer::lightMVPuniform(const glm::mat4& model) {

@@ -3,17 +3,20 @@
 #include "../../../glew/glew.h"
 
 Polytope::Polytope(size_t length) 
-    : vertexLength(length), modelMatrix(1.f), indicesLength(0), selected(false), faceCulling(FaceCulling::BACK) {
+    : vertexLength(length), modelMatrix(1.f), indicesLength(0), selected(false), 
+    faceCulling(FaceCulling::BACK), emissionStrength(1.0) {
     initPolytope(length);
 }
 
 Polytope::Polytope(std::vector<Vec3f>& vertices)
-    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0), selected(false), faceCulling(FaceCulling::BACK) {
+    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(0), selected(false), 
+    faceCulling(FaceCulling::BACK), emissionStrength(1.0) {
     initPolytope(vertices);
 }
 
 Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices) 
-    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()), selected(false), faceCulling(FaceCulling::BACK) {
+    : vertexLength(vertices.size()), modelMatrix(1.f), indicesLength(indices.size()), selected(false), 
+    faceCulling(FaceCulling::BACK), emissionStrength(1.0) {
     initPolytope(vertices, indices);
 }
 

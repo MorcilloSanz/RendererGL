@@ -322,14 +322,18 @@ int main(void) {
 
         // Clear
         renderer->clear();
+
         // Draw to texture instead of default
         textureRenderer.renderToTexture();
+
         // Render
         renderer->render();
+
         // Go back to default
         textureRenderer.renderToDefault();
 
-        // Rotate cubePolytope2
+        // Update cubePolytope2 emission strength
+        cubePolytope2->setEmissionStrength(sin(glfwGetTime()) / 2 + 0.5);
         //cubePolytope2->rotate(0.15, glm::vec3(1, 0, 1));
 
         // Update vertex from cubePolytope

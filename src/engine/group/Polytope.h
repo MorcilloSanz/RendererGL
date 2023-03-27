@@ -37,6 +37,7 @@ protected:
     glm::mat4 modelMatrix;
     bool selected;
     FaceCulling faceCulling;
+    float emissionStrength;
 public:
     Polytope(size_t length);
     Polytope(std::vector<Vec3f>& vertices);
@@ -87,4 +88,7 @@ public:
 
     inline void setFaceCulling(const FaceCulling& faceCulling) { this->faceCulling = faceCulling; }
     inline FaceCulling& getFaceCulling() { return faceCulling; }
+
+    inline void setEmissionStrength(float emissionStrength) { this->emissionStrength = emissionStrength; }
+    float getEmissionStrength() const { return emissionStrength; }
 };

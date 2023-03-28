@@ -38,14 +38,9 @@ Simple rotating cube example:
 #include "engine/renderer/Renderer.h"
 #include "engine/renderer/TrackballCamera.h"
 
-Window window("Cube example", 1280, 800);
+Window window;
 
-Renderer renderer;
-
-TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
-float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
-camera.zoom(-5.5);
-renderer.setCamera(camera);
+Renderer::Ptr renderer;
 
 // x y z r g b
 std::vector<Vec3f> cubeVertices {
@@ -72,6 +67,15 @@ std::vector<unsigned int> cubeIndices {
 
 int main() {
 
+    window = Window("Cube example", 1280, 800);
+
+    renderer = Renderer::New(window.getWidth(), window.getHeight());
+
+    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+    float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
+    camera.zoom(-5.5);
+    renderer->setCamera(camera);
+
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
 
     Group group;
@@ -79,7 +83,7 @@ int main() {
     group.translate(glm::vec3(-2.5, 0.5, 0));
     group.add(polytopeCube);
 
-    renderer.addGroup(group);
+    renderer->addGroup(group);
 
     while (!window.windowShouldClose()) {
 
@@ -87,10 +91,10 @@ int main() {
         polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
 
         // Clear
-        renderer.clear();
+        renderer->clear();
 
         // Render
-        renderer.render();
+        renderer->render();
 
         // Swap buffers
         window.update();

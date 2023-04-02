@@ -186,6 +186,7 @@ int main(void) {
 
     Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
     Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
+    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_normal.jpg", Texture::Type::TextureNormal);
     Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
     Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
     
@@ -193,6 +194,7 @@ int main(void) {
 
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
+    cubePolytope2->addTexture(textureNormal);
     cubePolytope2->addTexture(textureEmission);
 
     // Cubes group
@@ -298,6 +300,11 @@ int main(void) {
     model4.translate(glm::vec3(0, 0, -4));
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model4);
+
+    //Model model5("/home/morcillosanz/Desktop/model/Spider/spider.obj");
+    //model5.translate(glm::vec3(0, 5, 0));
+    //model5.scale(glm::vec3(0.01, 0.01, 0.01));
+    //renderer->addGroup(model5);
 
     // SkyBox
     std::vector<std::string> faces = {

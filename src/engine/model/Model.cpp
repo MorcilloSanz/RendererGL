@@ -73,6 +73,8 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             vertex.bitanx = vector.x = mesh->mBitangents[i].x;
             vertex.bitany = vector.y = mesh->mBitangents[i].y;
             vertex.bitanz = vector.z = mesh->mBitangents[i].z;
+
+            vertex.hasTangents = true;
         }
         else vertex.tx = vertex.ty = 0.0f;
         vertices.push_back(vertex);

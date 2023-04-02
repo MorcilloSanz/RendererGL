@@ -72,7 +72,7 @@ int main(void) {
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     fpsCamera.setSensitivity(sensitivity / 10);
 
-    // Lighting
+    // Point Lighting
     PointLight light(glm::vec3(0, 3, 0));
     light.setSpecular(glm::vec3(0.3));
     light.setLinear(0.04);
@@ -88,18 +88,14 @@ int main(void) {
     light3.setColor(glm::vec3(0, 0, 1));
     renderer->addLight(light3);
 
-    // Fix needed
-    SpotLight spotLight(glm::vec3(6, 2, 6), glm::vec3(-6, -2, -6));
-    spotLight.setColor(glm::vec3(1, 1, 1));
-    //renderer->addLight(spotLight);
-
+    // Directional lighting
     DirectionalLight light4(glm::vec3(-4, 7, 5.5));
     light4.setColor(glm::vec3(1.0, 1.0, 0.95));
 
     renderer->disableLight();
 
     // Shadow mapping
-    renderer->setShadowMapping(true);
+    renderer->setShadowMapping(false);
     renderer->setShadowLightPos(glm::vec3(-4, 7, 5.5)); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
@@ -186,6 +182,7 @@ int main(void) {
 
     Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
     Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
+    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_normal.jpg", Texture::Type::TextureNormal);
     Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
     Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
     
@@ -193,6 +190,7 @@ int main(void) {
 
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
+    cubePolytope2->addTexture(textureNormal);
     cubePolytope2->addTexture(textureEmission);
 
     // Cubes group
@@ -490,7 +488,6 @@ int main(void) {
                 light2.setAmbient(glm::vec3(ambientStrength));
                 light3.setAmbient(glm::vec3(ambientStrength));
                 light4.setAmbient(glm::vec3(ambientStrength));
-                spotLight.setAmbient(glm::vec3(ambientStrength));
 
                 static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
@@ -498,7 +495,6 @@ int main(void) {
                 light2.setDiffuse(glm::vec3(diffuseStrength));
                 light3.setDiffuse(glm::vec3(diffuseStrength));
                 light4.setDiffuse(glm::vec3(diffuseStrength));
-                spotLight.setDiffuse(glm::vec3(diffuseStrength));
 
                 static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
@@ -506,7 +502,6 @@ int main(void) {
                 light2.setSpecular(glm::vec3(specularStrength));
                 light3.setSpecular(glm::vec3(specularStrength));
                 light4.setSpecular(glm::vec3(specularStrength));
-                spotLight.setSpecular(glm::vec3(specularStrength));
 
                 glm::vec3 lightColor = light.getColor();
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };
@@ -543,14 +538,20 @@ int main(void) {
                     lightPolytope->translate(glm::vec3(dx, dy, dz));
                 }
 
-                ImGui::Separator();
-
                 if (ImGui::Button("Reset lighting")) {
                     lx = 2; ly = -8; lz = 5;
                     ambientStrength = 0.5f;
                     diffuseStrength = 0.5f;
                     specularStrength = 0.5f;
                 }
+
+                ImGui::Separator();
+
+                ImGui::Text("Shadows");
+
+                static bool shadowMapping = false;
+                ImGui::Checkbox("Shadow mapping", &shadowMapping);
+                renderer->setShadowMapping(shadowMapping);
 
                 ImGui::End();
             }

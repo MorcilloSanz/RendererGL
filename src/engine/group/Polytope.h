@@ -38,12 +38,17 @@ protected:
     bool selected;
     FaceCulling faceCulling;
     float emissionStrength;
+    bool tangentAndBitangents;
 public:
     Polytope(size_t length);
-    Polytope(std::vector<Vec3f>& vertices);
-    Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
+    Polytope(std::vector<Vec3f>& vertices, bool _tangentAndBitangents = true);
+    Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices, bool _tangentAndBitangents = true);
     Polytope() = default;
     virtual ~Polytope() = default;
+protected:
+    void setTangentsAndBitangents(Vec3f& vertex0, Vec3f& vertex1, Vec3f& vertex2);
+    void calculateTangentsAndBitangents(std::vector<Vec3f>& vertices);
+    void calculateTangentsAndBitangents(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices);
 public:
     void initPolytope(size_t length);
     void initPolytope(std::vector<Vec3f>& vertices);

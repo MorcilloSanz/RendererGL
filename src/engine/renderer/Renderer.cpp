@@ -108,7 +108,7 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
                 nEmissionMap ++;
             break;
             case Texture::Type::TextureNormal:
-
+                shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
                 nNormalMaps ++;
             break;
             case Texture::Type::TextureHeight:
@@ -119,6 +119,7 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
     }
     shaderProgram->uniformInt("hasDiffuse", nDiffuseMaps > 0);
     shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
+    shaderProgram->uniformInt("hasNormalMap", nNormalMaps > 0);
     shaderProgram->uniformInt("hasEmission", nEmissionMap > 0);
 }
 
@@ -172,6 +173,7 @@ void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
     shaderProgramLighting->uniformVec3("viewPos", camera->getEye());
+    shaderProgramLighting->uniformInt("shadowMapping", shadowMapping);
 }
 
 void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {

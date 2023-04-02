@@ -30,6 +30,7 @@ struct Light {
 struct MaterialMaps {
    sampler2D diffuseMap;
    sampler2D specularMap;
+   sampler2D normalMap;
    sampler2D emissionMap;
 };
 
@@ -38,6 +39,9 @@ in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoord;
 in vec4 FragPosLightSpace;
+in vec3 TangentLightPos;
+in vec3 TangentViewPos;
+in vec3 TangentFragPos;
 
 out vec4 FragColor;
 
@@ -53,11 +57,13 @@ uniform MaterialMaps materialMaps;
 uniform bool hasDiffuse;
 uniform bool hasSpecular;
 uniform bool hasEmission;
+uniform bool hasNormalMap;
 uniform float emissionStrength;
 
 uniform bool blinn;
 uniform bool gammaCorrection;
 
+uniform bool shadowMapping;
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
 
@@ -94,6 +100,9 @@ vec4 calculateDiffuse(Light light, vec3 normal, vec3 lightDir) {
 vec4 calculateSpecular(Light light, vec3 normal, vec3 lightDir) {
    vec4 specular = vec4(1.0);
    vec3 viewDir = normalize(viewPos - FragPos);
+
+   if(hasNormalMap) viewDir = normalize(TangentViewPos - TangentFragPos);
+
    vec3 reflectDir = reflect(-lightDir, normal);
    float spec = 0.0;
 
@@ -156,7 +165,15 @@ vec4 getLightColor(Light light) {
 
    // Calculate ambient, diffuse and specular
    vec3 norm = normalize(Normal);
+
    vec3 lightDir = normalize(light.position - FragPos);
+
+   if(hasNormalMap) {
+      norm = texture(materialMaps.normalMap, TexCoord).rgb;
+      // transform normal vector to range [-1,1]
+      norm = normalize(norm * 2.0 - 1.0);  // this normal is in tangent space
+      lightDir = normalize(TangentLightPos - TangentFragPos);
+   }
 
    vec4 ambient = calculateAmbient(light);
    vec4 diffuse = calculateDiffuse(light, norm, lightDir);
@@ -184,7 +201,8 @@ vec4 getLightColor(Light light) {
    }
 
    // Calculate shadow
-   float shadow = calculateShadow(FragPosLightSpace);
+   float shadow = 0.0;
+   if(shadowMapping) shadow = calculateShadow(FragPosLightSpace);
 
    vec4 lightColor = vec4(light.color, 1.0);
    return (ambient + (1.0 - shadow) * (diffuse + specular) + emission) * lightColor;

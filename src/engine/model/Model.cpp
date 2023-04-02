@@ -108,7 +108,7 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     // return a mesh object created from the extracted mesh data
-    Polytope::Ptr polytope = Polytope::New(vertices, indices);
+    Polytope::Ptr polytope = Polytope::New(vertices, indices, false);
     for(auto& texture : textures) polytope->addTexture(texture);
     return polytope;
 }

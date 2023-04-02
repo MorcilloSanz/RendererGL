@@ -72,7 +72,7 @@ int main(void) {
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
     fpsCamera.setSensitivity(sensitivity / 10);
 
-    // Lighting
+    // Point Lighting
     PointLight light(glm::vec3(0, 3, 0));
     light.setSpecular(glm::vec3(0.3));
     light.setLinear(0.04);
@@ -88,11 +88,7 @@ int main(void) {
     light3.setColor(glm::vec3(0, 0, 1));
     renderer->addLight(light3);
 
-    // Fix needed
-    SpotLight spotLight(glm::vec3(6, 2, 6), glm::vec3(-6, -2, -6));
-    spotLight.setColor(glm::vec3(1, 1, 1));
-    //renderer->addLight(spotLight);
-
+    // Directional lighting
     DirectionalLight light4(glm::vec3(-4, 7, 5.5));
     light4.setColor(glm::vec3(1.0, 1.0, 0.95));
 
@@ -301,10 +297,10 @@ int main(void) {
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model4);
 
-    //Model model5("/home/morcillosanz/Desktop/model/Spider/spider.obj");
-    //model5.translate(glm::vec3(0, 5, 0));
-    //model5.scale(glm::vec3(0.01, 0.01, 0.01));
-    //renderer->addGroup(model5);
+    Model model5("/home/morcillosanz/Desktop/model/Spider/spider.obj");
+    model5.translate(glm::vec3(0, 5, 0));
+    model5.scale(glm::vec3(0.01, 0.01, 0.01));
+    renderer->addGroup(model5);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -497,7 +493,6 @@ int main(void) {
                 light2.setAmbient(glm::vec3(ambientStrength));
                 light3.setAmbient(glm::vec3(ambientStrength));
                 light4.setAmbient(glm::vec3(ambientStrength));
-                spotLight.setAmbient(glm::vec3(ambientStrength));
 
                 static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
@@ -505,7 +500,6 @@ int main(void) {
                 light2.setDiffuse(glm::vec3(diffuseStrength));
                 light3.setDiffuse(glm::vec3(diffuseStrength));
                 light4.setDiffuse(glm::vec3(diffuseStrength));
-                spotLight.setDiffuse(glm::vec3(diffuseStrength));
 
                 static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
@@ -513,7 +507,6 @@ int main(void) {
                 light2.setSpecular(glm::vec3(specularStrength));
                 light3.setSpecular(glm::vec3(specularStrength));
                 light4.setSpecular(glm::vec3(specularStrength));
-                spotLight.setSpecular(glm::vec3(specularStrength));
 
                 glm::vec3 lightColor = light.getColor();
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };

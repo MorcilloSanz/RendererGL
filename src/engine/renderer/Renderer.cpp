@@ -173,6 +173,7 @@ void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
     shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
     shaderProgramLighting->uniformVec3("viewPos", camera->getEye());
+    shaderProgramLighting->uniformInt("shadowMapping", shadowMapping);
 }
 
 void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {

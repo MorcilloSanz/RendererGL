@@ -63,6 +63,7 @@ uniform float emissionStrength;
 uniform bool blinn;
 uniform bool gammaCorrection;
 
+uniform bool shadowMapping;
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
 
@@ -200,7 +201,8 @@ vec4 getLightColor(Light light) {
    }
 
    // Calculate shadow
-   float shadow = calculateShadow(FragPosLightSpace);
+   float shadow = 0.0;
+   if(shadowMapping) shadow = calculateShadow(FragPosLightSpace);
 
    vec4 lightColor = vec4(light.color, 1.0);
    return (ambient + (1.0 - shadow) * (diffuse + specular) + emission) * lightColor;

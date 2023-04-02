@@ -66,17 +66,13 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             vertex.tx = vec.x = mesh->mTextureCoords[0][i].x; 
             vertex.ty = vec.y = mesh->mTextureCoords[0][i].y;
             // tangent
-            /*
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
-            vertex.Tangent = vector;
+            vertex.tanx = vector.x = mesh->mTangents[i].x;
+            vertex.tany = vector.y = mesh->mTangents[i].y;
+            vertex.tanz = vector.z = mesh->mTangents[i].z;
             // bitangent
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
-            vertex.Bitangent = vector;
-            */
+            vertex.bitanx = vector.x = mesh->mBitangents[i].x;
+            vertex.bitany = vector.y = mesh->mBitangents[i].y;
+            vertex.bitanz = vector.z = mesh->mBitangents[i].z;
         }
         else vertex.tx = vertex.ty = 0.0f;
         vertices.push_back(vertex);

@@ -108,7 +108,7 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
                 nEmissionMap ++;
             break;
             case Texture::Type::TextureNormal:
-
+                shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
                 nNormalMaps ++;
             break;
             case Texture::Type::TextureHeight:
@@ -119,6 +119,7 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
     }
     shaderProgram->uniformInt("hasDiffuse", nDiffuseMaps > 0);
     shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
+    shaderProgram->uniformInt("hasNormalMap", nNormalMaps > 0);
     shaderProgram->uniformInt("hasEmission", nEmissionMap > 0);
 }
 

@@ -23,6 +23,7 @@ is an example file using ImGui and RendererGL
 * Texture renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting (directional, point and spot)
 * Shadow Mapping (percentage closer filtering)
+* Normal Mapping
 * Gamma correction
 * Emission
 * Skybox

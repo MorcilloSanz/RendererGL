@@ -95,7 +95,7 @@ int main(void) {
     renderer->disableLight();
 
     // Shadow mapping
-    renderer->setShadowMapping(true);
+    renderer->setShadowMapping(false);
     renderer->setShadowLightPos(glm::vec3(-4, 7, 5.5)); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
@@ -296,11 +296,6 @@ int main(void) {
     model4.translate(glm::vec3(0, 0, -4));
     model4.scale(glm::vec3(0.1, 0.1, 0.1));
     renderer->addGroup(model4);
-
-    Model model5("/home/morcillosanz/Desktop/model/Spider/spider.obj");
-    model5.translate(glm::vec3(0, 5, 0));
-    model5.scale(glm::vec3(0.01, 0.01, 0.01));
-    renderer->addGroup(model5);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -543,14 +538,20 @@ int main(void) {
                     lightPolytope->translate(glm::vec3(dx, dy, dz));
                 }
 
-                ImGui::Separator();
-
                 if (ImGui::Button("Reset lighting")) {
                     lx = 2; ly = -8; lz = 5;
                     ambientStrength = 0.5f;
                     diffuseStrength = 0.5f;
                     specularStrength = 0.5f;
                 }
+
+                ImGui::Separator();
+
+                ImGui::Text("Shadows");
+
+                static bool shadowMapping = false;
+                ImGui::Checkbox("Shadow mapping", &shadowMapping);
+                renderer->setShadowMapping(shadowMapping);
 
                 ImGui::End();
             }

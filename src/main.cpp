@@ -95,7 +95,7 @@ int main(void) {
     renderer->addLight(light3);
 
     PointLight light5(glm::vec3(-3, 3, 3));
-    light5.setColor(glm::vec3(1, 1, 0));
+    light5.setColor(glm::vec3(1, 1, 1));
     light5.setIntensity(1.25);
     renderer->addLight(light5);
 
@@ -493,6 +493,7 @@ int main(void) {
                 light2.setAmbient(glm::vec3(ambientStrength));
                 light3.setAmbient(glm::vec3(ambientStrength));
                 light4.setAmbient(glm::vec3(ambientStrength));
+                light5.setAmbient(glm::vec3(ambientStrength));
 
                 static float diffuseStrength = light.getDiffuse()[0];
                 ImGui::SliderFloat("Diffuse strength", &diffuseStrength, 0.f, 1.f);
@@ -500,6 +501,7 @@ int main(void) {
                 light2.setDiffuse(glm::vec3(diffuseStrength));
                 light3.setDiffuse(glm::vec3(diffuseStrength));
                 light4.setDiffuse(glm::vec3(diffuseStrength));
+                light5.setDiffuse(glm::vec3(diffuseStrength));
 
                 static float specularStrength = light.getSpecular()[0];
                 ImGui::SliderFloat("Specular strength", &specularStrength, 0.f, 1.f);
@@ -507,6 +509,7 @@ int main(void) {
                 light2.setSpecular(glm::vec3(specularStrength));
                 light3.setSpecular(glm::vec3(specularStrength));
                 light4.setSpecular(glm::vec3(specularStrength));
+                light5.setSpecular(glm::vec3(specularStrength));
 
                 glm::vec3 lightColor = light.getColor();
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };
@@ -984,10 +987,8 @@ void renderImGui(ImGuiIO& io) {
 // Window functions
 
 void resizeFun(GLFWwindow* w, int width, int height) {
-    textureRenderer.updateViewPort(width, height);
     window.setWidth(width);
     window.setHeight(height);
-    renderer->setViewport(width, height);
 }
 
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {

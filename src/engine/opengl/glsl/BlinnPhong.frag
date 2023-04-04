@@ -61,7 +61,6 @@ uniform bool hasNormalMap;
 uniform float emissionStrength;
 
 uniform bool blinn;
-uniform bool gammaCorrection;
 
 uniform bool shadowMapping;
 uniform sampler2D shadowMap;
@@ -212,11 +211,6 @@ void main() {
 
    vec4 lightColor = vec4(0.0);
    for(int i = 0; i < nLights; i ++) lightColor += getLightColor(lights[i]);
-
-   if(gammaCorrection) {
-      float gamma = 2.2;
-      lightColor.rgb = pow(lightColor.rgb, vec3(1.0 / gamma));
-   }
 
    // Apply transparency for blending
    if(hasDiffuse) {

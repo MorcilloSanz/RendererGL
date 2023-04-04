@@ -20,13 +20,14 @@ is an example file using ImGui and RendererGL
 * Dynamic polytopes
 * Textures
 * Load 3D models
+* Skybox
 * Texture renderer (capture FrameBuffer and create a texture)
 * Blinn-Phong lighting (directional, point and spot)
+* Emission
 * Shadow Mapping (percentage closer filtering)
 * Normal Mapping
 * Gamma correction
-* Emission
-* Skybox
+* HDR
 * Mouse ray casting
 * Object selection
 

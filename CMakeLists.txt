@@ -43,7 +43,9 @@ set(HEADERS
         src/engine/lighting/SpotLight.h
         src/engine/texture/vendor/stb_image.h
         src/engine/texture/Texture.h
+        src/engine/texture/TextureCubeMap.h
         src/engine/texture/DepthTexture.h
+        src/engine/texture/ColorBufferTexture.h
         src/engine/model/Model.h
 )
 
@@ -79,7 +81,9 @@ set(SOURCES
         src/engine/lighting/PointLight.cpp
         src/engine/lighting/SpotLight.cpp
         src/engine/texture/Texture.cpp
+        src/engine/texture/TextureCubeMap.cpp
         src/engine/texture/DepthTexture.cpp
+        src/engine/texture/ColorBufferTexture.cpp
         src/engine/model/Model.cpp
 )
 

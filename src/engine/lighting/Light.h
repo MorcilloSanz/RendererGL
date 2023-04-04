@@ -22,8 +22,9 @@ protected:
     glm::vec3 position;
     glm::vec3 color;
     glm::vec3 ambient, diffuse, specular;
+    float intensity;
 public:
-    static bool blinn, gammaCorrection;
+    static bool blinn;
 public:
     Light(const glm::vec3& position);
     Light(const glm::vec3& _position, const glm::vec3& _color);
@@ -44,4 +45,7 @@ public:
 
     inline void setSpecular(const glm::vec3& specular) { this->specular = specular; }
     inline glm::vec3& getSpecular() { return specular; }
+
+    inline void setIntensity(float intensity) { this->intensity = intensity; }
+    inline float getIntensity() const { return intensity; }
 };

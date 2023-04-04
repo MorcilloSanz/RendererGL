@@ -23,7 +23,8 @@ class Texture {
 public:
     enum class Type : int {
         None = -1, TextureAmbient = 0, TextureDiffuse = 1, TextureSpecular = 2, 
-        TextureNormal = 3, TextureHeight = 4, TextureEmission = 5, TextureDepth = 6
+        TextureNormal = 3, TextureHeight = 4, TextureEmission = 5, TextureDepth = 6,
+        TextureColorBuffer = 7, TextureCubeMap = 8
     };
     static int textureUnits;
     static unsigned int count;

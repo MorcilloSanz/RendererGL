@@ -987,8 +987,10 @@ void renderImGui(ImGuiIO& io) {
 // Window functions
 
 void resizeFun(GLFWwindow* w, int width, int height) {
+    textureRenderer.updateViewPort(width, height);
     window.setWidth(width);
     window.setHeight(height);
+    renderer->setViewport(width, height);
 }
 
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {

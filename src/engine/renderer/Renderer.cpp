@@ -247,6 +247,7 @@ void Renderer::initShadowMapping() {
 }
 
 void Renderer::initHDR() {
+
     glGenFramebuffers(1, &hdrFBO);
 
     colorBufferTexture = ColorBufferTexture::New(viewportWidth, viewportHeight);
@@ -263,10 +264,12 @@ void Renderer::initHDR() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer not complete!" << std::endl;
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::renderToDepthMap() {
+
     if(!hasLight) return;
 
     int previousFBO;
@@ -306,6 +309,7 @@ void Renderer::renderToDepthMap() {
 }
 
 void Renderer::drawGroup(Group* group) {
+    
     if(!group->isVisible()) return;
 
     glViewport(0, 0, viewportWidth, viewportHeight);

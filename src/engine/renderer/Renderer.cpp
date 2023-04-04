@@ -5,20 +5,17 @@
 #define SHADOW_MAP_WIDTH 1024
 #define SHADOW_MAP_HEIGHT 1024
 
-template<typename Base, typename T>
-inline bool instanceof(const T *ptr) {
-   return dynamic_cast<const Base*>(ptr) != nullptr;
-}
-
 Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight) 
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
     depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
-    shadowLightPos(0, 0, 0), shadowMapping(false) {
+    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(true), gammaCorrection(false) {
     initShaders();
     enableBlending();
     enableAntialiasing();
     initShadowMapping();
+    initHDR();
+    initTextureQuad();
 }
 
 Renderer::Renderer() 
@@ -42,6 +39,11 @@ void Renderer::initShaders() {
     Shader fragmentDepthMapShader = Shader::fromFile("glsl/SimpleDepth.frag", Shader::ShaderType::Fragment);
     shaderProgramDepthMap = ShaderProgram::New(vertexDepthMapShader, fragmentDepthMapShader);
 
+    // HDR shader program
+    Shader vertexHDRShader = Shader::fromFile("glsl/HDR.vert", Shader::ShaderType::Vertex);
+    Shader fragmentHDRShader = Shader::fromFile("glsl/HDR.frag", Shader::ShaderType::Fragment);
+    shaderProgramHDR = ShaderProgram::New(vertexHDRShader, fragmentHDRShader);
+
     // SkyBox shader program
     Shader vertexSkyBoxShader = Shader::fromFile("glsl/SkyBox.vert", Shader::ShaderType::Vertex);
     Shader fragmentSkyBoxShader = Shader::fromFile("glsl/SkyBox.frag", Shader::ShaderType::Fragment);
@@ -51,6 +53,18 @@ void Renderer::initShaders() {
     Shader vertexSelectionShader = Shader::fromFile("glsl/Selection.vert", Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader = Shader::fromFile("glsl/Selection.frag", Shader::ShaderType::Fragment);
     shaderProgramSelection = ShaderProgram::New(vertexSelectionShader, fragmentSelectionShader);
+}
+
+void Renderer::initTextureQuad() {
+    std::vector<Vec3f> quadVertices = {
+        Vec3f(-1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f),
+        Vec3f(-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+        Vec3f( 1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f),
+        Vec3f( 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
+    };
+    quadVAO = VertexArray::New();
+    quadVBO = VertexBuffer::New(quadVertices);
+    quadVAO->unbind();
 }
 
 void Renderer::removeGroup(Group& group) {
@@ -146,7 +160,7 @@ void Renderer::lightShaderUniforms() {
         // Directional Light
         std::string lightUniform = "lights[" + std::to_string(i) + "]";
         shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
-        shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor());
+        shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor() * lights[i]->getIntensity());
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
@@ -171,7 +185,6 @@ void Renderer::lightShaderUniforms() {
     }
     
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
-    shaderProgramLighting->uniformInt("gammaCorrection", Light::gammaCorrection);
     shaderProgramLighting->uniformVec3("viewPos", camera->getEye());
     shaderProgramLighting->uniformInt("shadowMapping", shadowMapping);
 }
@@ -231,6 +244,26 @@ void Renderer::initShadowMapping() {
 
     shaderProgramLighting->useProgram();
     shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
+}
+
+void Renderer::initHDR() {
+    glGenFramebuffers(1, &hdrFBO);
+
+    colorBufferTexture = ColorBufferTexture::New(viewportWidth, viewportHeight);
+    colorBufferTexture->bind();
+
+    // create depth buffer (renderbuffer)
+    glGenRenderbuffers(1, &rboDepth);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, viewportWidth, viewportWidth);
+
+    // attach buffers
+    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture->getID(), 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer not complete!" << std::endl;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::renderToDepthMap() {
@@ -329,16 +362,21 @@ void Renderer::drawGroup(Group* group) {
 void Renderer::drawSkyBox() {
 
     if(skyBox == nullptr) return;
+
     shaderProgramSkyBox->useProgram();
 
     // remove translation from the view matrix
-    view = glm::mat4(glm::mat3(camera->getViewMatrix())); 
-    shaderProgramSkyBox->uniformInt("skybox", 0); 
+    view = glm::mat4(glm::mat3(camera->getViewMatrix()));
+
+    skyBox->getTextureCubeMap()->bind();
+    shaderProgramSkyBox->uniformInt("skybox", skyBox->getTextureCubeMap()->getID() - 1);
+
     shaderProgramSkyBox->uniformMat4("view", view);
     shaderProgramSkyBox->uniformMat4("projection", projection);
 
     // Draw call
     glDepthRange(0.999,1.0);
+    skyBox->bind();
     skyBox->draw();
     glDepthRange(0.0,1.0);
 
@@ -346,11 +384,27 @@ void Renderer::drawSkyBox() {
     glDepthFunc(GL_LESS);
 }
 
+void Renderer::renderQuad() {
+
+    shaderProgramHDR->useProgram();
+
+    shaderProgramHDR->uniformInt("hdr", hdr);
+    shaderProgramHDR->uniformFloat("exposure", exposure);
+    shaderProgramHDR->uniformInt("gammaCorrection", gammaCorrection);
+
+    colorBufferTexture->bind();
+    shaderProgramHDR->uniformInt("hdrBuffer", colorBufferTexture->getID() - 1);
+
+    quadVAO->bind();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    quadVAO->unbind();
+}
+
 void Renderer::render() {
 
     enableAntialiasing();
     enableBlending();
-    drawSkyBox();
 
     if(hasCamera) {
         projection = camera->getProjectionMatrix();
@@ -359,7 +413,21 @@ void Renderer::render() {
 
     if(shadowMapping) renderToDepthMap();
 
+    // Render to HDR FBO
+    int previousFBO;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Draw scene
     for(Group* group : groups) drawGroup(group);
+
+    drawSkyBox();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
+
+    renderQuad();
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

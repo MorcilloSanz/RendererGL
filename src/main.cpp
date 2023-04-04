@@ -73,20 +73,31 @@ int main(void) {
     fpsCamera.setSensitivity(sensitivity / 10);
 
     // Point Lighting
-    PointLight light(glm::vec3(0, 3, 0));
-    light.setSpecular(glm::vec3(0.3));
-    light.setLinear(0.04);
-    light.setQuadratic(0.016);
+    PointLight light(glm::vec3(3, 3, 3));
+
+    //light.setSpecular(glm::vec3(0.3));
+    //light.setLinear(0.04);
+    //light.setQuadratic(0.016);
+
     light.setColor(glm::vec3(0, 1, 0));
+    light.setIntensity(2);
+
     renderer->addLight(light);
 
-    PointLight light2(glm::vec3(3, 2, 0));
+    PointLight light2(glm::vec3(3, 3, -3));
     light2.setColor(glm::vec3(1, 0, 0));
+    light2.setIntensity(2);
     renderer->addLight(light2);
 
-    PointLight light3(glm::vec3(0, 2, -3));
+    PointLight light3(glm::vec3(-3, 3, -3));
     light3.setColor(glm::vec3(0, 0, 1));
+    light3.setIntensity(2);
     renderer->addLight(light3);
+
+    PointLight light5(glm::vec3(-3, 3, 3));
+    light5.setColor(glm::vec3(1, 1, 0));
+    light5.setIntensity(1.25);
+    renderer->addLight(light5);
 
     // Directional lighting
     DirectionalLight light4(glm::vec3(-4, 7, 5.5));
@@ -146,7 +157,7 @@ int main(void) {
 
     Polytope::Ptr cubePolytope = Polytope::New(vertices);
     cubePolytope->translate(glm::vec3(0, 0, 3));
-    cubePolytope->setFaceCulling(Polytope::FaceCulling::NONE); // BACK default
+    cubePolytope->setFaceCulling(Polytope::FaceCulling::BACK); // BACK default
 
     std::vector<Vec3f> cubeVertices {
         // Front square
@@ -461,12 +472,6 @@ int main(void) {
 
                 ImGui::SameLine();
 
-                static bool gammaCorrection = false;
-                ImGui::Checkbox("Gamma correction", &gammaCorrection);
-                Light::gammaCorrection = gammaCorrection;
-
-                ImGui::SameLine();
-
                 static bool enableDirectionalLight = false;
                 bool previousDirectionalLight = enableDirectionalLight;
                 ImGui::Checkbox("Directional", &enableDirectionalLight);
@@ -538,20 +543,29 @@ int main(void) {
                     lightPolytope->translate(glm::vec3(dx, dy, dz));
                 }
 
-                if (ImGui::Button("Reset lighting")) {
-                    lx = 2; ly = -8; lz = 5;
-                    ambientStrength = 0.5f;
-                    diffuseStrength = 0.5f;
-                    specularStrength = 0.5f;
-                }
-
                 ImGui::Separator();
 
-                ImGui::Text("Shadows");
+                ImGui::TextColored(ImColor(200, 150, 255), "Shadows");
 
                 static bool shadowMapping = false;
                 ImGui::Checkbox("Shadow mapping", &shadowMapping);
                 renderer->setShadowMapping(shadowMapping);
+
+                ImGui::TextColored(ImColor(200, 150, 255), "HDR");
+
+                static bool hdr = renderer->isHDR();
+                ImGui::Checkbox("HDR", &hdr);
+                renderer->setHDR(hdr);
+
+                ImGui::SameLine();
+
+                static bool gammaCorrection = renderer->isGammaCorrection();
+                ImGui::Checkbox("Gamma correction", &gammaCorrection);
+                renderer->setGammaCorrection(gammaCorrection);
+
+                static float hdrExposure = 1.0f;
+                ImGui::SliderFloat("HDR exposure:", &hdrExposure, 0.f, 5.f);
+                renderer->setExposure(hdrExposure);
 
                 ImGui::End();
             }

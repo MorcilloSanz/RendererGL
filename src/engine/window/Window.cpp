@@ -27,15 +27,16 @@ void Window::initWindow() {
         std::cout << "Couldn't initialize window" << std::endl;
         return;
     }
-    glfwWindowHint(GLFW_SAMPLES, 4);
     window = glfwCreateWindow(CallbackManager::width, CallbackManager::height, title.c_str(), NULL, NULL);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     if (!window) terminate();
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, CallbackManager::frameBufferSizeCallback);
     glfwSetCursorPosCallback(window, CallbackManager::mouseCallback);
     glfwSetMouseButtonCallback(window, CallbackManager::mouseButtonCallback);
     glfwSetKeyCallback(window, CallbackManager::keyCallback);
-    glfwSwapInterval(1);
+    //glfwSwapInterval(1);
+    
     // Init glew
     initGlew();
 }

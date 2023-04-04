@@ -74,8 +74,8 @@ int main(void) {
 
     // Point Lighting
     PointLight light(glm::vec3(3, 3, 3));
-
-    //light.setSpecular(glm::vec3(0.3));
+    light.setSpecular(glm::vec3(0.3));
+    
     //light.setLinear(0.04);
     //light.setQuadratic(0.016);
 

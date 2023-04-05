@@ -6,7 +6,7 @@
 #include "engine/renderer/Renderer.h"
 #include "engine/renderer/TrackballCamera.h"
 #include "engine/renderer/FPSCamera.h"
-#include "engine/renderer/TextureRenderer.h"
+#include "engine/renderer/FrameCapturer.h"
 #include "engine/renderer/MouseRayCasting.h"
 #include "engine/model/Model.h"
 
@@ -27,8 +27,8 @@ void updateFPSCamera(double xpos, double ypos);
 // Window
 Window window;
 
-// Texture renderer
-TextureRenderer textureRenderer; // DO NOT INSTANCIATE AGAIN, that would destroy the current object and delete textureRenderer's buffers which ends up in OpenGL errors
+// FrameCapturer: Converts the scene into a texture (render it to a quad or an ImGui window)
+FrameCapturer::Ptr frameCapturer;
 
 // TrackBallCamera 
 TrackballCamera camera;
@@ -321,7 +321,7 @@ int main(void) {
     renderer->setSkyBox(skyBox);
 
     // Init textureRenderer
-    textureRenderer.updateViewPort(window.getWidth(), window.getHeight());
+    frameCapturer = FrameCapturer::New(window.getWidth(), window.getHeight());
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
@@ -333,13 +333,13 @@ int main(void) {
         renderer->clear();
 
         // Draw to texture instead of default
-        textureRenderer.renderToTexture();
+        frameCapturer->startCapturing();
 
         // Render
         renderer->render();
 
         // Go back to default
-        textureRenderer.renderToDefault();
+        frameCapturer->finishCapturing();
 
         // Update cubePolytope2 emission strength
         cubePolytope2->setEmissionStrength(sin(glfwGetTime()) / 2 + 0.5);
@@ -443,10 +443,10 @@ int main(void) {
                     cubePolytope2->addTexture(textureEmissionRed);
                 }
 
-                glm::vec3 backgroundColor = textureRenderer.getBackgroundColor();
+                glm::vec3 backgroundColor = frameCapturer->getBackgroundColor();
                 static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};
                 ImGui::ColorEdit3("Background color", color, 0);
-                textureRenderer.setBackgroundColor(color[0], color[1], color[2]);
+                frameCapturer->setBackgroundColor(color[0], color[1], color[2]);
 
                 ImGui::Separator();
 
@@ -642,7 +642,7 @@ int main(void) {
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
 
                 // Render graphics as a texture
-                ImGui::Image((void*)(intptr_t)textureRenderer.getTexture(), ImGui::GetWindowSize());   
+                ImGui::Image((void*)(intptr_t)frameCapturer->getTexture()->getID(), ImGui::GetWindowSize());   
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);
@@ -987,7 +987,7 @@ void renderImGui(ImGuiIO& io) {
 // Window functions
 
 void resizeFun(GLFWwindow* w, int width, int height) {
-    textureRenderer.updateViewPort(width, height);
+    frameCapturer->updateViewPort(width, height);
     window.setWidth(width);
     window.setHeight(height);
     renderer->setViewport(width, height);

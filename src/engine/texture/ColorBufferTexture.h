@@ -9,5 +9,5 @@ public:
     ColorBufferTexture() = default;
     ~ColorBufferTexture() = default;
 private:
-    void generateTexture();
+    void generateTexture() override;
 };

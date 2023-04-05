@@ -7,7 +7,7 @@
 #include "../opengl/buffer/VertexArray.h"
 #include "../opengl/buffer/VertexBuffer.h"
 #include "../opengl/shader/Shader.h"
-#include "../texture/TextureCubeMap.h"
+#include "../texture/CubeMapTexture.h"
 
 class SkyBox : public Buffer {
     GENERATE_PTR(SkyBox)
@@ -15,7 +15,7 @@ private:
     VertexArray::Ptr vertexArray;
     VertexBuffer::Ptr vertexBuffer;
     std::vector<std::string> faces;
-    TextureCubeMap::Ptr cubeMap;
+    CubeMapTexture::Ptr cubeMap;
 public:
     SkyBox() = default;
     /**
@@ -39,5 +39,5 @@ public:
 public:
     inline std::vector<std::string>& getFaces() { return faces; }
     inline VertexArray::Ptr& getVertexArray() { return vertexArray; }
-    inline TextureCubeMap::Ptr& getTextureCubeMap() { return cubeMap; }
+    inline CubeMapTexture::Ptr& getTextureCubeMap() { return cubeMap; }
 };

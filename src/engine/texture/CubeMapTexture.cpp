@@ -1,12 +1,12 @@
-#include "TextureCubeMap.h"
+#include "CubeMapTexture.h"
 
-TextureCubeMap::TextureCubeMap(const std::vector<std::string>& faces) 
+CubeMapTexture::CubeMapTexture(const std::vector<std::string>& faces) 
     : Texture() {
     type = Type::TextureCubeMap;
     generateTexture(faces);
 }
 
-void TextureCubeMap::generateTexture(const std::vector<std::string>& faces) {
+void CubeMapTexture::generateTexture(const std::vector<std::string>& faces) {
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
@@ -30,11 +30,11 @@ void TextureCubeMap::generateTexture(const std::vector<std::string>& faces) {
     count ++;
 }
 
-void TextureCubeMap::bind() {
+void CubeMapTexture::bind() {
     glActiveTexture(slot);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 }
 
-void TextureCubeMap::unbind() {
+void CubeMapTexture::unbind() {
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

@@ -36,7 +36,7 @@ SkyBox::~SkyBox() {
 void SkyBox::initBuffer() {
     vertexArray = VertexArray::New();
     vertexBuffer = VertexBuffer::New(vertices);
-    cubeMap = TextureCubeMap::New(faces);
+    cubeMap = CubeMapTexture::New(faces);
     unbind();
 }
 

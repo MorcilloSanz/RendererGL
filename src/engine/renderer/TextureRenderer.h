@@ -4,14 +4,25 @@
 
 #include "../../../glew/glew.h"
 
+#include "../opengl/buffer/FrameBuffer.h"
+#include "../opengl/buffer/MultiSampleRenderBuffer.h"
+#include "../texture/MultiSampleTexture.h"
+
 #include "../../../glm/vec3.hpp"
 
 class TextureRenderer {
+    GENERATE_PTR(TextureRenderer)
 private:
     unsigned int width, height;
-    unsigned int framebuffer, intermediateFrameBuffer;
-    unsigned int textureColorBufferMultiSampled, screenTexture;
-    unsigned int rbo;
+
+    FrameBuffer::Ptr frameBuffer;
+    FrameBuffer::Ptr intermediateFrameBuffer;
+
+    MultiSampleTexture::Ptr textureColorBufferMultiSampled;
+    Texture::Ptr screenTexture;
+
+    MultiSampleRenderBuffer::Ptr rbo;
+
     glm::vec3 backgroundColor;
 public:
     TextureRenderer(unsigned int _width, unsigned int _height) 
@@ -23,58 +34,39 @@ public:
         : width(0), height(0), backgroundColor(0.1f, 0.1f, 0.1f) {
     }
 
-    ~TextureRenderer() {
-        deleteBuffers();
-    }
-private:
-    void deleteBuffers() {
-        glDeleteBuffers(1, &framebuffer);
-        glDeleteBuffers(1, &intermediateFrameBuffer);
-        glDeleteBuffers(1, &textureColorBufferMultiSampled);
-        glDeleteBuffers(1, &screenTexture);
-        glDeleteBuffers(1, &rbo);
-        framebuffer = intermediateFrameBuffer = textureColorBufferMultiSampled = screenTexture = rbo = 0;
-    }
+    ~TextureRenderer() = default;
 public:
     void updateViewPort(unsigned int width, unsigned int height) {
+
         this->width = width;
         this->height = height;
-        // configure MSAA framebuffer
-        // --------------------------
-        glGenFramebuffers(1, &framebuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        // create a multisampled color attachment texture
-        glGenTextures(1, &textureColorBufferMultiSampled);
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
-        glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled, 0);
-        // create a (also multisampled) renderbuffer object for depth and stencil attachments
-        glGenRenderbuffers(1, &rbo);
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        // Configure MSAA framebuffer
+        frameBuffer = FrameBuffer::New();
+
+        // Create a multisampled color attachment texture
+        textureColorBufferMultiSampled = MultiSampleTexture::New(width, height);
+        frameBuffer->toTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled->getID());
+
+        // Create a (also multisampled) renderbuffer object for depth and stencil attachments
+        rbo = MultiSampleRenderBuffer::New(width, height);
+        frameBuffer->setRenderBuffer(GL_DEPTH_STENCIL_ATTACHMENT, rbo->getID());
+
+        if (!frameBuffer->isComplete()) std::cout << "Error: framebuffer is not complete!" << std::endl;
+        
+        frameBuffer->unbind();
 
         // configure second post-processing framebuffer
-        glGenFramebuffers(1, &intermediateFrameBuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
+        intermediateFrameBuffer = FrameBuffer::New();
+
         // create a color attachment texture
-        glGenTextures(1, &screenTexture);
-        glBindTexture(GL_TEXTURE_2D, screenTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);	// we only need a color buffer
+        screenTexture = Texture::New(width, height);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "ERROR::FRAMEBUFFER:: Intermediate framebuffer is not complete!" << std::endl;
+        intermediateFrameBuffer->toTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture->getID());
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if (!intermediateFrameBuffer->isComplete()) std::cout << "Error: Intermediate framebuffer is not complete!" << std::endl;
+
+        intermediateFrameBuffer->unbind();
     }
 
     void renderToTexture() {
@@ -82,10 +74,9 @@ public:
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         // Clear frame buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        frameBuffer->bind();
         glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -93,11 +84,9 @@ public:
 
     void renderToDefault() {
          // 2. now blit multisampled buffer(s) to normal colorbuffer of intermediate FBO. Image is stored in screenTexture
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
-        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        intermediateFrameBuffer->blitFrom(frameBuffer, width, height);
         // 3. now render quad with scene's visuals as its texture image
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        intermediateFrameBuffer->unbind();
         glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
@@ -109,7 +98,7 @@ public:
         backgroundColor.b = b;
     }
 
-    inline unsigned int getTexture() { return screenTexture; }
+    inline unsigned int getTexture() { return screenTexture->getID(); }
 
     inline glm::vec3& getBackgroundColor() { return backgroundColor; }
 };

@@ -26,6 +26,8 @@ set(HEADERS
         src/engine/opengl/buffer/VertexArray.h
         src/engine/opengl/buffer/VertexBuffer.h
         src/engine/opengl/buffer/IndexBuffer.h
+        src/engine/opengl/buffer/FrameBuffer.h
+        src/engine/opengl/buffer/MultiSampleRenderBuffer.h
         src/engine/opengl/shader/Shader.h
         src/engine/group/Polytope.h
         src/engine/group/DynamicPolytope.h
@@ -43,9 +45,10 @@ set(HEADERS
         src/engine/lighting/SpotLight.h
         src/engine/texture/vendor/stb_image.h
         src/engine/texture/Texture.h
-        src/engine/texture/TextureCubeMap.h
+        src/engine/texture/CubeMapTexture.h
         src/engine/texture/DepthTexture.h
         src/engine/texture/ColorBufferTexture.h
+        src/engine/texture/MultiSampleTexture.h
         src/engine/model/Model.h
 )
 
@@ -66,6 +69,8 @@ set(SOURCES
         src/engine/opengl/buffer/VertexArray.cpp
         src/engine/opengl/buffer/VertexBuffer.cpp
         src/engine/opengl/buffer/IndexBuffer.cpp
+        src/engine/opengl/buffer/FrameBuffer.cpp
+        src/engine/opengl/buffer/MultiSampleRenderBuffer.cpp
         src/engine/opengl/shader/Shader.cpp
         src/engine/group/Polytope.cpp
         src/engine/group/DynamicPolytope.cpp
@@ -81,9 +86,10 @@ set(SOURCES
         src/engine/lighting/PointLight.cpp
         src/engine/lighting/SpotLight.cpp
         src/engine/texture/Texture.cpp
-        src/engine/texture/TextureCubeMap.cpp
+        src/engine/texture/CubeMapTexture.cpp
         src/engine/texture/DepthTexture.cpp
         src/engine/texture/ColorBufferTexture.cpp
+        src/engine/texture/MultiSampleTexture.cpp
         src/engine/model/Model.cpp
 )
 

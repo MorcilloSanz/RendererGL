@@ -39,6 +39,7 @@ protected:
 public:
     Texture(const std::string& _path, const Type& _type = Type::TextureDiffuse, bool _flip = true);
     Texture(unsigned char* buffer, const Type& _type = Type::TextureDiffuse);
+    Texture(unsigned int _width, unsigned int _height, const Type& _type = Type::TextureDiffuse);
     Texture(const Texture& texture);
     Texture(Texture&& texture) noexcept;
     Texture();
@@ -49,6 +50,7 @@ protected:
     void loadTexture(unsigned char* buffer);
     void generateTextureFromBuffer(unsigned char* buffer);
     void generateTextureFromFile(const std::string& path);
+    virtual void generateTexture();
 public:
     virtual void bind();
     virtual void unbind();

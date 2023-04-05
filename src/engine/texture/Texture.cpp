@@ -27,6 +27,13 @@ Texture::Texture(unsigned char *buffer, const Type &_type)
 	generateTextureFromBuffer(buffer);
 }
 
+Texture::Texture(unsigned int _width, unsigned int _height, const Type& _type) 
+	: path(""), id(0), width(_width), height(_height), bpp(0), slot(0), type(_type),
+	flip(false), freeGPU(true) {
+	initTextureUnits();
+	generateTexture();
+}
+
 Texture::Texture() 
 	: id(0), width(0), height(0), bpp(0), path(""), slot(0), type(Type::None), 
 	flip(false), freeGPU(true) {
@@ -61,6 +68,18 @@ Texture& Texture::operator=(const Texture& texture) {
 	type = texture.type;
 	freeGPU = false;
 	return *this;
+}
+
+void Texture::generateTexture() {
+	
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	slot = 0x84C0 + count;
+	count++;
 }
 
 void Texture::loadTexture(unsigned char* buffer) {

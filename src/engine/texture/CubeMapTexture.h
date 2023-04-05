@@ -5,12 +5,12 @@
 
 #include "Texture.h"
 
-class TextureCubeMap : public Texture {
-    GENERATE_PTR(TextureCubeMap)
+class CubeMapTexture : public Texture {
+    GENERATE_PTR(CubeMapTexture)
 public:
-    TextureCubeMap(const std::vector<std::string>& faces);
-    TextureCubeMap() = default;
-    ~TextureCubeMap() = default;
+    CubeMapTexture(const std::vector<std::string>& faces);
+    CubeMapTexture() = default;
+    ~CubeMapTexture() = default;
 private:
     void generateTexture(const std::vector<std::string>& faces);
 public:

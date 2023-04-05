@@ -10,8 +10,8 @@
 
 #include "../../../glm/vec3.hpp"
 
-class TextureRenderer {
-    GENERATE_PTR(TextureRenderer)
+class FrameCapturer {
+    GENERATE_PTR(FrameCapturer)
 private:
     unsigned int width, height;
 
@@ -25,16 +25,16 @@ private:
 
     glm::vec3 backgroundColor;
 public:
-    TextureRenderer(unsigned int _width, unsigned int _height) 
+    FrameCapturer(unsigned int _width, unsigned int _height) 
         : width(_width), height(_height), backgroundColor(0.1f, 0.1f, 0.1f) {
         updateViewPort(width, height);
     }
 
-    TextureRenderer()
+    FrameCapturer()
         : width(0), height(0), backgroundColor(0.1f, 0.1f, 0.1f) {
     }
 
-    ~TextureRenderer() = default;
+    ~FrameCapturer() = default;
 public:
     void updateViewPort(unsigned int width, unsigned int height) {
 
@@ -69,7 +69,7 @@ public:
         intermediateFrameBuffer->unbind();
     }
 
-    void renderToTexture() {
+    void startCapturing() {
         // Blending
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
@@ -82,7 +82,7 @@ public:
         glEnable(GL_DEPTH_TEST);
     }
 
-    void renderToDefault() {
+    void finishCapturing() {
          // 2. now blit multisampled buffer(s) to normal colorbuffer of intermediate FBO. Image is stored in screenTexture
         intermediateFrameBuffer->blitFrom(frameBuffer, width, height);
         // 3. now render quad with scene's visuals as its texture image
@@ -98,7 +98,7 @@ public:
         backgroundColor.b = b;
     }
 
-    inline unsigned int getTexture() { return screenTexture->getID(); }
+    inline Texture::Ptr& getTexture() { return screenTexture; }
 
     inline glm::vec3& getBackgroundColor() { return backgroundColor; }
 };

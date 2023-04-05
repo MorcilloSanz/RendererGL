@@ -5,6 +5,11 @@ MultiSampleRenderBuffer::MultiSampleRenderBuffer(unsigned int _width, unsigned i
     initBuffer();
 }
 
+MultiSampleRenderBuffer::~MultiSampleRenderBuffer() {
+    unbind();
+    glDeleteBuffers(1, &id);
+}
+
 void MultiSampleRenderBuffer::initBuffer() {
     glGenRenderbuffers(1, &id);
     glBindRenderbuffer(GL_RENDERBUFFER, id);

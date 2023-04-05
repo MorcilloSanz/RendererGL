@@ -10,7 +10,7 @@ protected:
 public:
     MultiSampleRenderBuffer(unsigned int _width, unsigned int _height, unsigned int _samples = 4);
     MultiSampleRenderBuffer() = default;
-    virtual ~MultiSampleRenderBuffer() = default;
+    virtual ~MultiSampleRenderBuffer();
 protected:
     void initBuffer() override;
 public:

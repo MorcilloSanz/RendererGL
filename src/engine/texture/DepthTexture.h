@@ -9,5 +9,5 @@ public:
     DepthTexture() = default;
     ~DepthTexture() = default;
 private:
-    void generateTexture();
+    void generateTexture() override;
 };

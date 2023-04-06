@@ -11,7 +11,7 @@ VertexBuffer::VertexBuffer(size_t _length)
 
 VertexBuffer::VertexBuffer(std::vector<Vec3f>& vertices)
     : Buffer(), length(vertices.size()), hasIndexBuffer(false) {
-    initBuffer(vertices);
+    initBuffer(vertices, {});
 }
 
 VertexBuffer::VertexBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices) 
@@ -44,53 +44,35 @@ VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &id);
 }
 
-/*
-TODO: Refractor repeated code
-*/
-void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices) {
-    // Load vertices
-    unsigned int index = 0;
-    float* glVertices = new float[vertices.size() * 17];
-    for(Vec3f& vertex : vertices) {
-        glVertices[index] = vertex.x;   glVertices[index + 1] = vertex.y;   glVertices[index + 2] = vertex.z;
-        glVertices[index + 3] = vertex.r;   glVertices[index + 4] = vertex.g;   glVertices[index + 5] = vertex.b;
-        glVertices[index + 6] = vertex.nx;   glVertices[index + 7] = vertex.ny;   glVertices[index + 8] = vertex.nz;
-        glVertices[index + 9] = vertex.tx;  glVertices[index + 10] = vertex.ty; 
-        glVertices[index + 11] = vertex.tanx;  glVertices[index + 12] = vertex.tany; glVertices[index + 13] = vertex.tanz;
-        glVertices[index + 14] = vertex.bitanx; glVertices[index + 15] = vertex.bitany; glVertices[index + 16] = vertex.bitanz;
-        index += 17;
-    }
-    // Vertex buffer
-    glGenBuffers(1, &id);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float) * 17, glVertices, GL_DYNAMIC_DRAW);
-    delete[] glVertices;
+void VertexBuffer::vertexAttributes() {
+
     // position attribute
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
+
     // color attribute
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(float)));
+
     // normal attribute
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(6 * sizeof(float)));
+
     // texture coordinates attribute
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(9 * sizeof(float)));
+
     // tangent attribute
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(11 * sizeof(float)));
+    
     // bitangent attribute
     glEnableVertexAttribArray(5);
     glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(14 * sizeof(float)));
-    // Unbind VBO
-    unbind();
 }
 
-/*
-TODO: Refractor repeated code
-*/
 void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices) {
+
     // Load vertices
     unsigned int index = 0;
     float* glVertices = new float[vertices.size() * 17];
@@ -103,67 +85,39 @@ void VertexBuffer::initBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned
         glVertices[index + 14] = vertex.bitanx; glVertices[index + 15] = vertex.bitany; glVertices[index + 16] = vertex.bitanz;
         index += 17;
     }
+
     // Vertex buffer
     glGenBuffers(1, &id);
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float) * 17, glVertices, GL_DYNAMIC_DRAW);
     delete[] glVertices;
+
     // Index Buffer
-    if(hasIndexBuffer) indexBuffer = std::make_shared<IndexBuffer>(indices);
-    // position attribute
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
-    // color attribute
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(float)));
-    // normal attribute
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(6 * sizeof(float)));
-    // texture coordinates attribute
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(9 * sizeof(float)));
-    // tangent attribute
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(11 * sizeof(float)));
-    // bitangent attribute
-    glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(14 * sizeof(float)));
+    if(hasIndexBuffer && !indices.empty()) indexBuffer = std::make_shared<IndexBuffer>(indices);
+
+    // Vertex Attributes
+    vertexAttributes();
+
     // Unbind VBO
     unbind();
 }
 
-/*
-TODO: Refractor repeated code
-*/
-// Needed -> Buffer interface
 void VertexBuffer::initBuffer() { 
+
     // Vertex buffer
     glGenBuffers(1, &id);
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glBufferData(GL_ARRAY_BUFFER, length * sizeof(float) * 17, nullptr, GL_DYNAMIC_DRAW);
-    // position attribute
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
-    // color attribute
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(float)));
-    // normal attribute
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(6 * sizeof(float)));
-    // texture coordinates attribute
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(9 * sizeof(float)));
-    // tangent attribute
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(11 * sizeof(float)));
-    // bitangent attribute
-    glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(14 * sizeof(float)));
+
+    // Vertex Attributes
+    vertexAttributes();
+
     // Unbind VBO
     unbind();
 }
 
 void VertexBuffer::updateVertices(std::vector<Vec3f>& vertices) {
+
     glBindBuffer(GL_ARRAY_BUFFER, id);
     float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
 
@@ -183,6 +137,7 @@ void VertexBuffer::updateVertices(std::vector<Vec3f>& vertices) {
 }
 
 void VertexBuffer::updateVertex(int pos, Vec3f newVertex) {
+
     glBindBuffer(GL_ARRAY_BUFFER, id);
     float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
 
@@ -199,6 +154,7 @@ void VertexBuffer::updateVertex(int pos, Vec3f newVertex) {
 }
 
 std::vector<Vec3f> VertexBuffer::getVertices() {
+
     glBindBuffer(GL_ARRAY_BUFFER, id);
     float* ptr = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
 

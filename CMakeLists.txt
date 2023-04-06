@@ -33,7 +33,7 @@ set(HEADERS
         src/engine/group/DynamicPolytope.h
         src/engine/group/Group.h
         src/engine/renderer/Renderer.h
-        src/engine/renderer/TextureRenderer.h
+        src/engine/renderer/FrameCapturer.h
         src/engine/renderer/Camera.h
         src/engine/renderer/TrackballCamera.h
         src/engine/renderer/FPSCamera.h

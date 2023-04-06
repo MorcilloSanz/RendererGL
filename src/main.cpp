@@ -990,7 +990,7 @@ void resizeFun(GLFWwindow* w, int width, int height) {
     window.setWidth(width);
     window.setHeight(height);
     renderer->setViewport(width, height);
-    frameCapturer->updateViewPort(width, height);
+    //frameCapturer->updateViewPort(width, height);
 }
 
 void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {

@@ -16,6 +16,8 @@
 #include "../texture/DepthTexture.h"
 #include "../texture/ColorBufferTexture.h"
 
+#include "../opengl/buffer/FrameBuffer.h"
+
 #include "SkyBox.h"
 
 class Renderer {
@@ -44,8 +46,11 @@ private:
     unsigned int nLights;
     bool hasLight;
 
+    // Previous FBO
+    int previousFBO;
+
     // Shadow Mapping
-    unsigned int depthMapFBO;
+    FrameBuffer::Ptr depthMapFBO;
     DepthTexture::Ptr depthMap;
 
     glm::mat4 lightSpaceMatrix;
@@ -53,7 +58,7 @@ private:
     bool shadowMapping;
 
     // HDR
-    unsigned int hdrFBO;
+    FrameBuffer::Ptr hdrFBO;
     ColorBufferTexture::Ptr colorBufferTexture;
     unsigned int rboDepth;
 
@@ -92,6 +97,8 @@ private:
     void renderQuad();
     void drawGroup(Group* group);
     void drawSkyBox();
+    void loadPreviousFBO();
+    void bindPreviousFBO();
 public:
     void removeGroup(Group& group);
     void removeLight(Light& light);

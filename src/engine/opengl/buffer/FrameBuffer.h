@@ -10,7 +10,7 @@ public:
 protected:
     void initBuffer() override;
 public:
-    void toTexture(int colorAttachment, int texturePrimitive, int textureID);
+    void toTexture(int attachment, int texturePrimitive, int textureID);
     void blitFrom(FrameBuffer::Ptr& frameBuffer, unsigned int width, unsigned int height);
     void setRenderBuffer(int attachment, int renderBufferID);
     void bind() override;

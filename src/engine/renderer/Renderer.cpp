@@ -256,14 +256,12 @@ void Renderer::initHDR() {
     colorBufferTexture->bind();
 
     // create depth buffer (renderbuffer)
-    glGenRenderbuffers(1, &rboDepth);
-    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, viewportWidth, viewportWidth);
+    rboDepth = RenderBuffer::New(viewportWidth, viewportHeight);
 
     // attach buffers
     hdrFBO->bind();
     hdrFBO->toTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture->getID());
-    hdrFBO->setRenderBuffer(GL_DEPTH_ATTACHMENT, rboDepth);
+    hdrFBO->setRenderBuffer(GL_DEPTH_ATTACHMENT, rboDepth->getID());
 
     if (!hdrFBO->isComplete()) std::cout << "Framebuffer not complete!" << std::endl;
 

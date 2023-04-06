@@ -15,8 +15,8 @@ void FrameBuffer::initBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
 }
 
-void FrameBuffer::toTexture(int colorAttachment, int texturePrimitive, int textureID) {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachment, texturePrimitive, textureID, 0);
+void FrameBuffer::toTexture(int attachment, int texturePrimitive, int textureID) {
+    glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, texturePrimitive, textureID, 0);
 }
 
 void FrameBuffer::blitFrom(FrameBuffer::Ptr& frameBuffer, unsigned int width, unsigned int height) {

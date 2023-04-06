@@ -17,6 +17,7 @@
 #include "../texture/ColorBufferTexture.h"
 
 #include "../opengl/buffer/FrameBuffer.h"
+#include "../opengl/buffer/RenderBuffer.h"
 
 #include "SkyBox.h"
 
@@ -60,7 +61,7 @@ private:
     // HDR
     FrameBuffer::Ptr hdrFBO;
     ColorBufferTexture::Ptr colorBufferTexture;
-    unsigned int rboDepth;
+    RenderBuffer::Ptr rboDepth;
 
     bool hdr;
     float exposure;

@@ -74,9 +74,6 @@ void Polytope::calculateTangentsAndBitangents(std::vector<Vec3f>& vertices, std:
     }   
 }
 
-/*
-*  TODO: Refractor, repeated code
-*/
 void Polytope::initPolytope(size_t length) {
     vertexArray = VertexArray::New();
     vertexBuffer = VertexBuffer::New(length);

@@ -25,7 +25,7 @@ public:
     VertexBuffer& operator=(const VertexBuffer& vertexBuffer);
     ~VertexBuffer();
 protected:
-    void initBuffer(std::vector<Vec3f>& vertices);
+    void vertexAttributes();
     void initBuffer(std::vector<Vec3f>& vertices, std::vector<unsigned int> indices);
     void initBuffer() override;
 public:

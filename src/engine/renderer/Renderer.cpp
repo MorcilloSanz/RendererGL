@@ -230,53 +230,52 @@ void Renderer::setViewport(unsigned int viewportWidth, unsigned int viewportHeig
 }
 
 void Renderer::initShadowMapping() {
-
-    glGenFramebuffers(1, &depthMapFBO);  
+ 
+    depthMapFBO = FrameBuffer::New();
 
     depthMap = DepthTexture::New(SHADOW_MAP_WIDTH, SHADOW_MAP_WIDTH);
     depthMap->bind();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap->getID(), 0);
+    depthMapFBO->bind();
+    depthMapFBO->toTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap->getID());
+
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    depthMapFBO->unbind();
 
     shaderProgramLighting->useProgram();
     shaderProgramLighting->uniformInt("shadowMap", depthMap->getID() - 1);
 }
 
 void Renderer::initHDR() {
-
-    glGenFramebuffers(1, &hdrFBO);
+    
+    hdrFBO = FrameBuffer::New();
 
     colorBufferTexture = ColorBufferTexture::New(viewportWidth, viewportHeight);
     colorBufferTexture->bind();
 
     // create depth buffer (renderbuffer)
-    glGenRenderbuffers(1, &rboDepth);
-    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, viewportWidth, viewportWidth);
+    rboDepth = RenderBuffer::New(viewportWidth, viewportHeight);
 
     // attach buffers
-    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture->getID(), 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "Framebuffer not complete!" << std::endl;
+    hdrFBO->bind();
+    hdrFBO->toTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture->getID());
+    hdrFBO->setRenderBuffer(GL_DEPTH_ATTACHMENT, rboDepth->getID());
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    if (!hdrFBO->isComplete()) std::cout << "Framebuffer not complete!" << std::endl;
+
+    hdrFBO->unbind();
 }
 
 void Renderer::renderToDepthMap() {
 
     if(!hasLight) return;
 
-    int previousFBO;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+    loadPreviousFBO();
 
     glViewport(0, 0, SHADOW_MAP_WIDTH, SHADOW_MAP_WIDTH);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    depthMapFBO->bind();
 
     // Shaders
     float nearPlane = 0.1f, farPlane = 17.5f;
@@ -305,7 +304,7 @@ void Renderer::renderToDepthMap() {
         }
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
+    bindPreviousFBO();
 }
 
 void Renderer::drawGroup(Group* group) {
@@ -418,10 +417,9 @@ void Renderer::render() {
     if(shadowMapping) renderToDepthMap();
 
     // Render to HDR FBO
-    int previousFBO;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+    loadPreviousFBO();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+    hdrFBO->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Draw scene
@@ -429,7 +427,7 @@ void Renderer::render() {
 
     drawSkyBox();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
+    bindPreviousFBO();
 
     renderQuad();
 }
@@ -482,4 +480,12 @@ void Renderer::enableFrontFaceCulling() {
 
 void Renderer::disableFaceCulling() {
     glDisable(GL_CULL_FACE);
+}
+
+void Renderer::loadPreviousFBO() {
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+}
+
+void Renderer::bindPreviousFBO() {
+    glBindFramebuffer(GL_FRAMEBUFFER, previousFBO);
 }

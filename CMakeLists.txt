@@ -27,13 +27,14 @@ set(HEADERS
         src/engine/opengl/buffer/VertexBuffer.h
         src/engine/opengl/buffer/IndexBuffer.h
         src/engine/opengl/buffer/FrameBuffer.h
+        src/engine/opengl/buffer/RenderBuffer.h
         src/engine/opengl/buffer/MultiSampleRenderBuffer.h
         src/engine/opengl/shader/Shader.h
         src/engine/group/Polytope.h
         src/engine/group/DynamicPolytope.h
         src/engine/group/Group.h
         src/engine/renderer/Renderer.h
-        src/engine/renderer/TextureRenderer.h
+        src/engine/renderer/FrameCapturer.h
         src/engine/renderer/Camera.h
         src/engine/renderer/TrackballCamera.h
         src/engine/renderer/FPSCamera.h
@@ -70,6 +71,7 @@ set(SOURCES
         src/engine/opengl/buffer/VertexBuffer.cpp
         src/engine/opengl/buffer/IndexBuffer.cpp
         src/engine/opengl/buffer/FrameBuffer.cpp
+        src/engine/opengl/buffer/RenderBuffer.cpp
         src/engine/opengl/buffer/MultiSampleRenderBuffer.cpp
         src/engine/opengl/shader/Shader.cpp
         src/engine/group/Polytope.cpp

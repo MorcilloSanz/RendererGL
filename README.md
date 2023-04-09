@@ -1,6 +1,10 @@
 # RendererGL
 
-RendererGL is a 3D renderer written in C++ and OpenGL
+RendererGL is a 3D renderer written in C++ and OpenGL.
+
+The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way. 
+
+>Warning: This project is still under development
 
 The file:
 
@@ -14,15 +18,16 @@ is an example file using ImGui and RendererGL
 
 * Trackball and first person shooter camera
 * Polytopes and groups in order to create a 3D scene
-* Polytope face culling
-* Depth testing and blending
-* Anti aliasing
 * Dynamic polytopes
+* Polytope face culling
+* Depth testing
+* Blending
+* Anti aliasing
 * Textures
-* Load 3D models
+* Load 3D models (using ASSIMP)
 * Skybox
-* Texture renderer (capture FrameBuffer and create a texture)
-* Blinn-Phong lighting (directional, point and spot)
+* FrameCapturer (capture FrameBuffer and create a texture)
+* Blinn-Phong lighting
 * Emission
 * Shadow Mapping (percentage closer filtering)
 * Normal Mapping
@@ -31,9 +36,7 @@ is an example file using ImGui and RendererGL
 * Mouse ray casting
 * Object selection
 
-## Cube example
-
-Simple rotating cube example:
+### Simple rotating cube example
 
 ```cpp
 #include "engine/window/Window.h"
@@ -124,11 +127,23 @@ int main() {
 
 ![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
 
-# Dependencies
+## Contribution
 
-* [GLFW](https://github.com/glfw/glfw)
-* [GLEW](https://github.com/nigels-com/glew)
-* [GLM](https://github.com/g-truc/glm)
-* [IMGUI](https://github.com/ocornut/imgui)
-* [ASSIMP](https://github.com/assimp/assimp)
-* [STB](https://github.com/nothings/stb)
+RendererGL is an open source project under the MIT licence. Feel free to fork it and contribute
+
+## Dependencies
+
+* [GLFW](https://github.com/glfw/glfw) for creating a window with an OpenGL context
+* [GLEW](https://github.com/nigels-com/glew) for loading OpenGL extensions
+* [GLM](https://github.com/g-truc/glm) for linear algebra (vector and matrix operations...)
+* [IMGUI](https://github.com/ocornut/imgui) for the UI
+* [ASSIMP](https://github.com/assimp/assimp) for loading 3D models from files (.obj, .dae...)
+* [STB](https://github.com/nothings/stb) for loading images from files (.png, .tga, .jpg...)
+
+## References
+
+Dealing with OpenGL was much easier thanks to:
+
+* [Learn OpenGL](https://learnopengl.com/)
+* [The Cherno](https://www.youtube.com/@TheCherno)
+* [ThinMatrix](https://www.youtube.com/@ThinMatrix)

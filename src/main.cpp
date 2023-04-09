@@ -989,7 +989,7 @@ void renderImGui(ImGuiIO& io) {
 void resizeFun(GLFWwindow* w, int width, int height) {
     window.setWidth(width);
     window.setHeight(height);
-    renderer->setViewport(width, height);
+    //renderer->setViewport(width, height);
     //frameCapturer->updateViewPort(width, height);
 }
 

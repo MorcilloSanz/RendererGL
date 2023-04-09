@@ -4,15 +4,11 @@ RendererGL is a 3D renderer written in C++ and OpenGL.
 
 The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way. 
 
->Warning: This project is still under development
+> **Warning**: This project is still under development
 
-The file:
+-----
 
-```
-main.cpp
-```
-
-is an example file using ImGui and RendererGL
+*The file **main.cpp** is an example file using ImGui and RendererGL*
 
 ## Features
 
@@ -109,7 +105,7 @@ int main() {
 }
 ```
 
-# Screenshots
+## Screenshots
 
 **Multiple point lights**
 

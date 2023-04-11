@@ -9,7 +9,7 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
     depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
-    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(true), gammaCorrection(false) {
+    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), gammaCorrection(false) {
     initShaders();
     enableBlending();
     enableAntialiasing();
@@ -157,10 +157,12 @@ void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("nLights", nLights);
     for(int i = 0; i < nLights; i ++) {
 
+        float intensity = hdr ? lights[i]->getIntensity() : 1.0f;
+
         // Directional Light
         std::string lightUniform = "lights[" + std::to_string(i) + "]";
         shaderProgramLighting->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
-        shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor() * lights[i]->getIntensity());
+        shaderProgramLighting->uniformVec3(lightUniform + ".color", lights[i]->getColor() * intensity);
         shaderProgramLighting->uniformVec3(lightUniform + ".ambient", lights[i]->getAmbient());
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
@@ -416,20 +418,24 @@ void Renderer::render() {
 
     if(shadowMapping) renderToDepthMap();
 
-    // Render to HDR FBO
-    loadPreviousFBO();
-
-    hdrFBO->bind();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // FBO HDR
+    if(hdr) {
+        loadPreviousFBO();
+        hdrFBO->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
     // Draw scene
     for(Group* group : groups) drawGroup(group);
 
+    // Draw skybox
     drawSkyBox();
 
-    bindPreviousFBO();
-
-    renderQuad();
+    // Draw HDR texture to quad
+    if(hdr) {
+        bindPreviousFBO();
+        renderQuad();
+    }
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

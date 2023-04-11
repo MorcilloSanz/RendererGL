@@ -79,7 +79,7 @@ int main(void) {
     //light.setLinear(0.04);
     //light.setQuadratic(0.016);
 
-    light.setColor(glm::vec3(0, 1, 0));
+    light.setColor(glm::vec3(0.37, 1, 0.37));
     light.setIntensity(2);
 
     renderer->addLight(light);
@@ -107,7 +107,7 @@ int main(void) {
 
     // Shadow mapping
     renderer->setShadowMapping(false);
-    renderer->setShadowLightPos(glm::vec3(-4, 7, 5.5)); // Directional light pos
+    renderer->setShadowLightPos(light4.getPosition()); // Directional light pos
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -554,6 +554,8 @@ int main(void) {
                 ImGui::Checkbox("Shadow mapping", &shadowMapping);
                 renderer->setShadowMapping(shadowMapping);
 
+                ImGui::Separator();
+
                 ImGui::TextColored(ImColor(200, 150, 255), "HDR");
 
                 static bool hdr = renderer->isHDR();
@@ -565,6 +567,8 @@ int main(void) {
                 static bool gammaCorrection = renderer->isGammaCorrection();
                 ImGui::Checkbox("Gamma correction", &gammaCorrection);
                 renderer->setGammaCorrection(gammaCorrection);
+
+                ImGui::SameLine();
 
                 static float hdrExposure = 1.0f;
                 ImGui::SliderFloat("HDR exposure:", &hdrExposure, 0.f, 5.f);

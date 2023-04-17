@@ -1,12 +1,8 @@
 # RendererGL
 
-RendererGL is a 3D renderer written in C++ and OpenGL.
+RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way. 
 
-The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way. 
-
-> **Warning**: This project is still under development
-
------
+> **Warning** This project is still under development
 
 *The file **main.cpp** is an example file using ImGui and RendererGL*
 
@@ -39,18 +35,14 @@ The main objective of this project is to create a framework that allows working 
 #include "engine/renderer/Renderer.h"
 #include "engine/renderer/TrackballCamera.h"
 
-Window window;
-
 Renderer::Ptr renderer;
 
-// x y z r g b
+// x y z  r g b
 std::vector<Vec3f> cubeVertices {
-    // Front square
     Vec3f(-0.5, -0.5,  0.5,   0.0f, 0.0f, 1.0f),
     Vec3f( 0.5, -0.5,  0.5,   1.0f, 0.0f, 1.0f),
     Vec3f( 0.5,  0.5,  0.5,   0.0f, 1.0f, 1.0f),
     Vec3f(-0.5,  0.5,  0.5,   0.0f, 1.0f, 0.5f),
-    // Back square
     Vec3f(-0.5, -0.5, -0.5,   0.0f, 0.0f, 1.0f),
     Vec3f( 0.5, -0.5, -0.5,   1.0f, 0.0f, 1.0f),
     Vec3f( 0.5,  0.5, -0.5,   0.0f, 1.0f, 1.0f),
@@ -58,22 +50,19 @@ std::vector<Vec3f> cubeVertices {
 };
 
 std::vector<unsigned int> cubeIndices {
-    //front   //right   //back
     0, 1, 2,  1, 5, 6,  7, 6, 5,
     2, 3, 0,  6, 2, 1,  5, 4, 7,
-    //left    //bottom  //top
     4, 0, 3,  4, 5, 1,  3, 2, 6,
     3, 7, 4,  1, 0, 4,  6, 7, 3 
 };
 
 int main() {
 
-    window = Window("Cube example", 1280, 800);
+    Window window("Cube example", 1280, 800);
 
     renderer = Renderer::New(window.getWidth(), window.getHeight());
 
     TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
-    float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
     camera.zoom(-5.5);
     renderer->setCamera(camera);
 
@@ -88,16 +77,12 @@ int main() {
 
     while (!window.windowShouldClose()) {
 
-        // Rotate cube
+        // Update scene
         polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
 
-        // Clear
+        // Draw scene
         renderer->clear();
-
-        // Render
         renderer->render();
-
-        // Swap buffers
         window.update();
     }
 
@@ -131,10 +116,10 @@ RendererGL is an open source project under the MIT licence. Feel free to fork it
 
 * [GLFW](https://github.com/glfw/glfw) for creating a window with an OpenGL context
 * [GLEW](https://github.com/nigels-com/glew) for loading OpenGL extensions
-* [GLM](https://github.com/g-truc/glm) for linear algebra (vector and matrix operations...)
-* [IMGUI](https://github.com/ocornut/imgui) for the UI
-* [ASSIMP](https://github.com/assimp/assimp) for loading 3D models from files (.obj, .dae...)
-* [STB](https://github.com/nothings/stb) for loading images from files (.png, .tga, .jpg...)
+* [GLM](https://github.com/g-truc/glm) for linear algebra stuff
+* [IMGUI](https://github.com/ocornut/imgui) for the user interface
+* [ASSIMP](https://github.com/assimp/assimp) for loading 3D models from files (*.obj*, *.dae*, *...*)
+* [STB](https://github.com/nothings/stb) for loading images from files (*.png*, *.tga*, *.jpg*, *...*)
 
 ## References
 

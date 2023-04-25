@@ -4,11 +4,11 @@ template<typename T>
 struct Vec3 {
 
     T x, y, z;
-    float r, g, b;
-    float nx, ny, nz;
-    float tx, ty;
-    float tanx, tany, tanz;
-    float bitanx, bitany, bitanz;
+    T r, g, b;
+    T nx, ny, nz;
+    T tx, ty;
+    T tanx, tany, tanz;
+    T bitanx, bitany, bitanz;
 
     bool hasTangents;
 
@@ -18,14 +18,14 @@ struct Vec3 {
         hasTangents(false) {
     }
 
-    Vec3(T _x, T _y, T _z, float _r, float _g, float _b, float _nx, float _ny, float _nz)
+    Vec3(T _x, T _y, T _z, float _r, float _g, float _b, T _nx, T _ny, T _nz)
         : x(_x), y(_y), z(_z), r(_r), g(_g), b(_b), nx(_nx), ny(_ny), nz(_nz), tx(0), ty(0),
         tanx(0), tany(0), tanz(0), bitanx(0), bitany(0), bitanz(0), hasTangents(false) {
     }
 
-    Vec3(T _x, T _y, T _z, float _r, float _g, float _b, float _nx, float _ny, float _nz, float _tx, float _ty)
-        : x(_x), y(_y), z(_z), r(_r), g(_g), b(_b), nx(_nx), ny(_ny), nz(_nz), tx(_tx), ty(_ty), tanx(0), tany(0), 
-        tanz(0), bitanx(0), bitany(0), bitanz(0), hasTangents(false) {
+    Vec3(T _x, T _y, T _z, float _r, float _g, float _b, T _nx, T _ny, T _nz, T _tx, T _ty)
+        : x(_x), y(_y), z(_z), r(_r), g(_g), b(_b), nx(_nx), ny(_ny), nz(_nz), tx(_tx), ty(_ty), 
+        tanx(0), tany(0), tanz(0), bitanx(0), bitany(0), bitanz(0), hasTangents(false) {
     }
 
     Vec3() 

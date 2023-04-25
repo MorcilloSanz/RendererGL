@@ -4,7 +4,6 @@
  * @author MorcilloSanz
  * @brief This file is an example of how to use RendererGL with ImGui
  * @version 0.1
- * @date 2023-04-17
  */
 
 #include <iostream>

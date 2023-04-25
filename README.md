@@ -58,19 +58,18 @@ std::vector<unsigned int> cubeIndices {
 
 int main() {
 
-    Window window("Cube example", 1280, 800);
+    Window window("Perspective cube example", 500, 400);
 
     renderer = Renderer::New(window.getWidth(), window.getHeight());
 
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
-    camera.zoom(-5.5);
+    double aspectRatio = static_cast<double>(window.getWidth()) / window.getHeight();
+    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    camera.zoom(-2.5);
     renderer->setCamera(camera);
 
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
 
     Group group;
-    group.setLineWidth(2.f);
-    group.translate(glm::vec3(-2.5, 0.5, 0));
     group.add(polytopeCube);
 
     renderer->addGroup(group);
@@ -78,7 +77,7 @@ int main() {
     while (!window.windowShouldClose()) {
 
         // Update scene
-        polytopeCube->rotate(0.15, glm::vec3(1, 0, 1));
+        polytopeCube->rotate(0.55, glm::vec3(1, 0, 1));
 
         // Draw scene
         renderer->clear();

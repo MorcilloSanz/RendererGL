@@ -7,7 +7,7 @@ FrameBuffer::FrameBuffer()
 
 FrameBuffer::~FrameBuffer() {
     unbind();
-    glDeleteBuffers(1, &id);
+    glDeleteFramebuffers(1, &id);
 }
 
 void FrameBuffer::initBuffer() {

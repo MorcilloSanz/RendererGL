@@ -7,7 +7,7 @@ RenderBuffer::RenderBuffer(unsigned int _width, unsigned int _height, int _inter
 
 RenderBuffer::~RenderBuffer() {
     unbind();
-    glDeleteBuffers(1, &id);
+    glDeleteRenderbuffers(1, &id);
 }
 
 void RenderBuffer::initBuffer() {

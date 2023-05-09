@@ -33,6 +33,7 @@ set(HEADERS
         src/engine/group/Polytope.h
         src/engine/group/DynamicPolytope.h
         src/engine/group/Group.h
+        src/engine/group/Scene.h
         src/engine/renderer/Renderer.h
         src/engine/renderer/FrameCapturer.h
         src/engine/renderer/Camera.h
@@ -77,6 +78,7 @@ set(SOURCES
         src/engine/group/Polytope.cpp
         src/engine/group/DynamicPolytope.cpp
         src/engine/group/Group.cpp
+        src/engine/group/Scene.cpp
         src/engine/renderer/Renderer.cpp
         src/engine/renderer/Camera.cpp
         src/engine/renderer/TrackballCamera.cpp

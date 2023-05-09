@@ -1,6 +1,6 @@
 # RendererGL
 
-RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way. 
+RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way.
 
 > **Warning** This project is still under development
 
@@ -27,6 +27,21 @@ RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of thi
 * HDR
 * Mouse ray casting
 * Object selection
+* Scene Graph
+
+### Scene Graph
+
+A scene graph is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure
+
+* [Scene Graph](https://en.wikipedia.org/wiki/Scene_graph)
+
+![](img/SceneGraph.png)
+
+* **Polytope:** A set of vertices and indices (optional) that defines a shape
+* **Group:** A set of polytopes
+* **Model:** A group which contains a set of polytopes that are loaded from a file (*.obj*, *.dae*, *...*)
+* **Scene:** Contains a set of groups, models and other scenes
+* **Renderer:** Contains a set of scenes. It's the one who deals with all the graphics stuff
 
 ### Simple rotating cube example
 
@@ -69,10 +84,13 @@ int main() {
 
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
 
-    Group group;
-    group.add(polytopeCube);
+    Group::Ptr group = Group::New();
+    group->add(polytopeCube);
 
-    renderer->addGroup(group);
+    Scene::Ptr scene = Scene::New();
+    scene->addGroup(group);
+
+    renderer->addScene(scene);
 
     while (!window.windowShouldClose()) {
 
@@ -93,19 +111,19 @@ int main() {
 
 **Multiple point lights**
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/lighting.png)
+![](img/lighting.png)
 
 **Shadows**
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/shadows.png)
+![](img/shadows.png)
 
 **Emission**
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/emission.png)
+![](img/emission.png)
 
 **Call of Duty Ghost dog**
 
-![alt text](https://github.com/MorcilloSanz/RendererGL/blob/main/img/2.png)
+![](img/2.png)
 
 ## Contribution
 

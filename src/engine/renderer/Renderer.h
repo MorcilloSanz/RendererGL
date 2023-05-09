@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../group/Group.h"
+#include "../group/Scene.h"
 #include "../opengl/shader/Shader.h"
 
 #include "Camera.h"
@@ -32,11 +32,11 @@ private:
     ShaderProgram::Ptr shaderProgramSkyBox;
     ShaderProgram::Ptr shaderProgramSelection;
 
-    // Group visualization
+    // Scenes visualization
     glm::mat4 projection;
     glm::mat4 view;
 
-    std::vector<Group*> groups;
+    std::vector<Scene::Ptr> scenes;
 
     // Camera
     Camera* camera;
@@ -88,20 +88,22 @@ private:
     void textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope, bool hasLight);
     void initShadowMapping();
     void initHDR();
-    void primitiveSettings(Group* group);
+    void primitiveSettings(Group::Ptr& group);
     void defaultPrimitiveSettings();
     void lightShaderUniforms();
     void lightMaterialUniforms(const Polytope::Ptr& polytope);
     void lightMVPuniform(const glm::mat4& model);
     void shadowMappingUniforms();
+    void renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes);
+    void renderScenes(std::vector<Scene::Ptr>& scenes);
     void renderToDepthMap();
     void renderQuad();
-    void drawGroup(Group* group);
+    void drawGroup(Scene::Ptr& scene, Group::Ptr& group);
     void drawSkyBox();
     void loadPreviousFBO();
     void bindPreviousFBO();
 public:
-    void removeGroup(Group& group);
+    void removeScene(Scene::Ptr& scene);
     void removeLight(Light& light);
     void render();
     void setBackgroundColor(float r, float g, float b);
@@ -117,10 +119,10 @@ public:
     void setFaceCulling(const Polytope::Ptr& polytope);
     void setViewport(unsigned int viewportWidth, unsigned int viewportHeight);
 public:
-    inline void addGroup(Group& group) { groups.push_back(&group); }
-    inline void removeGroup(int index) { groups.erase(groups.begin() + index); }
-    inline Group* getGroup(int index) { return groups[index]; }
-    inline std::vector<Group*>& getGroups() { return groups; }
+    inline void addScene(Scene::Ptr& scene) { scenes.push_back(scene); }
+    inline void removeScene(int index) { scenes.erase(scenes.begin() + index); }
+    inline Scene::Ptr getScene(int index) { return scenes[index]; }
+    inline std::vector<Scene::Ptr>& getScenes() { return scenes; }
 
     inline Camera* getCamera() { return camera; }
 

@@ -12,7 +12,10 @@
 #include "../texture/Texture.h"
 #include "../lighting/Material.h"
 
+#include "../ptr.h"
+
 class Model : public Group {
+    GENERATE_PTR(Model)
 private:
     std::string directory, path;
     std::vector<Texture::Ptr> texturesLoaded;

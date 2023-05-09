@@ -21,6 +21,9 @@ private:
     float pointSize, lineWidth, outliningWidth;
     bool showWire, visible;
     glm::mat4 modelMatrix;
+
+    static unsigned long groupCount;
+    unsigned long id;
 public:
     Group(unsigned int _primitive, bool _showWire = false);
     Group();
@@ -58,4 +61,6 @@ public:
     inline void setPointSize(float pointSize) { this->pointSize = pointSize; }
     inline void setLineWidth(float lineWidth) { this->lineWidth = lineWidth; }
     inline void setOutliningWidth(float outliningWidth) { this->outliningWidth = outliningWidth; }
+
+    inline unsigned long getID() const { return id; }
 };

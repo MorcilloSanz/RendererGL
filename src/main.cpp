@@ -820,7 +820,7 @@ int main(void) {
                             return false;
                         };
 
-                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group::Ptr& group, Polytope::Ptr& polytope) {
+                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group::Ptr& group, Scene::Ptr& scene, Polytope::Ptr& polytope) {
                             for(int i = 0; i < points.size(); i += 3) {
 
                                 glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);
@@ -828,7 +828,7 @@ int main(void) {
                                 glm::vec4 vertex3(points[i + 2].x, points[i + 2].y, points[i + 2].z, 1);
 
                                 // Apply transforms
-                                glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+                                glm::mat4 model = scene->getModelMatrix() * group->getModelMatrix() * polytope->getModelMatrix();
 
                                 vertex1 = model * vertex1;
                                 vertex2 = model * vertex2;
@@ -868,11 +868,11 @@ int main(void) {
 
                         // CubePolytope selection
                         static std::vector<Vec3f> pointsCube = cubePolytope->getVertices();
-                        checkPolytopeSelection(pointsCube, group, cubePolytope);
+                        checkPolytopeSelection(pointsCube, group, mainScene, cubePolytope);
 
                         // CubePolytope2 selection
                         static std::vector<Vec3f> pointsCube2 = cubePolytope2->getVertices();
-                        checkPolytopeSelection(pointsCube2, group, cubePolytope2);
+                        checkPolytopeSelection(pointsCube2, group, mainScene, cubePolytope2);
 
                         // CubePolytope indices selection
                         static std::vector<Vec3f> pointsIndices;
@@ -888,7 +888,7 @@ int main(void) {
                                 pointsIndices.push_back(vertex3);
                             }
                         }
-                        checkPolytopeSelection(pointsIndices, group, cubePolytopeIndices);
+                        checkPolytopeSelection(pointsIndices, group, mainScene, cubePolytopeIndices);
                     }
                 }
 

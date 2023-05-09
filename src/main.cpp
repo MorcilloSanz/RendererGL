@@ -116,6 +116,9 @@ int main(void) {
     // Shadow mapping
     renderer->setShadowMapping(false);
     renderer->setShadowLightPos(light4.getPosition()); // Directional light pos
+
+    // Create scene
+    Scene::Ptr mainScene = Scene::New();
     
     // Cube polytope -> Vertex: x y z r g b nx ny nz tx ty
     std::vector<Vec3f> vertices = {
@@ -213,13 +216,14 @@ int main(void) {
     cubePolytope2->addTexture(textureEmission);
 
     // Cubes group
-    Group group;
-    group.setLineWidth(2.f);
-    group.translate(glm::vec3(0, 0.5, 0));
-    group.add(cubePolytope);
-    group.add(cubePolytopeIndices);
-    group.add(cubePolytope2);
-    renderer->addGroup(group);
+    Group::Ptr group = Group::New();
+    group->setLineWidth(2.f);
+    group->translate(glm::vec3(0, 0.5, 0));
+    group->add(cubePolytope);
+    group->add(cubePolytopeIndices);
+    group->add(cubePolytope2);
+
+    mainScene->addGroup(group);
 
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
@@ -239,13 +243,13 @@ int main(void) {
     }
     Polytope::Ptr gridPolytope = Polytope::New(gridVertices);
 
-    Group groupGrid(GL_LINES);
-    groupGrid.add(gridPolytope);
-    renderer->addGroup(groupGrid);
+    Group::Ptr groupGrid = Group::New(GL_LINES);
+    groupGrid->add(gridPolytope);
+    mainScene->addGroup(groupGrid);
 
     // Light polytopes
-    Group lightsGroup;
-    lightsGroup.setVisible(false);
+    Group::Ptr lightsGroup = Group::New();
+    lightsGroup->setVisible(false);
 
     for(Light* light : renderer->getLights()) {
         for(auto& vec : cubeVertices) {
@@ -257,10 +261,10 @@ int main(void) {
         Polytope::Ptr lightPolytope = Polytope::New(cubeVertices, cubeIndices);
         lightPolytope->translate(light->getPosition());
         lightPolytope->scale(glm::vec3(0.25, 0.25, 0.25));
-        lightsGroup.add(lightPolytope);
+        lightsGroup->add(lightPolytope);
     }
 
-    renderer->addGroup(lightsGroup);
+    mainScene->addGroup(lightsGroup);
 
     // Directional light polytope
     for(auto& vec : cubeVertices) {
@@ -277,44 +281,50 @@ int main(void) {
     // Dynamic Polytope for mouse picking (ray casting)
     unsigned int length = 5000;
     DynamicPolytope::Ptr mousePickingPolytope = DynamicPolytope::New(length);
-    Group groupMousePicking(GL_POINTS);
-    groupMousePicking.setPointSize(8.f);
-    groupMousePicking.add(mousePickingPolytope);
-    renderer->addGroup(groupMousePicking);
+    Group::Ptr groupMousePicking = Group::New(GL_POINTS);
+    groupMousePicking->setPointSize(8.f);
+    groupMousePicking->add(mousePickingPolytope);
+    mainScene->addGroup(groupMousePicking);
 
     // Dynamic Polytope for ray casting drawing
     DynamicPolytope::Ptr raysPolytope = DynamicPolytope::New(length);
-    Group raysGroup(GL_LINES);
-    raysGroup.setLineWidth(2.f);
-    raysGroup.add(raysPolytope);
-    renderer->addGroup(raysGroup);
+    Group::Ptr raysGroup = Group::New(GL_LINES);
+    raysGroup->setLineWidth(2.f);
+    raysGroup->add(raysPolytope);
+    mainScene->addGroup(raysGroup);
+
+    // Models Scene
+    Scene::Ptr modelsScene = Scene::New();
 
     // 3D model from file
-    Model modelMap("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
-    modelMap.translate(glm::vec3(0, -5, 0));
-    modelMap.scale(glm::vec3(0.001, 0.001, 0.001));
-    renderer->addGroup(modelMap);
+    Model::Ptr modelMap = Model::New("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
+    modelMap->translate(glm::vec3(0, -5, 0));
+    modelMap->scale(glm::vec3(0.001, 0.001, 0.001));
+    modelsScene->addModel(modelMap);
 
-    Model model("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
-    model.setLineWidth(2.5f);
-    model.translate(glm::vec3(2.0, 0.0, 0.0));
-    model.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer->addGroup(model);
+    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
+    model->setLineWidth(2.5f);
+    model->translate(glm::vec3(2.0, 0.0, 0.0));
+    model->scale(glm::vec3(0.1, 0.1, 0.1));
+    modelsScene->addModel(model);
 
-    Model model2("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
-    model2.translate(glm::vec3(-0.25, 0, -1.0));
-    model2.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer->addGroup(model2);
+    Model::Ptr model2 = Model::New("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
+    model2->translate(glm::vec3(-0.25, 0, -1.0));
+    model2->scale(glm::vec3(0.1, 0.1, 0.1));
+    modelsScene->addModel(model2);
 
-    Model model3("/home/morcillosanz/Desktop/model/PeachTennis/Model.dae");
-    model3.translate(glm::vec3(-1.5, 0, 0.8));
-    model3.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer->addGroup(model3);
+    Model::Ptr model3 = Model::New("/home/morcillosanz/Desktop/model/PeachTennis/Model.dae");
+    model3->translate(glm::vec3(-1.5, 0, 0.8));
+    model3->scale(glm::vec3(0.1, 0.1, 0.1));
+    modelsScene->addModel(model3);
 
-    Model model4("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
-    model4.translate(glm::vec3(0, 0, -4));
-    model4.scale(glm::vec3(0.1, 0.1, 0.1));
-    renderer->addGroup(model4);
+    Model::Ptr model4 = Model::New("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
+    model4->translate(glm::vec3(0, 0, -4));
+    model4->scale(glm::vec3(0.1, 0.1, 0.1));
+    modelsScene->addModel(model4);
+
+    mainScene->addScene(modelsScene);
+    renderer->addScene(mainScene);
 
     // SkyBox
     std::vector<std::string> faces = {
@@ -375,22 +385,22 @@ int main(void) {
 
                 ImGui::Separator();
 
-                static bool groupVisible = group.isVisible();
+                static bool groupVisible = group->isVisible();
                 ImGui::Checkbox("Show group", &groupVisible);
-                group.setVisible(groupVisible);
+                group->setVisible(groupVisible);
 
                 ImGui::SameLine();
 
-                static bool showWire = group.isShowWire();
+                static bool showWire = group->isShowWire();
                 ImGui::Checkbox("Show wire", &showWire);
-                group.setShowWire(showWire);
-                model.setShowWire(showWire);
+                group->setShowWire(showWire);
+                model->setShowWire(showWire);
 
                 ImGui::SameLine();
 
-                static bool showGrid = groupGrid.isVisible();
+                static bool showGrid = groupGrid->isVisible();
                 ImGui::Checkbox("Show grid", &showGrid);
-                groupGrid.setVisible(showGrid);
+                groupGrid->setVisible(showGrid);
 
                 ImGui::SameLine();
 
@@ -399,9 +409,9 @@ int main(void) {
                 if(!showSkyBox) renderer->setSkyBox(nullptr);
                 else renderer->setSkyBox(skyBox);
 
-                static bool showLights = lightsGroup.isVisible();
+                static bool showLights = lightsGroup->isVisible();
                 ImGui::Checkbox("Show lights", &showLights);
-                lightsGroup.setVisible(showLights);
+                lightsGroup->setVisible(showLights);
 
                 ImGui::SameLine();
 
@@ -486,11 +496,11 @@ int main(void) {
                 if(enableDirectionalLight != previousDirectionalLight) {
                     if(enableDirectionalLight) {
                         renderer->addLight(light4);
-                        lightsGroup.add(directionalPolytope);
+                        lightsGroup->add(directionalPolytope);
                     }
                     else {
                         renderer->removeLight(light4);
-                        lightsGroup.removePolytope(directionalPolytope);
+                        lightsGroup->removePolytope(directionalPolytope);
                     }
                     previousDirectionalLight = enableDirectionalLight;
                 }
@@ -523,7 +533,7 @@ int main(void) {
                 static float color[3] = { lightColor[0], lightColor[1], lightColor[2] };
                 ImGui::ColorEdit3("Light color", color, 0);
 
-                static Polytope::Ptr lightPolytope = lightsGroup.getPolytopes()[0];
+                static Polytope::Ptr lightPolytope = lightsGroup->getPolytopes()[0];
 
                 if(color[0] != lightColor.r || color[1] != lightColor.g || color[2] != lightColor.b) {
                     light.setColor(glm::vec3(color[0], color[1], color[2]));
@@ -810,7 +820,7 @@ int main(void) {
                             return false;
                         };
 
-                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group& group, Polytope::Ptr& polytope) {
+                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group::Ptr& group, Polytope::Ptr& polytope) {
                             for(int i = 0; i < points.size(); i += 3) {
 
                                 glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);
@@ -818,7 +828,7 @@ int main(void) {
                                 glm::vec4 vertex3(points[i + 2].x, points[i + 2].y, points[i + 2].z, 1);
 
                                 // Apply transforms
-                                glm::mat4 model = group.getModelMatrix() * polytope->getModelMatrix();
+                                glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
 
                                 vertex1 = model * vertex1;
                                 vertex2 = model * vertex2;

@@ -67,11 +67,11 @@ void Renderer::initTextureQuad() {
     quadVAO->unbind();
 }
 
-void Renderer::removeGroup(Group& group) {
+void Renderer::removeScene(Scene::Ptr& scene) {
     unsigned int index = 0;
-    for(Group* g : groups) {
-        if(g == &group) {
-            removeGroup(index);
+    for(auto& s : scenes) {
+        if(s.get() == scene.get()) {
+            removeScene(index);
             break;
         }
         index ++;
@@ -142,7 +142,7 @@ void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr
     else textureUniformLighting(shaderProgram, polytope);
 }
 
-void Renderer::primitiveSettings(Group* group) {
+void Renderer::primitiveSettings(Group::Ptr& group) {
     glPointSize(group->getPointSize());
     glLineWidth(group->getLineWidth());
 }
@@ -270,6 +270,45 @@ void Renderer::initHDR() {
     hdrFBO->unbind();
 }
 
+void Renderer::renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes) {
+
+    for(Scene::Ptr& scene : scenes) {
+
+            if(scene->isVisible()) {
+
+                // Render groups
+                for(auto& group : scene->getGroups()) {
+
+                    if(!group->isVisible()) continue;
+
+                    for(auto& polytope : group->getPolytopes()) {
+                        
+                        glm::mat4 model = scene->getModelMatrix() * group->getModelMatrix() * polytope->getModelMatrix();
+                        shaderProgramDepthMap->uniformMat4("model", model);
+
+                        glCullFace(GL_BACK);
+                        polytope->draw(group->getPrimitive(), group->isShowWire());
+                        glCullFace(GL_FRONT);
+                    }
+                }
+
+                // Render child scenes
+                renderScenes(scene->getScenes());
+            }
+        }
+}
+
+void Renderer::renderScenes(std::vector<Scene::Ptr>& scenes) {
+    for(auto& scene : scenes) {
+        if(scene->isVisible()) {
+            // Draw groups
+            for(auto& group : scene->getGroups()) drawGroup(scene, group);
+            // Draw child scenes
+            renderScenes(scene->getScenes());
+        }
+    }
+}
+
 void Renderer::renderToDepthMap() {
 
     if(!hasLight) return;
@@ -291,25 +330,12 @@ void Renderer::renderToDepthMap() {
     // Draw
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    for(Group* group : groups) {
-
-        if(!group->isVisible()) continue;
-
-        for(auto& polytope : group->getPolytopes()) {
-            
-            glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
-            shaderProgramDepthMap->uniformMat4("model", model);
-
-            glCullFace(GL_BACK);
-            polytope->draw(group->getPrimitive(), group->isShowWire());
-            glCullFace(GL_FRONT);
-        }
-    }
+    renderScenesToDepthMap(scenes);
 
     bindPreviousFBO();
 }
 
-void Renderer::drawGroup(Group* group) {
+void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
     
     if(!group->isVisible()) return;
 
@@ -319,8 +345,8 @@ void Renderer::drawGroup(Group* group) {
     
     for(auto& polytope : group->getPolytopes()) {
 
-        // Compute model matrix from polytope and group
-        glm::mat4 model = group->getModelMatrix() * polytope->getModelMatrix();
+        // Compute model matrix from polytope, group and scene
+        glm::mat4 model = scene->getModelMatrix() * group->getModelMatrix() * polytope->getModelMatrix();
         glm::mat4 mvp = projection * view * model;
 
         // Use shader programs
@@ -425,8 +451,8 @@ void Renderer::render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    // Draw scene
-    for(Group* group : groups) drawGroup(group);
+    // Draw scenes
+    renderScenes(scenes);
 
     // Draw skybox
     drawSkyBox();

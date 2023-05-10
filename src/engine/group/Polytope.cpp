@@ -1,6 +1,6 @@
 #include "Polytope.h"
 
-#include "../../../glew/glew.h"
+#include <GL/glew.h>
 
 Polytope::Polytope(size_t length) 
     : vertexLength(length), modelMatrix(1.f), indicesLength(0), selected(false), 

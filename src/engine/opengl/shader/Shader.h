@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "../../../../glew/glew.h"
+#include <GL/glew.h>
 
 #include "../../../../glm/vec3.hpp"
 #include "../../../../glm/vec4.hpp"

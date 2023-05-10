@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../../glew/glew.h"
+#include <GL/glew.h>
 
 #include "../opengl/buffer/FrameBuffer.h"
 #include "../opengl/buffer/MultiSampleRenderBuffer.h"

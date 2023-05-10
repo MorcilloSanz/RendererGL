@@ -6,6 +6,8 @@ RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of thi
 
 *The file **main.cpp** is an example file using ImGui and RendererGL*
 
+Take a look at some [screenshots](#screenshots)
+
 ## Features
 
 * Trackball and first person shooter camera
@@ -29,13 +31,12 @@ RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of thi
 * Object selection
 * Scene Graph
 
-### Scene Graph
+### How RendererGL works: Scene Graph
 
-A scene graph is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure
-
+A scene graph is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure 
 * [Scene Graph](https://en.wikipedia.org/wiki/Scene_graph)
 
-![](img/SceneGraph.png)
+![](img/sceneGraph.png)
 
 * **Polytope:** A set of vertices and indices (optional) that defines a shape
 * **Group:** A set of polytopes
@@ -43,7 +44,9 @@ A scene graph is a general data structure commonly used by vector-based graphics
 * **Scene:** Contains a set of groups, models and other scenes
 * **Renderer:** Contains a set of scenes. It's the one who deals with all the graphics stuff
 
-### Simple rotating cube example
+*Take a look at the example below*
+
+## Example: simple rotating cube
 
 ```cpp
 #include "engine/window/Window.h"

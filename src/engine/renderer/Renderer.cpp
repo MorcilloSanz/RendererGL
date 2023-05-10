@@ -293,7 +293,7 @@ void Renderer::renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes) {
                 }
 
                 // Render child scenes
-                renderScenes(scene->getScenes());
+                renderScenesToDepthMap(scene->getScenes());
             }
         }
 }

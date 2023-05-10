@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "../../../glew/glew.h"
+#include <GL/glew.h>
 
 #include "../ptr.h"
 

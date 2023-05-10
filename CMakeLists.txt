@@ -8,8 +8,6 @@ project(RendererGL
 
 # Header Files
 set(HEADERS 
-        glew/glew.h
-
         imgui/imgui.h
         imgui/backends/imgui_impl_glfw.h
         imgui/backends/imgui_impl_opengl3.h
@@ -56,8 +54,6 @@ set(HEADERS
 
 # CPP files
 set(SOURCES
-        glew/glew.cpp
-
         imgui/imgui.cpp
         imgui/backends/imgui_impl_glfw.cpp
         imgui/backends/imgui_impl_opengl3.cpp
@@ -108,4 +104,4 @@ endforeach()
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} assimp GL dl X11 glfw)
+target_link_libraries(${PROJECT_NAME} assimp GL dl X11 glfw GLEW)

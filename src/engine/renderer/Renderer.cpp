@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include "../../../glew/glew.h"
+#include <GL/glew.h>
 
 #define SHADOW_MAP_WIDTH 1024
 #define SHADOW_MAP_HEIGHT 1024
@@ -272,7 +272,7 @@ void Renderer::initHDR() {
 
 void Renderer::renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes) {
 
-    for(Scene::Ptr& scene : scenes) {
+    for(auto& scene : scenes) {
 
             if(scene->isVisible()) {
 
@@ -302,7 +302,9 @@ void Renderer::renderScenes(std::vector<Scene::Ptr>& scenes) {
     for(auto& scene : scenes) {
         if(scene->isVisible()) {
             // Draw groups
-            for(auto& group : scene->getGroups()) drawGroup(scene, group);
+            for(auto& group : scene->getGroups()) {
+                if(group->isVisible()) drawGroup(scene, group);
+            }
             // Draw child scenes
             renderScenes(scene->getScenes());
         }

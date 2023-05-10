@@ -1,6 +1,6 @@
 #include "Light.h"
 
-#include "../../../glew/glew.h"
+#include <GL/glew.h>
 
 bool Light::blinn = true;
 

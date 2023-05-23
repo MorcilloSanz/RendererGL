@@ -11,16 +11,15 @@ Take a look at some [screenshots](#screenshots)
 ## Features
 
 * Trackball and first person shooter camera
-* Polytopes and groups in order to create a 3D scene
+* Polytopes and groups of polytopes
 * Dynamic polytopes
 * Polytope face culling
-* Depth testing
 * Blending
-* Anti aliasing
+* Anti aliasing (MSAA)
 * Textures
-* Load 3D models (using ASSIMP)
-* Skybox
-* FrameCapturer (capture FrameBuffer and create a texture)
+* Load 3D models and textures from files: .obj, .dae, ...
+* Skybox (cubemap)
+* FrameCapturer (create a texture of the scene)
 * Blinn-Phong lighting
 * Emission
 * Shadow Mapping (percentage closer filtering)

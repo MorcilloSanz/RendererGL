@@ -30,12 +30,9 @@ Take a look at some [screenshots](#screenshots)
 * Object selection
 * Scene Graph
 
-### How RendererGL works: Scene Graph
+### Scene Graph
 
-A scene graph is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure 
-* [Scene Graph](https://en.wikipedia.org/wiki/Scene_graph)
-
-![](img/sceneGraph.png)
+A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure:
 
 * **Polytope:** A set of vertices and indices (optional) that defines a shape
 * **Group:** A set of polytopes

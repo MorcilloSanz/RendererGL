@@ -4,9 +4,9 @@ RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of thi
 
 > **Warning** This project is still under development
 
-*The file **main.cpp** is an example file using GLFW and ImGui with RendererGL*
+`test` is an example code using GLFW and ImGui with RendererGL
 
-Take a look at some [screenshots](#screenshots)
+Take a look at some [screenshots](#screenshots) of test
 
 ## Features
 
@@ -45,9 +45,17 @@ A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data str
 ## Example: simple rotating cube
 
 ```cpp
-#include "engine/window/Window.h"
-#include "engine/renderer/Renderer.h"
-#include "engine/renderer/TrackballCamera.h"
+#include <iostream>
+#include <vector>
+
+#include <engine/renderer/Renderer.h>
+#include <engine/renderer/TrackballCamera.h>
+
+#include <GLFW/glfw3.h>
+
+const int WIDTH = 1280;
+const int HEIGHT = 900;
+GLFWwindow* window;
 
 Renderer::Ptr renderer;
 
@@ -72,15 +80,28 @@ std::vector<unsigned int> cubeIndices {
 
 int main() {
 
-    Window window("Perspective cube example", 500, 400);
+    // Create window
+    if (!glfwInit()) {
+        std::cout << "Couldn't initialize window" << std::endl;
+        return -1;
+    }
 
-    renderer = Renderer::New(window.getWidth(), window.getHeight());
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Perspective cube example", NULL, NULL);
+    
+    if (!window) glfwTerminate();
 
-    double aspectRatio = static_cast<double>(window.getWidth()) / window.getHeight();
+    glfwMakeContextCurrent(window);
+
+    // Renderer
+    renderer = Renderer::New(WIDTH, HEIGHT);
+
+    double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
     TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
     camera.zoom(-2.5);
+
     renderer->setCamera(camera);
 
+    // Scene
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
 
     Group::Ptr group = Group::New();
@@ -91,7 +112,8 @@ int main() {
 
     renderer->addScene(scene);
 
-    while (!window.windowShouldClose()) {
+    // Main loop
+    while (!glfwWindowShouldClose(window)) {
 
         // Update scene
         polytopeCube->rotate(0.55, glm::vec3(1, 0, 1));
@@ -99,8 +121,14 @@ int main() {
         // Draw scene
         renderer->clear();
         renderer->render();
-        window.update();
+        
+        // Update window
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
+
+    // Destroy window
+    glfwTerminate();
 
     return 0;
 }
@@ -127,6 +155,10 @@ int main() {
 ## Contribution
 
 RendererGL is an open source project under the MIT licence. Feel free to fork it and contribute
+
+## Compilation
+
+`CMake` is required for compilation. Take a look at [compile.md](compile.md)
 
 ## Dependencies
 

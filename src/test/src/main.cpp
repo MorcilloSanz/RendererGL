@@ -66,7 +66,7 @@ int main(void) {
     }
 
     // Create window
-    window = glfwCreateWindow(1280, 900, "RendererGL test", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "RendererGL test", NULL, NULL);
 
     if (!window) glfwTerminate();
 

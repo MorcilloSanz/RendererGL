@@ -6,21 +6,21 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include "../group/Scene.h"
-#include "../opengl/shader/Shader.h"
+#include "engine/group/Scene.h"
+#include "engine/opengl/shader/Shader.h"
 
 #include "Camera.h"
 
-#include "../lighting/Light.h"
-#include "../lighting/DirectionalLight.h"
-#include "../lighting/PointLight.h"
-#include "../lighting/SpotLight.h"
+#include "engine/lighting/Light.h"
+#include "engine/lighting/DirectionalLight.h"
+#include "engine/lighting/PointLight.h"
+#include "engine/lighting/SpotLight.h"
 
-#include "../texture/DepthTexture.h"
-#include "../texture/ColorBufferTexture.h"
+#include "engine/texture/DepthTexture.h"
+#include "engine/texture/ColorBufferTexture.h"
 
-#include "../opengl/buffer/FrameBuffer.h"
-#include "../opengl/buffer/RenderBuffer.h"
+#include "engine/opengl/buffer/FrameBuffer.h"
+#include "engine/opengl/buffer/RenderBuffer.h"
 
 #include "SkyBox.h"
 

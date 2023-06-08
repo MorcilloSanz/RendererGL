@@ -8,11 +8,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../group/Group.h"
-#include "../texture/Texture.h"
-#include "../lighting/Material.h"
+#include "engine/group/Group.h"
+#include "engine/texture/Texture.h"
+#include "engine/lighting/Material.h"
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 class Model : public Group {
     GENERATE_PTR(Model)

@@ -2,7 +2,7 @@
  * @file main.cpp
  * 
  * @author MorcilloSanz
- * @brief This file is an example of how to use RendererGL with ImGui
+ * @brief This file is an example of how to use RendererGL with GLFW and ImGui
  * @version 0.1
  */
 

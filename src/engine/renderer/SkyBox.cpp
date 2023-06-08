@@ -1,8 +1,8 @@
 #include "SkyBox.h"
 
-#include "../texture/Texture.h"
+#include "engine/texture/Texture.h"
 
-#include "../Vec3.h"
+#include "engine/Vec3.h"
 
 std::vector<Vec3f> vertices = {        
     Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(1.0f, -1.0f, -1.0f ),

@@ -5,7 +5,7 @@
 
 #include <GL/glew.h>
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 struct Image {
     unsigned char* data;

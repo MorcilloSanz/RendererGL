@@ -1,7 +1,5 @@
 #include "Renderer.h"
 
-#include <GL/glew.h>
-
 #define SHADOW_MAP_WIDTH 1024
 #define SHADOW_MAP_HEIGHT 1024
 

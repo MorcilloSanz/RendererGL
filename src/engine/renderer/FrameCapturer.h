@@ -4,11 +4,11 @@
 
 #include <GL/glew.h>
 
-#include "../opengl/buffer/FrameBuffer.h"
-#include "../opengl/buffer/MultiSampleRenderBuffer.h"
-#include "../texture/MultiSampleTexture.h"
+#include <glm/vec3.hpp>
 
-#include "../../../glm/vec3.hpp"
+#include "engine/opengl/buffer/FrameBuffer.h"
+#include "engine/opengl/buffer/MultiSampleRenderBuffer.h"
+#include "engine/texture/MultiSampleTexture.h"
 
 class FrameCapturer {
     GENERATE_PTR(FrameCapturer)

@@ -4,19 +4,19 @@
 #include <vector>
 #include <memory>
 
-#include "../../../glm/vec3.hpp"
-#include "../../../glm/vec4.hpp"
-#include "../../../glm/mat4x4.hpp"
-#include "../../../glm/gtc/type_ptr.hpp"
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "../opengl/buffer/VertexArray.h"
-#include "../opengl/buffer/VertexBuffer.h"
+#include "engine/opengl/buffer/VertexArray.h"
+#include "engine/opengl/buffer/VertexBuffer.h"
 
-#include "../lighting/Material.h"
+#include "engine/lighting/Material.h"
 
-#include "../texture/Texture.h"
+#include "engine/texture/Texture.h"
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 #define MATERIAL_DIFFUSE glm::vec3(1.0f)
 #define MATERIAL_SPECULAR glm::vec3(1.0f)

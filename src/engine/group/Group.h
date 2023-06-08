@@ -7,7 +7,7 @@
 #include "Polytope.h"
 #include "DynamicPolytope.h"
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 #define POINT_SIZE 1.0
 #define LINE_WIDTH 1.0

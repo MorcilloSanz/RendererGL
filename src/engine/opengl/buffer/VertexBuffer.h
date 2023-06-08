@@ -7,7 +7,7 @@
 #include "Buffer.h"
 #include "IndexBuffer.h"
 
-#include "../../Vec3.h"
+#include "engine/Vec3.h"
 
 class VertexBuffer : public Buffer {
     GENERATE_PTR(VertexBuffer)

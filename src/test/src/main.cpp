@@ -2,21 +2,22 @@
  * @file main.cpp
  * 
  * @author MorcilloSanz
- * @brief This file is an example of how to use RendererGL with ImGui
+ * @brief This file is an example of how to use RendererGL with GLFW and ImGui
  * @version 0.1
  */
 
 #include <iostream>
 #include <cmath>
 
-#include "engine/window/Window.h"
+#include <engine/renderer/Renderer.h> // First OpenGL line always (because of GLEW)
 
-#include "engine/renderer/Renderer.h"
-#include "engine/renderer/TrackballCamera.h"
-#include "engine/renderer/FPSCamera.h"
-#include "engine/renderer/FrameCapturer.h"
-#include "engine/renderer/MouseRayCasting.h"
-#include "engine/model/Model.h"
+#include <GLFW/glfw3.h>
+
+#include <engine/renderer/TrackballCamera.h>
+#include <engine/renderer/FPSCamera.h>
+#include <engine/renderer/FrameCapturer.h>
+#include <engine/renderer/MouseRayCasting.h>
+#include <engine/model/Model.h>
 
 #include "ImguiStyles.h"
 
@@ -26,14 +27,16 @@ void dockSpace(bool* p_open);
 void renderImGui(ImGuiIO& io);
 
 // Window callbacks
-void resizeFun(GLFWwindow* w, int width, int height);
-void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void resizeCallback(GLFWwindow* w, int width, int height);
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // Camera functions
 void updateFPSCamera(double xpos, double ypos);
 
 // Window
-Window window;
+const int WIDTH = 1280;
+const int HEIGHT = 900;
+GLFWwindow* window;
 
 // FrameCapturer: Converts the scene into a texture (render it to a quad or an ImGui window)
 FrameCapturer::Ptr frameCapturer;
@@ -56,10 +59,20 @@ float rayLong = 100;
 
 int main(void) {
 
+    // Init glfw
+    if (!glfwInit()) {
+        std::cout << "Couldn't initialize window" << std::endl;
+        return -1;
+    }
+
     // Create window
-    window = Window("RendererGL", 1280, 900);
-    window.setResizeFun(resizeFun);
-    window.setKeyFun(keyFun);
+    window = glfwCreateWindow(1280, 900, "RendererGL test", NULL, NULL);
+
+    if (!window) glfwTerminate();
+
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, resizeCallback);
+    glfwSetKeyCallback(window, keyCallback);
 
     // Init ImGui
     IMGUI_CHECKVERSION();
@@ -68,16 +81,16 @@ int main(void) {
     initImGui(io);
 
     // Renderer
-    renderer = Renderer::New(window.getWidth(), window.getHeight());
+    renderer = Renderer::New(WIDTH, HEIGHT);
 
     // Trackball Camera
-    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), WIDTH / HEIGHT, 0.1, 1000);
     float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
     camera.zoom(-5.5);
     renderer->setCamera(camera);
 
     // First Person Shooter Camera
-    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), window.getWidth() / window.getHeight(), 0.1, 1000);
+    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), WIDTH / HEIGHT, 0.1, 1000);
     fpsCamera.setSensitivity(sensitivity / 10);
 
     // Point Lighting
@@ -339,13 +352,13 @@ int main(void) {
     renderer->setSkyBox(skyBox);
 
     // Init textureRenderer
-    frameCapturer = FrameCapturer::New(window.getWidth(), window.getHeight());
+    frameCapturer = FrameCapturer::New(WIDTH, HEIGHT);
 
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
 
     // Main loop
-    while (!window.windowShouldClose()) {
+    while (!glfwWindowShouldClose(window)) {
 
         // Clear
         renderer->clear();
@@ -642,7 +655,7 @@ int main(void) {
                 ImGui::SameLine();
                 if (ImGui::Button("FPS camera")) {
                     renderer->setCamera(fpsCamera);
-                    glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
                 ImGui::Separator();
@@ -899,7 +912,8 @@ int main(void) {
             renderImGui(io);
         }
 
-        window.update();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     // Destroy imgui 
@@ -908,7 +922,7 @@ int main(void) {
     ImGui::DestroyContext();
 
     // Destroy window
-    window.terminate();
+    glfwTerminate();
 
     return 0;
 }
@@ -930,7 +944,7 @@ void initImGui(ImGuiIO& io) {
     }
 
     const char* glsl_version = "#version 130";
-    ImGui_ImplGlfw_InitForOpenGL(window.getGLFWwindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
@@ -994,7 +1008,7 @@ void dockSpace(bool* p_open) {
 void renderImGui(ImGuiIO& io) {
     ImGui::Render();
     int display_w, display_h;
-    glfwGetFramebufferSize(window.getGLFWwindow(), &display_w, &display_h);
+    glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     
@@ -1007,15 +1021,12 @@ void renderImGui(ImGuiIO& io) {
 }
 
 // Window functions
-
-void resizeFun(GLFWwindow* w, int width, int height) {
-    window.setWidth(width);
-    window.setHeight(height);
+void resizeCallback(GLFWwindow* w, int width, int height) {
     //renderer->setViewport(width, height);
     //frameCapturer->updateViewPort(width, height);
 }
 
-void keyFun(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_W && action == GLFW_PRESS)          movementForward = true;
     else if(key == GLFW_KEY_W && action == GLFW_RELEASE)    movementForward = false;
     if (key == GLFW_KEY_S && action == GLFW_PRESS)          movementBackward = true;

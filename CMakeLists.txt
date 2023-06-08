@@ -1,25 +1,18 @@
 cmake_minimum_required(VERSION 3.12)
-set (CMAKE_CXX_STANDARD 17)
 
 project(RendererGL
         VERSION 0.1
         DESCRIPTION "OpenGL renderer"
         LANGUAGES CXX)
 
+set (CMAKE_CXX_STANDARD 17)
+
+find_package(GLEW)
+
 # Header Files
 set(HEADERS 
-        imgui/imgui.h
-        imgui/backends/imgui_impl_glfw.h
-        imgui/backends/imgui_impl_opengl3.h
-        imgui/imgui_internal.h
-        imgui/imstb_rectpack.h
-        imgui/imstb_textedit.h
-        imgui/imstb_truetype.h
-
-        src/ImguiStyles.h
         src/engine/Vec3.h
         src/engine/ptr.h
-        src/engine/window/Window.h
         src/engine/opengl/buffer/Buffer.h
         src/engine/opengl/buffer/VertexArray.h
         src/engine/opengl/buffer/VertexBuffer.h
@@ -54,16 +47,6 @@ set(HEADERS
 
 # CPP files
 set(SOURCES
-        imgui/imgui.cpp
-        imgui/backends/imgui_impl_glfw.cpp
-        imgui/backends/imgui_impl_opengl3.cpp
-        imgui/imgui_demo.cpp
-        imgui/imgui_draw.cpp
-        imgui/imgui_tables.cpp
-        imgui/imgui_widgets.cpp
-
-        src/main.cpp
-        src/engine/window/Window.cpp
         src/engine/opengl/buffer/VertexArray.cpp
         src/engine/opengl/buffer/VertexBuffer.cpp
         src/engine/opengl/buffer/IndexBuffer.cpp
@@ -93,6 +76,8 @@ set(SOURCES
         src/engine/model/Model.cpp
 )
 
+include_directories(src)
+
 # Copy shaders into build folder
 set(SHADERS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/opengl/glsl")
 file(GLOB shaderFiles ${SHADERS_PATH}/*.frag ${SHADERS_PATH}/*.vert)
@@ -101,7 +86,16 @@ foreach(filename ${shaderFiles} )
 endforeach()
 
 # Compile files
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} assimp GL dl X11 glfw GLEW)
+target_link_libraries(${PROJECT_NAME} 
+                assimp 
+                GL 
+                dl 
+                X11 
+                GLEW::GLEW
+)
+
+# Add tests
+add_subdirectory(src/test)

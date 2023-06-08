@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Group.h"
-#include "../model/Model.h"
+#include "engine/model/Model.h"
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 class Scene {
     GENERATE_PTR(Scene)

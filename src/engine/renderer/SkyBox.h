@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 
-#include "../opengl/buffer/VertexArray.h"
-#include "../opengl/buffer/VertexBuffer.h"
-#include "../opengl/shader/Shader.h"
-#include "../texture/CubeMapTexture.h"
+#include "engine/opengl/buffer/VertexArray.h"
+#include "engine/opengl/buffer/VertexBuffer.h"
+#include "engine/opengl/shader/Shader.h"
+#include "engine/texture/CubeMapTexture.h"
 
 class SkyBox : public Buffer {
     GENERATE_PTR(SkyBox)

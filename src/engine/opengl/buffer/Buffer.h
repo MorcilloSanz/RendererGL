@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "../../ptr.h"
+#include "engine/ptr.h"
 
 class Buffer {
 protected:

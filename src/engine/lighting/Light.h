@@ -3,14 +3,14 @@
 #include <iostream>
 #include <memory>
 
-#include "../../../glm/vec3.hpp"
-#include "../../../glm/vec4.hpp"
-#include "../../../glm/mat4x4.hpp"
-#include "../../../glm/gtc/type_ptr.hpp"
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "../opengl/shader/Shader.h"
+#include "engine/opengl/shader/Shader.h"
 
-#include "../ptr.h"
+#include "engine/ptr.h"
 
 #define AMBIENT_STRENGTH 0.5f 
 #define DIFFUSE_STRENGTH 0.5f

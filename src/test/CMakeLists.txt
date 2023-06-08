@@ -37,4 +37,4 @@ endforeach()
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Linker
-target_link_libraries(${PROJECT_NAME} RendererGL)
+target_link_libraries(${PROJECT_NAME} glfw RendererGL)

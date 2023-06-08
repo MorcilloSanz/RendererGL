@@ -13,7 +13,6 @@ find_package(GLEW)
 set(HEADERS 
         src/engine/Vec3.h
         src/engine/ptr.h
-        src/engine/window/Window.h
         src/engine/opengl/buffer/Buffer.h
         src/engine/opengl/buffer/VertexArray.h
         src/engine/opengl/buffer/VertexBuffer.h
@@ -48,7 +47,6 @@ set(HEADERS
 
 # CPP files
 set(SOURCES
-        src/engine/window/Window.cpp
         src/engine/opengl/buffer/VertexArray.cpp
         src/engine/opengl/buffer/VertexBuffer.cpp
         src/engine/opengl/buffer/IndexBuffer.cpp
@@ -96,7 +94,6 @@ target_link_libraries(${PROJECT_NAME}
                 GL 
                 dl 
                 X11 
-                glfw
                 GLEW::GLEW
 )
 

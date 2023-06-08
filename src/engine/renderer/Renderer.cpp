@@ -10,6 +10,7 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
     depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
     shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), gammaCorrection(false) {
+    loadFunctionsGL();
     initShaders();
     enableBlending();
     enableAntialiasing();
@@ -20,6 +21,13 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
 
 Renderer::Renderer() 
     : Renderer(0, 0) {
+}
+
+void Renderer::loadFunctionsGL() {
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Couldn't initialize GLEW" << std::endl;
+        return;
+    }
 }
 
 void Renderer::initShaders() {

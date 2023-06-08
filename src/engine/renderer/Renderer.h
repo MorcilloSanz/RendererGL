@@ -3,6 +3,9 @@
 #include <iostream>
 #include <vector>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include "../group/Scene.h"
 #include "../opengl/shader/Shader.h"
 
@@ -81,6 +84,7 @@ public:
     Renderer();
     ~Renderer() = default;
 private:
+    void loadFunctionsGL();
     void initShaders();
     void initTextureQuad();
     void textureUniformDefault(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);

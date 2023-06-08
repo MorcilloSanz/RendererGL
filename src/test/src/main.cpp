@@ -9,14 +9,15 @@
 #include <iostream>
 #include <cmath>
 
-#include "engine/window/Window.h"
+#include <engine/window/Window.h>
+//#include <GLFW/glfw3.h>
 
-#include "engine/renderer/Renderer.h"
-#include "engine/renderer/TrackballCamera.h"
-#include "engine/renderer/FPSCamera.h"
-#include "engine/renderer/FrameCapturer.h"
-#include "engine/renderer/MouseRayCasting.h"
-#include "engine/model/Model.h"
+#include <engine/renderer/Renderer.h>
+#include <engine/renderer/TrackballCamera.h>
+#include <engine/renderer/FPSCamera.h>
+#include <engine/renderer/FrameCapturer.h>
+#include <engine/renderer/MouseRayCasting.h>
+#include <engine/model/Model.h>
 
 #include "ImguiStyles.h"
 

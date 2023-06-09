@@ -162,10 +162,8 @@ RendererGL is an open source project under the MIT licence. Feel free to fork it
 
 ## Dependencies
 
-* [GLFW](https://github.com/glfw/glfw) for creating a window with an OpenGL context
 * [GLEW](https://github.com/nigels-com/glew) for loading OpenGL extensions
 * [GLM](https://github.com/g-truc/glm) for linear algebra stuff
-* [IMGUI](https://github.com/ocornut/imgui) for the user interface
 * [ASSIMP](https://github.com/assimp/assimp) for loading 3D models from files (*.obj*, *.dae*, *...*)
 * [STB](https://github.com/nothings/stb) for loading images from files (*.png*, *.tga*, *.jpg*, *...*)
 

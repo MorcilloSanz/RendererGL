@@ -1,0 +1,8 @@
+*.vert linguist-detectable
+*.vert linguist-language=GLSL
+
+*.frag linguist-detectable
+*.frag linguist-language=GLSL
+
+CMakeLists.txt linguist-detectable
+CMakeLists.txt linguist-language=CMake

@@ -22,42 +22,43 @@
     SOFTWARE.
 ]]
 
-cmake_minimum_required(VERSION 3.10.0...3.22)
+project(testImGuiGLFW)
 
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-endif()
+# Header Files
+set(HEADERS 
+        imgui/imgui.h
+        imgui/backends/imgui_impl_glfw.h
+        imgui/backends/imgui_impl_opengl3.h
+        imgui/imgui_internal.h
+        imgui/imstb_rectpack.h
+        imgui/imstb_textedit.h
+        imgui/imstb_truetype.h
 
-# Project
-project(RendererGL
-        VERSION 0.1
-        DESCRIPTION "OpenGL renderer"
-        HOMEPAGE_URL "https://github.com/MorcilloSanz/RendererGL"
-        LANGUAGES CXX)
+        src/ImguiStyles.h
+)
 
-message(STATUS "\n${PROJECT_NAME} ${RendererGL_VERSION}")
-message(STATUS ${RendererGL_DESCRIPTION})
-message(STATUS ${RendererGL_HOMEPAGE_URL})
+# CPP files
+set(SOURCES
+        imgui/imgui.cpp
+        imgui/backends/imgui_impl_glfw.cpp
+        imgui/backends/imgui_impl_opengl3.cpp
+        imgui/imgui_demo.cpp
+        imgui/imgui_draw.cpp
+        imgui/imgui_tables.cpp
+        imgui/imgui_widgets.cpp
 
-set (CMAKE_CXX_STANDARD 17)
-set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-add_definitions(-DUNICODE)
-
-# Libraries
-find_package(GLEW REQUIRED)
-find_package(assimp REQUIRED)
-
-# Add src
-include_directories(src)
-add_subdirectory(src)
+        src/main.cpp
+)
 
 # Copy shaders into build folder
-set(SHADERS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/opengl/glsl")
+set(SHADERS_PATH "${CMAKE_SOURCE_DIR}/src/engine/opengl/glsl")
 file(GLOB shaderFiles ${SHADERS_PATH}/*.frag ${SHADERS_PATH}/*.vert)
 foreach(filename ${shaderFiles} )
     file(COPY ${filename} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/glsl)
 endforeach()
 
-# Add tests
-add_subdirectory(tests)
+# Executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Linker
+target_link_libraries(${PROJECT_NAME} glfw RendererGL)

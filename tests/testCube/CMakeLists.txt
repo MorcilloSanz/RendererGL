@@ -22,42 +22,27 @@
     SOFTWARE.
 ]]
 
-cmake_minimum_required(VERSION 3.10.0...3.22)
+project(testCube)
 
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-endif()
+# Header Files
+set(HEADERS 
 
-# Project
-project(RendererGL
-        VERSION 0.1
-        DESCRIPTION "OpenGL renderer"
-        HOMEPAGE_URL "https://github.com/MorcilloSanz/RendererGL"
-        LANGUAGES CXX)
+)
 
-message(STATUS "\n${PROJECT_NAME} ${RendererGL_VERSION}")
-message(STATUS ${RendererGL_DESCRIPTION})
-message(STATUS ${RendererGL_HOMEPAGE_URL})
-
-set (CMAKE_CXX_STANDARD 17)
-set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-add_definitions(-DUNICODE)
-
-# Libraries
-find_package(GLEW REQUIRED)
-find_package(assimp REQUIRED)
-
-# Add src
-include_directories(src)
-add_subdirectory(src)
+# CPP files
+set(SOURCES
+    src/main.cpp
+)
 
 # Copy shaders into build folder
-set(SHADERS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/opengl/glsl")
+set(SHADERS_PATH "${CMAKE_SOURCE_DIR}/src/engine/opengl/glsl")
 file(GLOB shaderFiles ${SHADERS_PATH}/*.frag ${SHADERS_PATH}/*.vert)
 foreach(filename ${shaderFiles} )
     file(COPY ${filename} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/glsl)
 endforeach()
 
-# Add tests
-add_subdirectory(tests)
+# Executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Linker
+target_link_libraries(${PROJECT_NAME} glfw RendererGL)

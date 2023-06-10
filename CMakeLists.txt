@@ -60,4 +60,4 @@ foreach(filename ${shaderFiles} )
 endforeach()
 
 # Add tests
-add_subdirectory(tests)
+add_subdirectory(test)

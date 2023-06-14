@@ -47,6 +47,9 @@ set(HEADERS
         renderer/FPSCamera.h
         renderer/SkyBox.h
         renderer/MouseRayCasting.h
+        lighting/Material.h
+        lighting/PhongMaterial.h
+        lighting/PBRMaterial.h
         lighting/Light.h
         lighting/DirectionalLight.h
         lighting/PointLight.h
@@ -97,8 +100,8 @@ add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 # Link libraries
 target_link_libraries(${PROJECT_NAME} 
                 assimp 
-                GL 
-                dl 
-                X11 
+                $<$<BOOL:${UNIX}>:GL>
+                $<$<BOOL:${UNIX}>:dl>
+                $<$<BOOL:${UNIX}>:X11>
                 GLEW::GLEW
 )

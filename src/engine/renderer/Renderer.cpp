@@ -198,9 +198,23 @@ void Renderer::lightShaderUniforms() {
 }
 
 void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
-    shaderProgramLighting->uniformVec3("material.diffuse", polytope->getMaterial().getDiffuse());
-    shaderProgramLighting->uniformVec3("material.specular", polytope->getMaterial().getSpecular());
-    shaderProgramLighting->uniformFloat("material.shininess", polytope->getMaterial().getShininess());
+
+    Material::Ptr material = polytope->getMaterial();
+
+    // Phong materials
+    if(material->getMaterialType() == Material::MaterialType::Phong) {
+
+        PhongMaterial* phongMaterial = dynamic_cast<PhongMaterial*>(material.get()); 
+
+        shaderProgramLighting->uniformVec3("material.diffuse", phongMaterial->getDiffuse());
+        shaderProgramLighting->uniformVec3("material.specular", phongMaterial->getSpecular());
+        shaderProgramLighting->uniformFloat("material.shininess", phongMaterial->getShininess());
+    }
+    // PBR materials
+    else if(material->getMaterialType() == Material::MaterialType::PBR) {
+
+    }
+
     shaderProgramLighting->uniformFloat("emissionStrength", polytope->getEmissionStrength());
 }
 

@@ -20,6 +20,10 @@ Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indi
     initPolytope(vertices, indices);
 }
 
+Polytope::~Polytope() {
+
+}
+
 void Polytope::setTangentsAndBitangents(Vec3f& vertex0, Vec3f& vertex1, Vec3f& vertex2) {
 
     glm::vec3 pos1(vertex0.x,  vertex0.y, vertex0.z);
@@ -77,7 +81,7 @@ void Polytope::calculateTangentsAndBitangents(std::vector<Vec3f>& vertices, std:
 void Polytope::initPolytope(size_t length) {
     vertexArray = VertexArray::New();
     vertexBuffer = VertexBuffer::New(length);
-    material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
+    material = PhongMaterial::New(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
@@ -85,7 +89,7 @@ void Polytope::initPolytope(std::vector<Vec3f>& vertices) {
     calculateTangentsAndBitangents(vertices);
     vertexArray = VertexArray::New();
     vertexBuffer = VertexBuffer::New(vertices);
-    material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
+    material = PhongMaterial::New(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 
@@ -93,7 +97,7 @@ void Polytope::initPolytope(std::vector<Vec3f>& vertices, std::vector<unsigned i
     calculateTangentsAndBitangents(vertices, indices);
     vertexArray = VertexArray::New();
     vertexBuffer = VertexBuffer::New(vertices, indices);
-    material = Material(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
+    material = PhongMaterial::New(MATERIAL_DIFFUSE, MATERIAL_SPECULAR, MATERIAL_SHININESS);
     unbind();
 }
 

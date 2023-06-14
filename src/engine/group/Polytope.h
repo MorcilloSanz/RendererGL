@@ -13,6 +13,7 @@
 #include "engine/opengl/buffer/VertexBuffer.h"
 
 #include "engine/lighting/Material.h"
+#include "engine/lighting/PhongMaterial.h"
 
 #include "engine/texture/Texture.h"
 
@@ -33,7 +34,7 @@ protected:
     VertexBuffer::Ptr vertexBuffer;
     std::vector<Texture::Ptr> textures;
     unsigned int vertexLength, indicesLength;
-    Material material;
+    Material::Ptr material;
     glm::mat4 modelMatrix;
     bool selected;
     FaceCulling faceCulling;
@@ -44,7 +45,7 @@ public:
     Polytope(std::vector<Vec3f>& vertices, bool _tangentAndBitangents = true);
     Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices, bool _tangentAndBitangents = true);
     Polytope() = default;
-    virtual ~Polytope() = default;
+    virtual ~Polytope();
 protected:
     void setTangentsAndBitangents(Vec3f& vertex0, Vec3f& vertex1, Vec3f& vertex2);
     void calculateTangentsAndBitangents(std::vector<Vec3f>& vertices);
@@ -82,8 +83,8 @@ public:
     inline void setVertexBuffer(const VertexBuffer::Ptr& vertexBuffer) { this->vertexBuffer = vertexBuffer; }
     inline void setVertexLength(unsigned int vertexLength) { this->vertexLength = vertexLength; }
 
-    inline void setMaterial(const Material& material) { this->material = material; }
-    inline Material& getMaterial() { return material; }
+    inline void setMaterial(const Material::Ptr& material) { this->material = material; }
+    inline Material::Ptr& getMaterial() { return material; }
 
     inline std::vector<Vec3f> getVertices() { return vertexBuffer->getVertices(); }
     inline std::vector<unsigned int> getIndices() { return vertexBuffer->getIndexBuffer()->getIndices(); }

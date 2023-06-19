@@ -7,7 +7,8 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
     : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
     depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
-    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), gammaCorrection(false) {
+    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), 
+    gammaCorrection(false), pbr(false) {
     loadFunctionsGL();
     initShaders();
     enableBlending();
@@ -371,15 +372,28 @@ void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
         glm::mat4 model = scene->getModelMatrix() * group->getModelMatrix() * polytope->getModelMatrix();
         glm::mat4 mvp = projection * view * model;
 
-        // Use shader programs
-        if(!hasLight)   shaderProgram->useProgram();
-        else            shaderProgramLighting->useProgram();
+        // Use default shader program
+        if(!hasLight && !pbr)   
+            shaderProgram->useProgram();
+        
+        // Use PBR shader program
+        else if(pbr) {
 
-        // Uniforms
+        }
+        // Use phong shader program
+        else   
+            shaderProgramLighting->useProgram();
+
+        // Default uniforms
         if(!hasLight) {
             shaderProgram->uniformMat4("mvp", mvp);
             textureUniform(shaderProgram, polytope, false);
         } 
+        // PBR uniforms
+        else if(hasCamera && pbr) {
+
+        }
+        // Phong lighting uniforms
         else if(hasCamera && hasLight) {
             lightShaderUniforms();
             lightMaterialUniforms(polytope);

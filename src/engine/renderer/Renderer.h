@@ -50,6 +50,8 @@ private:
     unsigned int nLights;
     bool hasLight;
 
+    bool pbr;
+
     // Previous FBO
     int previousFBO;
 
@@ -133,9 +135,15 @@ public:
     inline void enableLight() { hasLight = true; }
     inline void disableLight() { hasLight = false; } 
     inline void setLightEnabled(bool enable) { hasLight = enable; }
+
     inline void removeLight(int index) { lights.erase(lights.begin() + index); nLights --; }
     inline Light* getLight(int index) { return lights[index]; }
+
     inline std::vector<Light*>& getLights() { return lights; }
+
+    inline void enablePBR() { pbr = true; }
+    inline void disablePBR() { pbr = false; }
+    inline void setPBREnabled(bool enable) { pbr = enable; }
 
     inline void setShadowLightPos(const glm::vec3& shadowLightPos) { this->shadowLightPos = shadowLightPos; }
     inline glm::vec3& getShadowLightPos() { return shadowLightPos; }

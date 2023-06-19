@@ -22,4 +22,4 @@
     SOFTWARE.
 ]]
 
-add_subdirectory(engine)
+add_subdirectory(glm)

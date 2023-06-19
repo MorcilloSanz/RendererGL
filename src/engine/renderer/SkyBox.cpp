@@ -4,26 +4,6 @@
 
 #include "engine/Vec3.h"
 
-std::vector<Vec3f> vertices = {        
-    Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(1.0f, -1.0f, -1.0f ),
-    Vec3f(1.0f, -1.0f, -1.0f ), Vec3f(1.0f,  1.0f, -1.0f ), Vec3f(-1.0f,  1.0f, -1.0f),
-
-    Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(-1.0f,  1.0f, -1.0f),
-    Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(-1.0f, -1.0f,  1.0f),
-
-    Vec3f(1.0f, -1.0f, -1.0f), Vec3f(1.0f, -1.0f,  1.0f), Vec3f(1.0f,  1.0f,  1.0f),
-    Vec3f(1.0f,  1.0f,  1.0f), Vec3f(1.0f,  1.0f, -1.0f), Vec3f(1.0f, -1.0f, -1.0f),
-
-    Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(1.0f,  1.0f,  1.0f ),
-    Vec3f(1.0f,  1.0f,  1.0f ), Vec3f(1.0f, -1.0f,  1.0f ), Vec3f(-1.0f, -1.0f,  1.0f),
-
-    Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(1.0f,  1.0f, -1.0f ), Vec3f(1.0f,  1.0f,  1.0f ),
-    Vec3f(1.0f,  1.0f,  1.0f ), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(-1.0f,  1.0f, -1.0f),
-
-    Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(1.0f, -1.0f, -1.0f ),
-    Vec3f(1.0f, -1.0f, -1.0f ), Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(1.0f, -1.0f,  1.0f)
-};
-
 SkyBox::SkyBox(const std::vector<std::string>& _faces) 
     : Buffer(), faces(_faces) {
     initBuffer();
@@ -34,8 +14,24 @@ SkyBox::~SkyBox() {
 }
 
 void SkyBox::initBuffer() {
+
+    std::vector<Vec3f> sbv = {        
+        Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(1.0f, -1.0f, -1.0f ),
+        Vec3f(1.0f, -1.0f, -1.0f ), Vec3f(1.0f,  1.0f, -1.0f ), Vec3f(-1.0f,  1.0f, -1.0f),
+        Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(-1.0f,  1.0f, -1.0f),
+        Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(-1.0f, -1.0f,  1.0f),
+        Vec3f(1.0f, -1.0f, -1.0f), Vec3f(1.0f, -1.0f,  1.0f), Vec3f(1.0f,  1.0f,  1.0f),
+        Vec3f(1.0f,  1.0f,  1.0f), Vec3f(1.0f,  1.0f, -1.0f), Vec3f(1.0f, -1.0f, -1.0f),
+        Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(1.0f,  1.0f,  1.0f ),
+        Vec3f(1.0f,  1.0f,  1.0f ), Vec3f(1.0f, -1.0f,  1.0f ), Vec3f(-1.0f, -1.0f,  1.0f),
+        Vec3f(-1.0f,  1.0f, -1.0f), Vec3f(1.0f,  1.0f, -1.0f ), Vec3f(1.0f,  1.0f,  1.0f ),
+        Vec3f(1.0f,  1.0f,  1.0f ), Vec3f(-1.0f,  1.0f,  1.0f), Vec3f(-1.0f,  1.0f, -1.0f),
+        Vec3f(-1.0f, -1.0f, -1.0f), Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(1.0f, -1.0f, -1.0f ),
+        Vec3f(1.0f, -1.0f, -1.0f ), Vec3f(-1.0f, -1.0f,  1.0f), Vec3f(1.0f, -1.0f,  1.0f)
+    };
+
     vertexArray = VertexArray::New();
-    vertexBuffer = VertexBuffer::New(vertices);
+    vertexBuffer = VertexBuffer::New(sbv);
     cubeMap = CubeMapTexture::New(faces);
     unbind();
 }

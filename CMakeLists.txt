@@ -48,6 +48,10 @@ add_definitions(-DUNICODE)
 find_package(GLEW REQUIRED)
 find_package(assimp REQUIRED)
 
+# third party
+add_subdirectory(third_party)
+include_directories(third_party)
+
 # Add src
 include_directories(src)
 add_subdirectory(src)

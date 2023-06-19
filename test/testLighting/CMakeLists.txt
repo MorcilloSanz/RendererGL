@@ -22,4 +22,27 @@
     SOFTWARE.
 ]]
 
-add_subdirectory(engine)
+project(testLighting)
+
+# Header Files
+set(HEADERS 
+
+)
+
+# CPP files
+set(SOURCES
+    src/main.cpp
+)
+
+# Copy shaders into build folder
+set(SHADERS_PATH "${CMAKE_SOURCE_DIR}/src/engine/opengl/glsl")
+file(GLOB shaderFiles ${SHADERS_PATH}/*.frag ${SHADERS_PATH}/*.vert)
+foreach(filename ${shaderFiles} )
+    file(COPY ${filename} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/glsl)
+endforeach()
+
+# Executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Linker
+target_link_libraries(${PROJECT_NAME} glfw RendererGL)

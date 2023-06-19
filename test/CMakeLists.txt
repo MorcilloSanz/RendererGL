@@ -24,3 +24,4 @@
 
 add_subdirectory(testImGuiGLFW)
 add_subdirectory(testCube)
+add_subdirectory(testLighting)

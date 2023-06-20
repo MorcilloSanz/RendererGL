@@ -41,6 +41,11 @@ void Renderer::initShaders() {
     Shader fragmentLightingShader = Shader::fromFile("glsl/BlinnPhong.frag", Shader::ShaderType::Fragment);
     shaderProgramLighting = ShaderProgram::New(vertexLightingShader, fragmentLightingShader);
 
+    // PBR shader program
+    Shader vertexPBRShader = Shader::fromFile("glsl/PBR.vert", Shader::ShaderType::Vertex);
+    Shader fragmentPBRShader = Shader::fromFile("glsl/PBR.frag", Shader::ShaderType::Fragment);
+    shaderProgramPBR = ShaderProgram::New(vertexPBRShader, fragmentPBRShader);
+
     // Depth Map shader program
     Shader vertexDepthMapShader = Shader::fromFile("glsl/SimpleDepth.vert", Shader::ShaderType::Vertex);
     Shader fragmentDepthMapShader = Shader::fromFile("glsl/SimpleDepth.frag", Shader::ShaderType::Fragment);
@@ -112,41 +117,89 @@ void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::sha
 }
 
 void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+
     unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nEmissionMap = 0, nNormalMaps = 0, nHeightMaps = 0;
+
     for(auto& texture : polytope->getTextures()) {
+
         texture->bind();
+
         switch(texture->getType()) {
+
             case Texture::Type::TextureDiffuse:
                 shaderProgram->uniformInt("materialMaps.diffuseMap", texture->getID() - 1);
                 nDiffuseMaps ++;
             break;
+
             case Texture::Type::TextureSpecular:
                 shaderProgram->uniformInt("materialMaps.specularMap", texture->getID() - 1);
                 nSpecularMaps ++;
             break;
+
             case Texture::Type::TextureEmission:
                 shaderProgram->uniformInt("materialMaps.emissionMap", texture->getID() - 1);
                 nEmissionMap ++;
             break;
+
             case Texture::Type::TextureNormal:
                 shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
                 nNormalMaps ++;
             break;
-            case Texture::Type::TextureHeight:
 
+            case Texture::Type::TextureHeight:
                 nHeightMaps ++;
             break;
         }
     }
+
     shaderProgram->uniformInt("hasDiffuse", nDiffuseMaps > 0);
     shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
     shaderProgram->uniformInt("hasNormalMap", nNormalMaps > 0);
     shaderProgram->uniformInt("hasEmission", nEmissionMap > 0);
 }
 
-void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope, bool hasLight) {
-    if(!hasLight) textureUniformDefault(shaderProgram, polytope);
-    else textureUniformLighting(shaderProgram, polytope);
+void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
+
+    unsigned int nAlbedoMaps = 0, nMetallicMaps = 0, nRoughnessMap = 0, nNormalMaps = 0;
+
+    for(auto& texture : polytope->getTextures()) {
+
+        texture->bind();
+
+        switch(texture->getType()) {
+
+            case Texture::Type::TextureAlbedo:
+                shaderProgram->uniformInt("materialMaps.albedo", texture->getID() - 1);
+                nAlbedoMaps ++;
+            break;
+
+            case Texture::Type::TextureMetallic:
+                shaderProgram->uniformInt("materialMaps.metallic", texture->getID() - 1);
+                nMetallicMaps ++;
+            break;
+
+            case Texture::Type::TextureRoughness:
+                shaderProgram->uniformInt("materialMaps.roughness", texture->getID() - 1);
+                nRoughnessMap ++;
+            break;
+
+            case Texture::Type::TextureNormal:
+                shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
+                nNormalMaps ++;
+            break;
+        }
+    }
+
+    shaderProgram->uniformInt("hasAlbedo", nAlbedoMaps > 0);
+    shaderProgram->uniformInt("hasMetallic", nMetallicMaps > 0);
+    shaderProgram->uniformInt("hasNormal", nNormalMaps > 0);
+    shaderProgram->uniformInt("hasRoughness", nRoughnessMap > 0);
+}
+
+void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+    if(pbr) textureUniformPBR(shaderProgram, polytope);
+    else if(hasLight) textureUniformLighting(shaderProgram, polytope);
+    else textureUniformDefault(shaderProgram, polytope);
 }
 
 void Renderer::primitiveSettings(Group::Ptr& group) {
@@ -198,6 +251,30 @@ void Renderer::lightShaderUniforms() {
     shaderProgramLighting->uniformInt("shadowMapping", shadowMapping);
 }
 
+void Renderer::pbrShaderUniforms() {
+
+    shaderProgramPBR->uniformInt("nLights", nLights);
+
+    for(int i = 0; i < nLights; i ++) {
+
+        float intensity = hdr ? lights[i]->getIntensity() : 1.0f;
+
+        // Directional Light
+        std::string lightUniform = "lights[" + std::to_string(i) + "]";
+        shaderProgramPBR->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
+        shaderProgramPBR->uniformVec3(lightUniform + ".color", lights[i]->getColor() * intensity);
+
+        // Point Light (Spot Light is also a Point Light)
+        if(instanceof<PointLight>(lights[i])) {
+            PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+            shaderProgramPBR->uniformInt("isPointLight", true);
+        }else shaderProgramPBR->uniformInt("isPointLight", false);
+    }
+    
+    shaderProgramPBR->uniformVec3("viewPos", camera->getEye());
+    //shaderProgramPBR->uniformInt("shadowMapping", shadowMapping);
+}
+
 void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
 
     Material::Ptr material = polytope->getMaterial();
@@ -211,18 +288,38 @@ void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) 
         shaderProgramLighting->uniformVec3("material.specular", phongMaterial->getSpecular());
         shaderProgramLighting->uniformFloat("material.shininess", phongMaterial->getShininess());
     }
-    // PBR materials
-    else if(material->getMaterialType() == Material::MaterialType::PBR) {
-
-    }
 
     shaderProgramLighting->uniformFloat("emissionStrength", polytope->getEmissionStrength());
 }
 
+void Renderer::pbrMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
+
+    Material::Ptr material = polytope->getMaterial();
+
+    // PBR materials
+    if(material->getMaterialType() == Material::MaterialType::PBR) {
+        
+        PBRMaterial* pbrMaterial = dynamic_cast<PBRMaterial*>(material.get()); 
+
+        shaderProgramPBR->uniformVec3("material.albedo", pbrMaterial->getAlbedo());
+        shaderProgramPBR->uniformFloat("material.metallic", pbrMaterial->getMetallic());
+        shaderProgramPBR->uniformFloat("material.roughness", pbrMaterial->getRoughness());
+        shaderProgramPBR->uniformFloat("material.ao", pbrMaterial->getAmbientOcclusion());
+    }
+}
+
+void Renderer::mvpUniform(ShaderProgram::Ptr& shaderProgram, const glm::mat4& model) {
+    shaderProgram->uniformMat4("model", model);
+    shaderProgram->uniformMat4("view", view);
+    shaderProgram->uniformMat4("projection", projection);
+}
+
 void Renderer::lightMVPuniform(const glm::mat4& model) {
-    shaderProgramLighting->uniformMat4("model", model);
-    shaderProgramLighting->uniformMat4("view", view);
-    shaderProgramLighting->uniformMat4("projection", projection);
+    mvpUniform(shaderProgramLighting, model);
+}
+
+void Renderer::pbrMVPuniform(const glm::mat4& model) {
+    mvpUniform(shaderProgramPBR, model);
 }
 
 void Renderer::shadowMappingUniforms() {
@@ -372,36 +469,33 @@ void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
         glm::mat4 model = scene->getModelMatrix() * group->getModelMatrix() * polytope->getModelMatrix();
         glm::mat4 mvp = projection * view * model;
 
-        // Use default shader program
-        if(!hasLight && !pbr)   
-            shaderProgram->useProgram();
-        
-        // Use PBR shader program
-        else if(pbr) {
-
+        // PBR 
+        if(pbr) {
+            shaderProgramPBR->useProgram();
+            pbrShaderUniforms();
+            pbrMaterialUniforms(polytope);
+            textureUniform(shaderProgramPBR, polytope);
+            pbrMVPuniform(model);
+            //shadowMappingUniforms();
         }
-        // Use phong shader program
-        else   
+            
+        // Phong lighting
+        else if(hasLight) {
             shaderProgramLighting->useProgram();
-
-        // Default uniforms
-        if(!hasLight) {
-            shaderProgram->uniformMat4("mvp", mvp);
-            textureUniform(shaderProgram, polytope, false);
-        } 
-        // PBR uniforms
-        else if(hasCamera && pbr) {
-
-        }
-        // Phong lighting uniforms
-        else if(hasCamera && hasLight) {
             lightShaderUniforms();
             lightMaterialUniforms(polytope);
-            textureUniform(shaderProgramLighting, polytope, true);
+            textureUniform(shaderProgramLighting, polytope);
             lightMVPuniform(model);
             shadowMappingUniforms();
         }
 
+        // Default  
+        else {
+            shaderProgram->useProgram();
+            shaderProgram->uniformMat4("mvp", mvp);
+            textureUniform(shaderProgram, polytope);
+        }
+        
         // Set face culling
         setFaceCulling(polytope);
 

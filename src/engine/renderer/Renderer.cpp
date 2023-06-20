@@ -264,11 +264,8 @@ void Renderer::pbrShaderUniforms() {
         shaderProgramPBR->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
         shaderProgramPBR->uniformVec3(lightUniform + ".color", lights[i]->getColor() * intensity);
 
-        // Point Light (Spot Light is also a Point Light)
-        if(instanceof<PointLight>(lights[i])) {
-            PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-            shaderProgramPBR->uniformInt("isPointLight", true);
-        }else shaderProgramPBR->uniformInt("isPointLight", false);
+        // Point
+        shaderProgramPBR->uniformInt("isPointLight", instanceof<PointLight>(lights[i]));
     }
     
     shaderProgramPBR->uniformVec3("viewPos", camera->getEye());

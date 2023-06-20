@@ -80,11 +80,11 @@ int main() {
     renderer->enablePBR();
 
     // Lighting
-    PointLight light1(glm::vec3(2, 0, 2));
+    PointLight light1(glm::vec3(-3, 0, 3));
     light1.setColor(glm::vec3(1, 0, 0));
     renderer->addLight(light1);
 
-    DirectionalLight light2(glm::vec3(1));
+    DirectionalLight light2(glm::vec3(15));
     light2.setColor(glm::vec3(1));
     renderer->addLight(light2);
 

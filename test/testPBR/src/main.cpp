@@ -12,57 +12,88 @@ GLFWwindow* window;
 
 Renderer::Ptr renderer;
 
-Polytope::Ptr createSphere() {
+Polytope::Ptr createSphere(int radius = 1, int latitudes = 64, int longitudes = 64) {
 
-    Polytope::Ptr sphere;
+    Polytope::Ptr sphere = nullptr;
 
-    std::vector<Vec3f> vertices;
+    std::vector<unsigned int> sphereIndices;
+
+    if(longitudes < 3) longitudes = 3;
+    if(latitudes < 2) latitudes = 2;
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> uv;
     std::vector<unsigned int> indices;
+    std::vector<Vec3f> vert;
 
-    const unsigned int X_SEGMENTS = 64;
-    const unsigned int Y_SEGMENTS = 64;
-    const float PI = 3.14159265359f;
+    float nx, ny, nz, lengthInv = 1.0f / radius;
 
-    for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
-        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y) {
+    struct Vertex {
+        float x, y, z, s, t;
+    };
 
-            float xSegment = (float)x / (float)X_SEGMENTS;
-            float ySegment = (float)y / (float)Y_SEGMENTS;
+    float deltaLatitude = M_PI / latitudes;
+    float deltaLongitude = 2 * M_PI / longitudes;
+    float latitudeAngle;
+    float longitudeAngle;
 
-            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-            float yPos = std::cos(ySegment * PI);
-            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+    for (int i = 0; i <= latitudes; ++i) {
+        
+        latitudeAngle = M_PI / 2 - i * deltaLatitude;
+        float xy = radius * cosf(latitudeAngle);
+        float z = radius * sinf(latitudeAngle);
 
-            // x y z  r g b nx ny nz tx ty
-            Vec3f vertex(xPos, yPos, zPos, 1.0f, 1.0f, 1.0f, xPos, yPos, zPos, xSegment, ySegment);
-            vertices.push_back(vertex);
+        for (int j = 0; j <= longitudes; ++j) {
+            
+            longitudeAngle = j * deltaLongitude;
+
+            Vertex vertex;
+            vertex.x = xy * cosf(longitudeAngle);
+            vertex.y = xy * sinf(longitudeAngle);
+            vertex.z = z;
+
+            vertex.s = (float) j / longitudes;
+            vertex.t = (float) i / latitudes;
+
+            vertices.push_back(glm::vec3(vertex.x, vertex.y, vertex.z));
+            uv.push_back(glm::vec2(vertex.s, vertex.t));
+
+            nx = vertex.x * lengthInv;
+            ny = vertex.y * lengthInv;
+            nz = vertex.z * lengthInv;
+            normals.push_back(glm::vec3(nx, ny, nz));
+
+            Vec3f v(vertex.x, vertex.y, vertex.z, 1.0f, 1.0f, 1.0f, nx, ny, nz, vertex.s, vertex.t);
+            vert.push_back(v);
         }
     }
 
-    bool oddRow = false;
-    for (unsigned int y = 0; y <=Y_SEGMENTS -1 ; ++y) {
-        if (!oddRow) { // even rows: y == 0, y == 2; and so on
-            for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
-                indices.push_back(y * (X_SEGMENTS + 1) + x);
-                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+    unsigned int k1, k2;
+    for(int i = 0; i < latitudes; ++i) {
+
+        k1 = i * (longitudes + 1);
+        k2 = k1 + longitudes + 1;
+
+        for(int j = 0; j < longitudes; ++j, ++k1, ++k2) {
+
+            if (i != 0) {
+                indices.push_back(k1 + 1);
+                indices.push_back(k2);
+                indices.push_back(k1);
+            }
+
+            if (i != (latitudes - 1)) {
+                indices.push_back(k2 + 1);
+                indices.push_back(k2);
+                indices.push_back(k1 + 1);
             }
         }
-        else {
-            for (int x = X_SEGMENTS; x > 0; --x) {
-                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
-                indices.push_back(y * (X_SEGMENTS + 1) + x);
-            }
-        }
-        oddRow = !oddRow;
     }
 
-    int verticesSize = vertices.size();
-    int indicesSize = indices.size();
-
-    sphere = Polytope::New(vertices, indices);
+    sphere = Polytope::New(vert, indices);
     return sphere;
 }
-
 int main() {
 
     // Create window
@@ -96,6 +127,8 @@ int main() {
 
     // Polytope
     Polytope::Ptr sphere = createSphere();
+    sphere->setFaceCulling(Polytope::FaceCulling::FRONT);
+    sphere->scale(glm::vec3(1.5));
 
     // PBR materials
     Texture::Ptr textureAlbedo = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_basecolor.png", Texture::Type::TextureAlbedo);
@@ -121,6 +154,8 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
 
         sphere->rotate(0.25, glm::vec3(1, 0, 1));
+
+        renderer->setBackgroundColor(0.08, 0.08, 0.08);
 
         // Draw scene
         renderer->clear();

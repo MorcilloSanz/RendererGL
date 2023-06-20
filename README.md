@@ -21,6 +21,7 @@ Take a look at some [screenshots](#screenshots) of test
 * Skybox (cubemap)
 * FrameCapturer (create a texture of the scene)
 * Blinn-Phong lighting
+* PBR
 * Emission
 * Shadow Mapping (percentage closer filtering)
 * Normal Mapping
@@ -143,6 +144,10 @@ int main() {
 **Shadows**
 
 ![](img/shadows.png)
+
+**PBR**
+
+![](img/pbr.png)
 
 **Emission**
 

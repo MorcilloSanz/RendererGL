@@ -16,6 +16,8 @@
 #include "engine/lighting/PointLight.h"
 #include "engine/lighting/SpotLight.h"
 
+#include "engine/lighting/PBRMaterial.h"
+
 #include "engine/texture/DepthTexture.h"
 #include "engine/texture/ColorBufferTexture.h"
 
@@ -30,6 +32,7 @@ private:
     // Shaders
     ShaderProgram::Ptr shaderProgram;
     ShaderProgram::Ptr shaderProgramLighting;
+    ShaderProgram::Ptr shaderProgramPBR;
     ShaderProgram::Ptr shaderProgramDepthMap;
     ShaderProgram::Ptr shaderProgramHDR;
     ShaderProgram::Ptr shaderProgramSkyBox;
@@ -91,14 +94,19 @@ private:
     void initTextureQuad();
     void textureUniformDefault(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
     void textureUniformLighting(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
-    void textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope, bool hasLight);
+    void textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
+    void textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
     void initShadowMapping();
     void initHDR();
     void primitiveSettings(Group::Ptr& group);
     void defaultPrimitiveSettings();
     void lightShaderUniforms();
+    void pbrShaderUniforms();
     void lightMaterialUniforms(const Polytope::Ptr& polytope);
+    void pbrMaterialUniforms(const Polytope::Ptr& polytope);
+    void mvpUniform(ShaderProgram::Ptr& shaderProgram, const glm::mat4& model);
     void lightMVPuniform(const glm::mat4& model);
+    void pbrMVPuniform(const glm::mat4& model);
     void shadowMappingUniforms();
     void renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes);
     void renderScenes(std::vector<Scene::Ptr>& scenes);

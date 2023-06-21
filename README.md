@@ -1,12 +1,10 @@
 # RendererGL
 
-RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and more advanced 3D models in an easy way.
+RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and materials.
 
 > **Warning** This project is still under development
 
-`test` is an example code using GLFW and ImGui with RendererGL
-
-Take a look at some [screenshots](#screenshots) of test
+Take a look at some [screenshots](#screenshots)
 
 ## Features
 
@@ -21,7 +19,7 @@ Take a look at some [screenshots](#screenshots) of test
 * Skybox (cubemap)
 * FrameCapturer (create a texture of the scene)
 * Blinn-Phong lighting
-* PBR
+* Physically Based Rendering (PBR)
 * Emission
 * Shadow Mapping (percentage closer filtering)
 * Normal Mapping
@@ -137,15 +135,15 @@ int main() {
 
 ## Screenshots
 
-**Multiple point lights**
+**Multiple point lights (Blinn-Phong)**
 
 ![](img/lighting.png)
 
-**Shadows**
+**Shadow Mapping**
 
 ![](img/shadows.png)
 
-**PBR**
+**PBR Materials**
 
 ![](img/pbr.png)
 

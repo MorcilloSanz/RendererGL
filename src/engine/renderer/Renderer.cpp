@@ -460,6 +460,10 @@ void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
 
     primitiveSettings(group);
     
+    enableBlending();
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     for(auto& polytope : group->getPolytopes()) {
 
         // Compute model matrix from polytope, group and scene

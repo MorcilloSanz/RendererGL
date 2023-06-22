@@ -143,7 +143,7 @@ vec3 calculateNormal() {
 
 vec3 calculateEmission() {
     vec3 emission = material.emission;
-    if(hasEmission) emission = vec3(texture(materialMaps.metallic, TexCoord));
+    if(hasEmission) emission = vec3(texture(materialMaps.emission, TexCoord));
     return emission;
 }
 
@@ -173,9 +173,10 @@ void main() {
         vec3 L = normalize(lights[i].position - FragPos);
         vec3 H = normalize(V + L);
         float distance = length(lights[i].position - FragPos);
-        float attenuation = (lights[i].pointLight) ? 1.0 / (distance * distance) : 1.0;
+        float attenuation = 1.0 / (distance * distance);
 
-        vec3 radiance = lights[i].color * attenuation;
+        vec3 radiance = lights[i].color;
+        if(lights[i].pointLight) radiance *= attenuation;
 
         // Cook-Torrance BRDF
         float NDF = distributionGGX(N, H, roughness);   
@@ -205,7 +206,7 @@ void main() {
     }   
 
     // replace this ambient lighting with environment lighting).
-    vec3 ambient = vec3(0.04) * albedo * ao;
+    vec3 ambient = vec3(0.095) * albedo * ao;
 
     vec3 color = ambient + emission + Lo;
 

@@ -8,11 +8,13 @@ struct Material {
     float metallic;
     float roughness;
     float ao;
+    vec3 emission;
 }; 
 
 struct Light {
     vec3 position;
     vec3 color;
+    bool pointLight;
 };
 
 struct MaterialMaps {
@@ -21,6 +23,7 @@ struct MaterialMaps {
    sampler2D roughness;
    sampler2D normalMap;
    sampler2D ao;
+   sampler2D emission;
 };
 
 in vec3 ourColor;
@@ -36,7 +39,6 @@ out vec4 FragColor;
 
 uniform Light lights[MAX_LIGHTS];
 uniform int nLights;
-uniform bool isPointLight;
 
 uniform Material material;
 
@@ -46,6 +48,7 @@ uniform bool hasMetallic;
 uniform bool hasRoughness;
 uniform bool hasNormalMap;
 uniform bool hasAmbientOcclusion;
+uniform bool hasEmission;
 
 uniform vec3 viewPos;
 
@@ -107,28 +110,52 @@ vec3 getNormalFromMap() {
     return normalize(TBN * tangentNormal);
 }
 
-void main() {
-
-    // Albedo
+vec3 calculateAlbedo() {
     vec3 albedo = material.albedo;
     if(hasAlbedo) albedo = pow(texture(materialMaps.albedo, TexCoord).rgb, vec3(2.2));
     albedo *= ourColor;
+    return albedo;
+}
 
-    // Metallic
+float calculateMetallic() {
     float metallic = material.metallic;
     if(hasMetallic) metallic = texture(materialMaps.metallic, TexCoord).r;
+    return metallic;
+}
 
-    // Roughness
+float calculateRoughness() {
     float roughness = material.roughness;
     if(hasRoughness) roughness = texture(materialMaps.roughness, TexCoord).r;
+    return roughness;
+}
 
-    // Ambient Occlusion
+float calculateAmbientOcclusion() {
     float ao = material.ao;
     if(hasAmbientOcclusion) ao = texture(materialMaps.ao, TexCoord).r;
+    return ao;
+}
 
-    // Normal
+vec3 calculateNormal() {
     vec3 N = normalize(Normal);
     if(hasNormalMap) N = getNormalFromMap();
+    return N;
+}
+
+vec3 calculateEmission() {
+    vec3 emission = material.emission;
+    if(hasEmission) emission = vec3(texture(materialMaps.emission, TexCoord));
+    return emission;
+}
+
+void main() {
+
+    // Material
+    vec3 albedo = calculateAlbedo();
+    float metallic = calculateMetallic();
+    float roughness = calculateRoughness();
+    float ao = calculateAmbientOcclusion();
+    vec3 N = calculateNormal();
+    vec3 emission = calculateEmission();
 
     // V
     vec3 V = normalize(viewPos - FragPos);
@@ -146,9 +173,10 @@ void main() {
         vec3 L = normalize(lights[i].position - FragPos);
         vec3 H = normalize(V + L);
         float distance = length(lights[i].position - FragPos);
-        float attenuation = (isPointLight) ? 1.0 / (distance * distance) : 1.0;
+        float attenuation = 1.0 / (distance * distance);
 
-        vec3 radiance = lights[i].color * attenuation;
+        vec3 radiance = lights[i].color;
+        if(lights[i].pointLight) radiance *= attenuation;
 
         // Cook-Torrance BRDF
         float NDF = distributionGGX(N, H, roughness);   
@@ -178,9 +206,9 @@ void main() {
     }   
 
     // replace this ambient lighting with environment lighting).
-    vec3 ambient = vec3(0.035) * albedo * ao;
+    vec3 ambient = vec3(0.095) * albedo * ao;
 
-    vec3 color = ambient + Lo;
+    vec3 color = ambient + emission + Lo;
 
     // HDR tonemapping
     color = color / (color + vec3(1.0));

@@ -8,26 +8,21 @@ Take a look at some [screenshots](#screenshots)
 
 ## Features
 
-* Trackball and first person shooter camera
-* Polytopes and groups of polytopes
-* Dynamic polytopes
-* Polytope face culling
-* Blending
-* Anti aliasing (MSAA)
-* Textures
-* Load 3D models and textures from files: .obj, .dae, ...
-* Skybox (cubemap)
-* FrameCapturer (create a texture of the scene)
-* Blinn-Phong lighting
-* Physically Based Rendering (PBR)
-* Emission
-* Shadow Mapping (percentage closer filtering)
-* Normal Mapping
-* Gamma correction
-* HDR
-* Mouse ray casting
-* Object selection
-* Scene Graph
+* **Trackball and first person shooter camera**
+* **Polytopes and groups of polytopes**
+* **Anti aliasing (MSAA)**
+* **Textures**
+* **Load 3D models and textures from files**
+* **Skybox (cubemap)**
+* **FrameCapturer:** create a texture of the scene
+* **Blinn-Phong lighting:** Ambient, Diffuse, Specular, Emission
+* **Physically Based Rendering (PBR):** Albedo, Metallic, Normal, Roughness, Ambient Occlusion, Emission
+* **Shadow Mapping:** percentage closer filtering
+* **Normal Mapping**
+* **Gamma correction**
+* **HDR**
+* **Mouse ray casting:** object selection
+* **Scene Graph**
 
 ### Scene Graph
 

@@ -112,41 +112,52 @@ int main() {
 
     // Lighting
     DirectionalLight light(glm::vec3(15));
-    light.setColor(glm::vec3(0.5, 0.5, 1));
+    light.setColor(glm::vec3(0.35, 0.35, 1));
     renderer->addLight(light);
 
     DirectionalLight light2(glm::vec3(-15, 15, 15));
-    light2.setColor(glm::vec3(0.5, 1.0, 0.5));
+    light2.setColor(glm::vec3(1.0, 0.05, 0.05));
     renderer->addLight(light2);
 
     DirectionalLight light3(glm::vec3(0, 15, -1));
-    light3.setColor(glm::vec3(1.0, 0.5, 0.5));
+    light3.setColor(glm::vec3(0.45, 1.0, 0.45));
     renderer->addLight(light3);
 
     DirectionalLight light4(glm::vec3(0, -15, 0));
     light4.setColor(glm::vec3(1.0));
     renderer->addLight(light4);
 
+    DirectionalLight light5(glm::vec3(15, 0, 0));
+    light5.setColor(glm::vec3(1.0, 0.8f, 0.6f));
+    renderer->addLight(light5);
+
+    DirectionalLight light6(glm::vec3(8, 0, 0));
+    light6.setColor(glm::vec3(1.0, 0.8f, 0.6f));
+    renderer->addLight(light6);
+
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
     TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera.setPhi(M_PI / 3);
-    camera.setTheta(M_PI / 4);
+    camera.setPhi(M_PI / 3 - 0.1);
+    camera.setTheta(M_PI / 4 - 0.1);
     camera.zoom(-6.5);
     renderer->setCamera(camera);
 
     // Polytope
     Polytope::Ptr sphere = createSphere();
     sphere->setFaceCulling(Polytope::FaceCulling::FRONT);
-    sphere->translate(glm::vec3(-1.0, 0.0, 0.0));
+    sphere->translate(glm::vec3(-1.0, 1.0, 0.0));
 
     Polytope::Ptr sphere2 = createSphere();
     sphere2->setFaceCulling(Polytope::FaceCulling::FRONT);
-    sphere2->translate(glm::vec3(-3.0, 0.0, 0.0));
+    sphere2->translate(glm::vec3(-3.0, 1.0, 0.0));
+
+    PBRMaterial::Ptr material2 = PBRMaterial::New(glm::vec3(0, 0, 0), 0, 0, 1.0); // Add ambient occlusion
+    sphere2->setMaterial(material2);
 
     Polytope::Ptr sphere3 = createSphere();
     sphere3->setFaceCulling(Polytope::FaceCulling::FRONT);
-    sphere3->translate(glm::vec3(1.0, 0.0, 0.0));
+    sphere3->translate(glm::vec3(1.0, 1.0, 0.0));
 
     // PBR materials
     Texture::Ptr textureAlbedo = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_basecolor.png", Texture::Type::TextureAlbedo);
@@ -154,11 +165,10 @@ int main() {
     Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/Srustediron2_normal.png", Texture::Type::TextureNormal);
     Texture::Ptr textureRoughness = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_roughness.png", Texture::Type::TextureRoughness);
 
-    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Desktop/model/Moss002_2K-JPG/Moss002_2K_Color.jpg", Texture::Type::TextureAlbedo);
-    Texture::Ptr textureMetallic2 = Texture::New("/home/morcillosanz/Desktop/model/Moss002_2K-JPG/Moss002_2K_Metalness.jpg", Texture::Type::TextureMetallic);
-    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Desktop/model/Moss002_2K-JPG/Moss002_2K_NormalGL.jpg", Texture::Type::TextureNormal);
-    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/Moss002_2K-JPG/Moss002_2K_Roughness.jpg", Texture::Type::TextureRoughness);
-    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/Moss002_2K-JPG/Moss002_2K_AmbientOcclusion.jpg", Texture::Type::TextureAmbientOcclusion);
+    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_Color.jpg", Texture::Type::TextureAlbedo);
+    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_NormalDx.jpg", Texture::Type::TextureNormal);
+    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_Roughness.jpg", Texture::Type::TextureRoughness);
+    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_AmbientOcclusion.jpg", Texture::Type::TextureAmbientOcclusion);
 
     Texture::Ptr textureAlbedo3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_albedo.png", Texture::Type::TextureAlbedo);
     Texture::Ptr textureMetallic3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_metallic.png", Texture::Type::TextureMetallic);
@@ -171,10 +181,9 @@ int main() {
     sphere->addTexture(textureRoughness);
 
     sphere2->addTexture(textureAlbedo2);
-    sphere2->addTexture(textureMetallic2);
+    sphere2->addTexture(textureAmbientOcclusion2);
     sphere2->addTexture(textureNormal2);
     sphere2->addTexture(textureRoughness2);
-    sphere2->addTexture(textureAmbientOcclusion2);
 
     sphere3->addTexture(textureAlbedo3);
     sphere3->addTexture(textureMetallic3);
@@ -187,14 +196,14 @@ int main() {
     float c = -20; float d = -c;
     float dx = 0.5f; float dz = dx;
     while(a <= b) {
-        gridVertices.push_back(Vec3f(a, 0, c, 1.0, 1.0, 1.0));
-        gridVertices.push_back(Vec3f(a, 0, d, 1.0, 1.0, 1.0));
+        gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
+        gridVertices.push_back(Vec3f(a, 0, d, 0.3, 0.3, 0.3));
         a += dx;
     }
     a = -b;
     while(c <= d) {
-        gridVertices.push_back(Vec3f(a, 0, c, 1.0, 1.0, 1.0));
-        gridVertices.push_back(Vec3f(b, 0, c, 1.0, 1.0, 1.0));
+        gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
+        gridVertices.push_back(Vec3f(b, 0, c, 0.3, 0.3, 0.3));
         c += dz;
     }
     Polytope::Ptr gridPolytope = Polytope::New(gridVertices);
@@ -211,6 +220,8 @@ int main() {
     group->add(sphere);
     group->add(sphere2);
     group->add(sphere3);
+
+    group->translate(glm::vec3(0.75, 0, 0.5));
     
     // Scene
     Scene::Ptr scene = Scene::New();

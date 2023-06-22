@@ -22,9 +22,7 @@ struct Light {
     float linear;
     float quadratic;
 
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
+   bool pointLight;
 };
 
 struct MaterialMaps {
@@ -50,8 +48,6 @@ uniform Material material;
 
 uniform Light lights[MAX_LIGHTS];
 uniform int nLights;
-uniform bool isPointLight;
-uniform bool isSpotLight;
 
 uniform MaterialMaps materialMaps;
 uniform bool hasDiffuse;
@@ -181,22 +177,13 @@ vec4 getLightColor(Light light) {
    // Calculate emission
    vec4 emission = calculateEmission();
 
-   // Calculate attenuation (Point Light and Spot Light)
-   if(isPointLight || isSpotLight) {
+   // Calculate attenuation
+   if(light.pointLight) {
        float distance = length(light.position - FragPos);
        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
        ambient  *= attenuation;
        diffuse  *= attenuation;
        specular *= attenuation;
-   }
-
-   // Calculate cut off (Spot Light)
-   if(isSpotLight) {
-      float theta = dot(lightDir, normalize(-light.direction));
-      float epsilon = (light.cutOff - light.outerCutOff);
-      float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-      diffuse  *= intensity;
-      specular *= intensity;
    }
 
    // Calculate shadow

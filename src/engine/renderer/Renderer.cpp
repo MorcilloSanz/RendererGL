@@ -160,7 +160,7 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
 
 void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
 
-    unsigned int nAlbedoMaps = 0, nMetallicMaps = 0, nRoughnessMap = 0, nNormalMaps = 0;
+    unsigned int nAlbedoMaps = 0, nMetallicMaps = 0, nRoughnessMap = 0, nNormalMaps = 0, nAmbientOcclusionMaps = 0, nEmissionMaps = 0;
 
     for(auto& texture : polytope->getTextures()) {
 
@@ -187,6 +187,16 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
                 shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
                 nNormalMaps ++;
             break;
+
+            case Texture::Type::TextureAmbientOcclusion:
+                shaderProgram->uniformInt("materialMaps.ao", texture->getID() - 1);
+                nAmbientOcclusionMaps ++;
+            break;
+
+            case Texture::Type::TextureEmission:
+                shaderProgram->uniformInt("materialMaps.emission", texture->getID() - 1);
+                nEmissionMaps ++;
+            break;
         }
     }
 
@@ -194,6 +204,8 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
     shaderProgram->uniformInt("hasMetallic", nMetallicMaps > 0);
     shaderProgram->uniformInt("hasNormal", nNormalMaps > 0);
     shaderProgram->uniformInt("hasRoughness", nRoughnessMap > 0);
+    shaderProgram->uniformInt("hasAmbientOcclusion", nAmbientOcclusionMaps > 0);
+    shaderProgram->uniformInt("hasEmission", nEmissionMaps > 0);
 }
 
 void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
@@ -227,23 +239,15 @@ void Renderer::lightShaderUniforms() {
         shaderProgramLighting->uniformVec3(lightUniform + ".diffuse", lights[i]->getDiffuse());
         shaderProgramLighting->uniformVec3(lightUniform + ".specular", lights[i]->getSpecular());
 
-        // Point Light (Spot Light is also a Point Light)
+        // Point Light
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-            shaderProgramLighting->uniformInt("isPointLight", true);
+            shaderProgramLighting->uniformInt(lightUniform + ".pointLight", true);
             shaderProgramLighting->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
             shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
             shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
-        }else shaderProgramLighting->uniformInt("isPointLight", false);
+        }else shaderProgramLighting->uniformInt(lightUniform + ".pointLight", false);
 
-        // Spot Light
-        if(instanceof<SpotLight>(lights[i])) {
-            SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
-            shaderProgramLighting->uniformInt("isSpotLight", true);
-            shaderProgramLighting->uniformVec3(lightUniform + ".direction", spotLight->getDirection());
-            shaderProgramLighting->uniformFloat(lightUniform + ".cutOff", spotLight->getCutOff());
-            shaderProgramLighting->uniformFloat(lightUniform + ".outerCutOff", spotLight->getOuterCutOff());
-        }else shaderProgramLighting->uniformInt("isSpotLight", false);
     }
     
     shaderProgramLighting->uniformInt("blinn", Light::blinn);
@@ -265,7 +269,7 @@ void Renderer::pbrShaderUniforms() {
         shaderProgramPBR->uniformVec3(lightUniform + ".color", lights[i]->getColor() * intensity);
 
         // Point
-        shaderProgramPBR->uniformInt("isPointLight", instanceof<PointLight>(lights[i]));
+        shaderProgramPBR->uniformInt(lightUniform + ".pointLight", instanceof<PointLight>(lights[i]));
     }
     
     shaderProgramPBR->uniformVec3("viewPos", camera->getEye());

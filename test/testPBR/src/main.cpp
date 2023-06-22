@@ -112,7 +112,7 @@ int main() {
 
     // Lighting
     DirectionalLight light(glm::vec3(15));
-    light.setColor(glm::vec3(0.35, 0.35, 1));
+    light.setColor(glm::vec3(0.25, 0.25, 1));
     renderer->addLight(light);
 
     DirectionalLight light2(glm::vec3(-15, 15, 15));
@@ -146,18 +146,18 @@ int main() {
     // Polytope
     Polytope::Ptr sphere = createSphere();
     sphere->setFaceCulling(Polytope::FaceCulling::FRONT);
-    sphere->translate(glm::vec3(-1.0, 1.0, 0.0));
+    sphere->translate(glm::vec3(-3.0, 1.0, 0.0));
 
     Polytope::Ptr sphere2 = createSphere();
     sphere2->setFaceCulling(Polytope::FaceCulling::FRONT);
-    sphere2->translate(glm::vec3(-3.0, 1.0, 0.0));
-
-    PBRMaterial::Ptr material2 = PBRMaterial::New(glm::vec3(0, 0, 0), 0, 0, 1.0); // Add ambient occlusion
-    sphere2->setMaterial(material2);
+    sphere2->translate(glm::vec3(-1.0, 1.0, 0.0));
 
     Polytope::Ptr sphere3 = createSphere();
     sphere3->setFaceCulling(Polytope::FaceCulling::FRONT);
     sphere3->translate(glm::vec3(1.0, 1.0, 0.0));
+
+    PBRMaterial::Ptr aoMaterial = PBRMaterial::New(glm::vec3(0, 0, 0), 0, 0, 2.5);
+    sphere3->setMaterial(aoMaterial);
 
     // PBR materials
     Texture::Ptr textureAlbedo = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_basecolor.png", Texture::Type::TextureAlbedo);
@@ -165,10 +165,11 @@ int main() {
     Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/Srustediron2_normal.png", Texture::Type::TextureNormal);
     Texture::Ptr textureRoughness = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_roughness.png", Texture::Type::TextureRoughness);
 
-    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_Color.jpg", Texture::Type::TextureAlbedo);
-    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_NormalDx.jpg", Texture::Type::TextureNormal);
-    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_Roughness.jpg", Texture::Type::TextureRoughness);
-    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/PaintedPlaster016_2K-JPG/PaintedPlaster016_2K_AmbientOcclusion.jpg", Texture::Type::TextureAmbientOcclusion);
+    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_albedo.png", Texture::Type::TextureAlbedo);
+    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_normal-dx.png", Texture::Type::TextureNormal);
+    Texture::Ptr textureMetallic2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_metallic.png", Texture::Type::TextureMetallic);
+    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_roughness.png", Texture::Type::TextureRoughness);
+    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_ao.png", Texture::Type::TextureAmbientOcclusion);
 
     Texture::Ptr textureAlbedo3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_albedo.png", Texture::Type::TextureAlbedo);
     Texture::Ptr textureMetallic3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_metallic.png", Texture::Type::TextureMetallic);

@@ -206,7 +206,7 @@ void main() {
     }   
 
     // replace this ambient lighting with environment lighting).
-    vec3 ambient = vec3(0.095) * albedo * ao;
+    vec3 ambient = vec3(0.03) * albedo * ao;
 
     vec3 color = ambient + emission + Lo;
 

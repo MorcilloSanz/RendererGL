@@ -351,7 +351,7 @@ int main(void) {
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);
 
-    // Init textureRenderer
+    // Init FrameCapturer
     frameCapturer = FrameCapturer::New(WIDTH, HEIGHT);
 
     // Get First Vertex from cubePolytopeIndices

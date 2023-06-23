@@ -94,6 +94,7 @@ Polytope::Ptr createSphere(int radius = 1, int latitudes = 64, int longitudes = 
     sphere = Polytope::New(vert, indices);
     return sphere;
 }
+
 int main() {
 
     // Create window

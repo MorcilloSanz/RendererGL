@@ -14,6 +14,11 @@ struct Material {
 struct Light {
     vec3 position;
     vec3 color;
+
+    float constant;
+    float linear;
+    float quadratic;
+
     bool pointLight;
 };
 
@@ -172,11 +177,14 @@ void main() {
         // calculate per-light radiance
         vec3 L = normalize(lights[i].position - FragPos);
         vec3 H = normalize(V + L);
-        float distance = length(lights[i].position - FragPos);
-        float attenuation = 1.0 / (distance * distance);
-
+        
         vec3 radiance = lights[i].color;
-        if(lights[i].pointLight) radiance *= attenuation;
+
+        if(lights[i].pointLight) {
+            float distance = length(lights[i].position - FragPos);
+            float attenuation = 1.0 / (lights[i].constant + lights[i].linear * distance + lights[i].quadratic * (distance * distance));
+            radiance *= attenuation;
+        }
 
         // Cook-Torrance BRDF
         float NDF = distributionGGX(N, H, roughness);   

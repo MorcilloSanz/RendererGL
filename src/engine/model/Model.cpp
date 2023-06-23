@@ -1,11 +1,12 @@
 #include "Model.h"
 
-Model::Model(const std::string& _path, bool _gammaCorrection) 
-    : path(_path), gammaCorrection(_gammaCorrection) {
+Model::Model(const std::string& _path, bool _pbr) 
+    : path(_path), pbr(_pbr) {
     loadModel();
 }
 
 void Model::loadModel() {
+    
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -21,9 +22,9 @@ void Model::loadModel() {
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene) {
+
     // process each mesh located at the current nodeDynamicPolytope::New
-    for(unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
+    for(unsigned int i = 0; i < node->mNumMeshes; i++) {
         // the node object only contains indices to index the actual objects in the scene. 
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -41,8 +42,7 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Texture::Ptr> textures;   
 
     // walk through each of the mesh's vertices
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vec3f vertex;
         glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
         // positions
@@ -60,15 +60,18 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         }
         // texture coordinates
         if(mesh->mTextureCoords[0])  {
+
             glm::vec2 vec;
             // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
             // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
             vertex.tx = vec.x = mesh->mTextureCoords[0][i].x; 
             vertex.ty = vec.y = mesh->mTextureCoords[0][i].y;
+
             // tangent
             vertex.tanx = vector.x = mesh->mTangents[i].x;
             vertex.tany = vector.y = mesh->mTangents[i].y;
             vertex.tanz = vector.z = mesh->mTangents[i].z;
+
             // bitangent
             vertex.bitanx = vector.x = mesh->mBitangents[i].x;
             vertex.bitany = vector.y = mesh->mBitangents[i].y;
@@ -85,27 +88,44 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         // retrieve all indices of the face and store them in the indices vector
         for(unsigned int j = 0; j < face.mNumIndices; j++) indices.push_back(face.mIndices[j]);        
     }
+
     // process materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
-    // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-    // Same applies to other texture as the following list summarizes:
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
 
-    // 1. diffuse maps
-    std::vector<Texture::Ptr> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<Texture::Ptr>  specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    std::vector<Texture::Ptr>  normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    std::vector<Texture::Ptr>  heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    // Blinn-Phong materials
+    if(!pbr) {
+        std::vector<Texture::Ptr> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+        std::vector<Texture::Ptr>  specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+        std::vector<Texture::Ptr>  normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
+        std::vector<Texture::Ptr>  heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    }
+    // PBR materials
+    else {
+        std::vector<Texture::Ptr> pbrAlbedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, "pbr_texture_albedo");
+        textures.insert(textures.end(), pbrAlbedoMaps.begin(), pbrAlbedoMaps.end());
+
+        std::vector<Texture::Ptr> pbrMetalnessMaps = loadMaterialTextures(material, aiTextureType_METALNESS, "pbr_texture_metallic");
+        textures.insert(textures.end(), pbrMetalnessMaps.begin(), pbrMetalnessMaps.end());
+
+        std::vector<Texture::Ptr> pbrNormalMaps = loadMaterialTextures(material, aiTextureType_NORMAL_CAMERA, "pbr_texture_normal");
+        textures.insert(textures.end(), pbrNormalMaps.begin(), pbrNormalMaps.end());
+
+        std::vector<Texture::Ptr> pbrEmissionMaps = loadMaterialTextures(material, aiTextureType_EMISSION_COLOR, "pbr_texture_emission");
+        textures.insert(textures.end(), pbrEmissionMaps.begin(), pbrEmissionMaps.end());
+
+        std::vector<Texture::Ptr> pbrRoughnessMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE_ROUGHNESS, "pbr_texture_roughness");
+        textures.insert(textures.end(), pbrRoughnessMaps.begin(), pbrRoughnessMaps.end());
+
+        std::vector<Texture::Ptr> pbrAmbientOcclusion = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, "pbr_texture_ao");
+        textures.insert(textures.end(), pbrAmbientOcclusion.begin(), pbrAmbientOcclusion.end());
+    }
 
     // return a mesh object created from the extracted mesh data
     Polytope::Ptr polytope = Polytope::New(vertices, indices, false);
@@ -114,18 +134,34 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 }
 
 std::vector<Texture::Ptr> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string& typeName) {
+
     std::vector<Texture::Ptr> textures;
+
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+
         aiString str;
-        mat->GetTexture(type, i, &str);
+        mat->GetTexture(type, 0, &str);
 
         std::string texturePath = directory + "/" + str.C_Str();
         Texture::Ptr texture = Texture::New(texturePath, Texture::Type::None, false);
-        if(typeName == "texture_ambient") texture->setType(Texture::Type::TextureAmbient);
-        else if(typeName == "texture_diffuse") texture->setType(Texture::Type::TextureDiffuse);
-        else if(typeName == "texture_specular") texture->setType(Texture::Type::TextureSpecular);
-        else if(typeName == "texture_height") texture->setType(Texture::Type::TextureHeight);
-        else if(typeName == "texture_normal") texture->setType(Texture::Type::TextureNormal);
+
+        // Phong lighting
+        if(!pbr) {
+            if(typeName == "texture_ambient") texture->setType(Texture::Type::TextureAmbient);
+            else if(typeName == "texture_diffuse") texture->setType(Texture::Type::TextureDiffuse);
+            else if(typeName == "texture_specular") texture->setType(Texture::Type::TextureSpecular);
+            else if(typeName == "texture_height") texture->setType(Texture::Type::TextureHeight);
+            else if(typeName == "texture_normal") texture->setType(Texture::Type::TextureNormal);
+        }
+        // PBR
+        else {
+            if(typeName == "pbr_texture_albedo") texture->setType(Texture::Type::TextureAlbedo);
+            else if(typeName == "pbr_texture_metallic") texture->setType(Texture::Type::TextureMetallic);
+            else if(typeName == "pbr_texture_normal") texture->setType(Texture::Type::TextureNormal);
+            else if(typeName == "pbr_texture_roughness") texture->setType(Texture::Type::TextureRoughness);
+            else if(typeName == "pbr_texture_ao") texture->setType(Texture::Type::TextureAmbientOcclusion);
+            else if(typeName == "pbr_texture_emission") texture->setType(Texture::Type::TextureEmission);
+        }
 
         bool contained = false;
         for(auto& tex : textures) {

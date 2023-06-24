@@ -114,8 +114,8 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         std::vector<Texture::Ptr> pbrMetalnessMaps = loadMaterialTextures(material, aiTextureType_METALNESS, "pbr_texture_metallic");
         textures.insert(textures.end(), pbrMetalnessMaps.begin(), pbrMetalnessMaps.end());
 
-        std::vector<Texture::Ptr> pbrNormalMaps = loadMaterialTextures(material, aiTextureType_NORMAL_CAMERA, "pbr_texture_normal");
-        textures.insert(textures.end(), pbrNormalMaps.begin(), pbrNormalMaps.end());
+        std::vector<Texture::Ptr>  normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "pbr_texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
         std::vector<Texture::Ptr> pbrEmissionMaps = loadMaterialTextures(material, aiTextureType_EMISSION_COLOR, "pbr_texture_emission");
         textures.insert(textures.end(), pbrEmissionMaps.begin(), pbrEmissionMaps.end());
@@ -140,7 +140,7 @@ std::vector<Texture::Ptr> Model::loadMaterialTextures(aiMaterial *mat, aiTexture
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 
         aiString str;
-        mat->GetTexture(type, 0, &str);
+        mat->GetTexture(type, i, &str);
 
         std::string texturePath = directory + "/" + str.C_Str();
         Texture::Ptr texture = Texture::New(texturePath, Texture::Type::None, false);

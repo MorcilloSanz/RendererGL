@@ -45,17 +45,17 @@ int main() {
     renderer->enablePBR();
 
     // Lighting
-    DirectionalLight light(glm::vec3(3, 5, 0));
+    DirectionalLight light(glm::vec3(13, 15, 3));
     light.setColor(glm::vec3(0.25, 0.25, 1));
     renderer->addLight(light);
 
-    DirectionalLight light2(glm::vec3(-3, 5, 0));
+    DirectionalLight light2(glm::vec3(-13, 15, 3));
     light2.setColor(glm::vec3(1, 0.25, 0.25));
     renderer->addLight(light2);
 
-    DirectionalLight light3(glm::vec3(1));
-    light3.setColor(glm::vec3(1, 0.8, 0.5));
-    renderer->addLight(light3);
+    //DirectionalLight light3(glm::vec3(13));
+    //light3.setColor(glm::vec3(1, 0.8, 0.5));
+    //renderer->addLight(light3);
 
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
@@ -90,7 +90,8 @@ int main() {
     groupGrid->add(gridPolytope);
 
     // Model 
-    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/pbr_kabuto_samurai_helmet/scene.gltf", true);
+    //Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/pbr_kabuto_samurai_helmet/scene.gltf", true);
+    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/pbr-kabuto-samurai-helmet/source/HelmetPresentationLightMap.fbx.fbx", true);
     model->scale(glm::vec3(0.2));
     model->translate(glm::vec3(0, 10, 0));
 
@@ -107,7 +108,7 @@ int main() {
     // Main loop
     while (!glfwWindowShouldClose(window)) {
 
-        renderer->setBackgroundColor(0.1, 0.1, 0.1);
+        frameCapturer->setBackgroundColor(0.1, 0.1, 0.1);
 
         // Clear
         renderer->clear();

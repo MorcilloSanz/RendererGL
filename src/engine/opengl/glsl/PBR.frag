@@ -224,5 +224,13 @@ void main() {
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-    FragColor = vec4(color, 1.0);
+    // Apply transparency
+    float transparency = 1.0;
+    if(hasAlbedo) {
+        vec4 textureAlbedo = texture(materialMaps.albedo, TexCoord);
+        transparency = textureAlbedo.a;
+    }
+
+    // Color
+    FragColor = vec4(color, transparency);
 }

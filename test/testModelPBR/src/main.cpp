@@ -53,9 +53,9 @@ int main() {
     light2.setColor(glm::vec3(1, 0.25, 0.25));
     renderer->addLight(light2);
 
-    //DirectionalLight light3(glm::vec3(13));
-    //light3.setColor(glm::vec3(1, 0.8, 0.5));
-    //renderer->addLight(light3);
+    DirectionalLight light3(glm::vec3(-13, 13, 13));
+    light3.setColor(glm::vec3(1));
+    renderer->addLight(light3);
 
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
@@ -65,10 +65,12 @@ int main() {
     renderer->setCamera(camera);
 
     // Grid polytope
-    std::vector<Vec3f> gridVertices = {};
     float a = -20; float b = -a;
     float c = -20; float d = -c;
+
     float dx = 0.5f; float dz = dx;
+
+    std::vector<Vec3f> gridVertices = {};
     while(a <= b) {
         gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
         gridVertices.push_back(Vec3f(a, 0, d, 0.3, 0.3, 0.3));
@@ -90,10 +92,16 @@ int main() {
     groupGrid->add(gridPolytope);
 
     // Model 
-    //Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/pbr_kabuto_samurai_helmet/scene.gltf", true);
-    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/pbr-kabuto-samurai-helmet/source/HelmetPresentationLightMap.fbx.fbx", true);
-    model->scale(glm::vec3(0.2));
-    model->translate(glm::vec3(0, 10, 0));
+    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/hand_sculpture/scene.gltf", true);
+    Polytope::Ptr polytope = model->getPolytopes()[0];
+
+    Texture::Ptr roughness = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_roughness.jpg", Texture::Type::TextureRoughness);
+    Texture::Ptr normal = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_normal.jpg", Texture::Type::TextureNormal);
+    Texture::Ptr ao = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_AO.jpg", Texture::Type::TextureAmbientOcclusion);
+
+    polytope->addTexture(roughness);
+    polytope->addTexture(normal);
+    polytope->addTexture(ao);
 
     // Scene
     Scene::Ptr scene = Scene::New();

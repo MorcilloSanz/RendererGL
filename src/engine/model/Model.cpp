@@ -10,13 +10,16 @@ void Model::loadModel() {
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    
     // check for errors
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
         return;
     }
+    
     // retrieve the directory path of the filepath
     directory = path.substr(0, path.find_last_of('/'));
+    
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 }
@@ -108,6 +111,7 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     }
     // PBR materials
     else {
+
         std::vector<Texture::Ptr> pbrAlbedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, "pbr_texture_albedo");
         textures.insert(textures.end(), pbrAlbedoMaps.begin(), pbrAlbedoMaps.end());
 
@@ -126,6 +130,42 @@ Polytope::Ptr Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         std::vector<Texture::Ptr> pbrAmbientOcclusion = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, "pbr_texture_ao");
         textures.insert(textures.end(), pbrAmbientOcclusion.begin(), pbrAmbientOcclusion.end());
     }
+
+
+    // Test
+    auto test = [&](const std::string& name, aiTextureType type) {
+
+        aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];    
+
+        for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+            aiString str;
+            mat->GetTexture(type, i, &str);
+            std::string texturePath = directory + "/" + str.C_Str();
+            std::cout << "Type: " << name << " at: " << texturePath << std::endl;
+        }
+    };
+
+    /*
+    test("none", aiTextureType_NONE);
+    test("diffuse", aiTextureType_DIFFUSE);
+    test("specular", aiTextureType_SPECULAR);
+    test("ambient", aiTextureType_AMBIENT);
+    test("emissive", aiTextureType_EMISSIVE);
+    test("height", aiTextureType_HEIGHT);
+    test("normals", aiTextureType_NORMALS);
+    test("shininess", aiTextureType_SHININESS);
+    test("opacity", aiTextureType_OPACITY);
+    test("displacement", aiTextureType_DISPLACEMENT);
+    test("lightmap", aiTextureType_LIGHTMAP);
+    test("reflection", aiTextureType_REFLECTION);
+    test("base color", aiTextureType_BASE_COLOR);
+    test("normal camera", aiTextureType_NORMAL_CAMERA);
+    test("emission color", aiTextureType_EMISSION_COLOR);
+    test("metalness", aiTextureType_METALNESS);
+    test("diffuse roughness", aiTextureType_DIFFUSE_ROUGHNESS);
+    test("ambient occlusion", aiTextureType_AMBIENT_OCCLUSION);
+    test("unknown", aiTextureType_UNKNOWN);
+    */
 
     // return a mesh object created from the extracted mesh data
     Polytope::Ptr polytope = Polytope::New(vertices, indices, false);

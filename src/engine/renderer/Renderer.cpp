@@ -268,8 +268,14 @@ void Renderer::pbrShaderUniforms() {
         shaderProgramPBR->uniformVec3(lightUniform + ".position", lights[i]->getPosition());
         shaderProgramPBR->uniformVec3(lightUniform + ".color", lights[i]->getColor() * intensity);
 
-        // Point
-        shaderProgramPBR->uniformInt(lightUniform + ".pointLight", instanceof<PointLight>(lights[i]));
+        // Point Light
+        if(instanceof<PointLight>(lights[i])) {
+            PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+            shaderProgramLighting->uniformInt(lightUniform + ".pointLight", true);
+            shaderProgramLighting->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
+            shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
+            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
+        }else shaderProgramLighting->uniformInt(lightUniform + ".pointLight", false);
     }
     
     shaderProgramPBR->uniformVec3("viewPos", camera->getEye());

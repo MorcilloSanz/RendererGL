@@ -53,7 +53,6 @@ set(HEADERS
         lighting/Light.h
         lighting/DirectionalLight.h
         lighting/PointLight.h
-        lighting/SpotLight.h
         texture/vendor/stb_image.h
         texture/Texture.h
         texture/CubeMapTexture.h
@@ -85,7 +84,6 @@ set(SOURCES
         lighting/Light.cpp
         lighting/DirectionalLight.cpp
         lighting/PointLight.cpp
-        lighting/SpotLight.cpp
         texture/Texture.cpp
         texture/CubeMapTexture.cpp
         texture/DepthTexture.cpp

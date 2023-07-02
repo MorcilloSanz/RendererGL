@@ -1,6 +1,6 @@
 # RendererGL
 
-RendererGL is a 3D renderer written in C++ and OpenGL. The main objective of this project is to create a framework that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and materials.
+RendererGL is a basic 3D renderer written in C++ and OpenGL that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and materials.
 
 > **Warning** This project is still under development
 
@@ -9,7 +9,6 @@ Take a look at some [screenshots](#screenshots)
 ## Features
 
 * **Trackball and first person shooter camera**
-* **Polytopes and groups of polytopes**
 * **Anti aliasing (MSAA)**
 * **Textures**
 * **Load 3D models and textures from files**
@@ -22,11 +21,10 @@ Take a look at some [screenshots](#screenshots)
 * **Gamma correction**
 * **HDR**
 * **Mouse ray casting:** object selection
-* **Scene Graph**
 
 ### Scene Graph
 
-A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data structure commonly used by vector-based graphics editing applications and modern computer games, which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure:
+A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data structure which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure:
 
 * **Polytope:** A set of vertices and indices (optional) that defines a shape
 * **Group:** A set of polytopes
@@ -36,7 +34,7 @@ A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data str
 
 *Take a look at the example below*
 
-## Example: simple rotating cube
+## Example: rotating cube
 
 ```cpp
 #include <iostream>
@@ -80,7 +78,7 @@ int main() {
         return -1;
     }
 
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Perspective cube example", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Cube example", NULL, NULL);
     
     if (!window) glfwTerminate();
 
@@ -165,6 +163,11 @@ RendererGL is an open source project under the MIT licence. Feel free to fork it
 * [ASSIMP](https://github.com/assimp/assimp) for loading 3D models from files (*.obj*, *.dae*, *...*)
 * [STB](https://github.com/nothings/stb) for loading images from files (*.png*, *.tga*, *.jpg*, *...*)
 
+Optional dependencies used in tests:
+
+* [GLFW](https://github.com/glfw/glfw) for creating a window with an OpenGL context
+* [ImGui](https://github.com/ocornut/imgui) for GUI
+
 ## References
 
 Dealing with OpenGL was much easier thanks to:
@@ -172,3 +175,4 @@ Dealing with OpenGL was much easier thanks to:
 * [Learn OpenGL](https://learnopengl.com/)
 * [The Cherno](https://www.youtube.com/@TheCherno)
 * [ThinMatrix](https://www.youtube.com/@ThinMatrix)
+* [Physically Based Rendering: From Theory to Implementation](https://www.pbr-book.org/)

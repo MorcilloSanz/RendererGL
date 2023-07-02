@@ -14,7 +14,6 @@
 #include "engine/lighting/Light.h"
 #include "engine/lighting/DirectionalLight.h"
 #include "engine/lighting/PointLight.h"
-#include "engine/lighting/SpotLight.h"
 
 #include "engine/lighting/PBRMaterial.h"
 

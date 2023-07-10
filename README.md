@@ -144,6 +144,10 @@ int main() {
 
 ![](img/emission.png)
 
+**Point Cloud**
+
+![](img/pointcloud.png)
+
 **Call of Duty Ghost dog**
 
 ![](img/2.png)

@@ -150,10 +150,6 @@ int main() {
 
 [Gabriel archangel by greypixel geometrics](https://skfb.ly/6GvWu)
 
-**Call of Duty Ghost dog**
-
-![](img/2.png)
-
 ## Contribution
 
 RendererGL is an open source project under the MIT licence. Feel free to fork it and contribute

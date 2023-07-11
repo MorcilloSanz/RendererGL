@@ -123,14 +123,14 @@ int main() {
 
     std::vector<Vec3f> gridVertices = {};
     while(a <= b) {
-        gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
-        gridVertices.push_back(Vec3f(a, 0, d, 0.3, 0.3, 0.3));
+        gridVertices.push_back(Vec3f(a, 0, c, 0.2, 0.2, 0.2));
+        gridVertices.push_back(Vec3f(a, 0, d, 0.2, 0.2, 0.2));
         a += dx;
     }
     a = -b;
     while(c <= d) {
-        gridVertices.push_back(Vec3f(a, 0, c, 0.3, 0.3, 0.3));
-        gridVertices.push_back(Vec3f(b, 0, c, 0.3, 0.3, 0.3));
+        gridVertices.push_back(Vec3f(a, 0, c, 0.2, 0.2, 0.2));
+        gridVertices.push_back(Vec3f(b, 0, c, 0.2, 0.2, 0.2));
         c += dz;
     }
     Polytope::Ptr gridPolytope = Polytope::New(gridVertices);
@@ -140,12 +140,13 @@ int main() {
     groupGrid->add(gridPolytope);
 
     // Point Cloud
-    Polytope::Ptr pointCloud = pointCloudPolytope("/home/morcillosanz/Desktop/model/cellsmooth25m-Subsampled.asc");
-    //pointCloud->translate(glm::vec3(0, 1.3, 0));
+    Polytope::Ptr pointCloud = pointCloudPolytope("/home/morcillosanz/Desktop/model/Gabriel4Cloud.asc");
+    pointCloud->scale(glm::vec3(0.5));
+    pointCloud->translate(glm::vec3(0, -35, 0));
     pointCloud->rotate(-90, glm::vec3(1, 0, 0));
     
     Group::Ptr pointCloudGroup = Group::New(GL_POINTS);
-    pointCloudGroup->setPointSize(2.0f);
+    //pointCloudGroup->setPointSize(2.0f);
     pointCloudGroup->add(pointCloud);;
 
     // Scene

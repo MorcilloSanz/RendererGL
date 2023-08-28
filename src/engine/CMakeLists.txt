@@ -60,6 +60,11 @@ set(HEADERS
         texture/ColorBufferTexture.h
         texture/MultiSampleTexture.h
         model/Model.h
+        shapes/Shape.h
+        shapes/Cube.h
+        shapes/Sphere.h
+        shapes/Cylinder.h
+        shapes/Cone.h
 )
 
 # CPP files
@@ -90,6 +95,11 @@ set(SOURCES
         texture/ColorBufferTexture.cpp
         texture/MultiSampleTexture.cpp
         model/Model.cpp
+        shapes/Shape.cpp
+        shapes/Cube.cpp
+        shapes/Sphere.cpp
+        shapes/Cylinder.cpp
+        shapes/Cone.cpp
 )
 
 # Compile files

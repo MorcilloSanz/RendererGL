@@ -63,8 +63,6 @@ set(HEADERS
         shapes/Shape.h
         shapes/Cube.h
         shapes/Sphere.h
-        shapes/Cylinder.h
-        shapes/Cone.h
 )
 
 # CPP files
@@ -98,8 +96,6 @@ set(SOURCES
         shapes/Shape.cpp
         shapes/Cube.cpp
         shapes/Sphere.cpp
-        shapes/Cylinder.cpp
-        shapes/Cone.cpp
 )
 
 # Compile files

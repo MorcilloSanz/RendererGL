@@ -20,8 +20,19 @@ Polytope::Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indi
     initPolytope(vertices, indices);
 }
 
-Polytope::~Polytope() {
+Polytope::Polytope(const Polytope& polytope) 
+    : vertexArray(polytope.vertexArray), vertexBuffer(polytope.vertexBuffer), textures(polytope.textures),
+    vertexLength(polytope.vertexLength), indicesLength(polytope.indicesLength), material(polytope.material),
+    modelMatrix(polytope.modelMatrix), selected(polytope.selected), faceCulling(polytope.faceCulling),
+    emissionStrength(polytope.emissionStrength), tangentAndBitangents(polytope.tangentAndBitangents) {
+}
 
+Polytope::Polytope(Polytope&& polytope) noexcept 
+    : vertexArray(std::move(polytope.vertexArray)), vertexBuffer(std::move(polytope.vertexBuffer)),
+    textures(std::move(polytope.textures)), vertexLength(polytope.vertexLength), indicesLength(polytope.indicesLength),
+    material(std::move(polytope.material)), modelMatrix(std::move(polytope.modelMatrix)), selected(polytope.selected),
+    faceCulling(polytope.faceCulling), emissionStrength(polytope.emissionStrength),
+    tangentAndBitangents(polytope.tangentAndBitangents) {
 }
 
 void Polytope::setTangentsAndBitangents(Vec3f& vertex0, Vec3f& vertex1, Vec3f& vertex2) {

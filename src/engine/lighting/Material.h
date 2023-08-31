@@ -19,6 +19,15 @@ public:
     Material(MaterialType _materialType) 
         : materialType(_materialType) {
     }
+
+    Material(const Material& material)
+        : materialType(material.materialType) {
+    }
+
+    Material(Material&& material) noexcept 
+        : materialType(material.materialType) {
+    }
+
     Material() = default;
     virtual ~Material() = default;
 public:

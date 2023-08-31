@@ -13,7 +13,6 @@ GLFWwindow* window;
 
 Renderer::Ptr renderer;
 
-
 int main() {
 
     // Create window

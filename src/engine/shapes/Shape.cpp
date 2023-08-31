@@ -4,6 +4,10 @@ Shape::Shape(size_t length)
     : Polytope(length) {
 }
 
+Shape::Shape(Polytope::Ptr polytope)
+    : Polytope(*polytope) {
+}
+
 Shape::Shape(std::vector<Vec3f>& vertices, bool tangentAndBitangents) 
     : Polytope(vertices, tangentAndBitangents) {
 }

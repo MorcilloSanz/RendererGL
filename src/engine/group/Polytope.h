@@ -44,8 +44,10 @@ public:
     Polytope(size_t length);
     Polytope(std::vector<Vec3f>& vertices, bool _tangentAndBitangents = true);
     Polytope(std::vector<Vec3f>& vertices, std::vector<unsigned int>& indices, bool _tangentAndBitangents = true);
+    Polytope(const Polytope& polytope);
+    Polytope(Polytope&& polytope) noexcept;
     Polytope() = default;
-    virtual ~Polytope();
+    virtual ~Polytope() = default;
 protected:
     void setTangentsAndBitangents(Vec3f& vertex0, Vec3f& vertex1, Vec3f& vertex2);
     void calculateTangentsAndBitangents(std::vector<Vec3f>& vertices);

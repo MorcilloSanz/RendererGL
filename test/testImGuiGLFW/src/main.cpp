@@ -767,11 +767,13 @@ int main(void) {
                         // BUILD A BETTER ONE FOR YOUR OWN APPLICATION / GAME / GAMEENGINE
 
                         struct Plane {
+
                             double A, B, C, D;
 
                             Plane(double _A, double _B, double _C, double _D)
                                 : A(_A), B(_B), C(_C), D(_D) {
                             }
+                            
                             Plane() = default;
                             ~Plane() = default;
 
@@ -795,7 +797,9 @@ int main(void) {
                         };
 
                         struct Vec2f {
+
                             float x, y;
+
                             Vec2f(float _x, float _y) : x(_x), y(_y) { }
                             Vec2f() = default;
                             ~Vec2f() = default;
@@ -812,14 +816,10 @@ int main(void) {
                         };
 
                         auto isPointInTriangle = [&](float x, float y, float x0, float y0, float x1, float y1, float x2, float y2) {
+
                             Vec2f v1(x0, y0);
                             Vec2f v2(x1, y1);
                             Vec2f v3(x2, y2);
-
-                            int maxX = std::max(v1.x, std::max(v2.x, v3.x));
-                            int maxY = std::max(v1.y, std::max(v2.y, v3.y));
-                            int minX = std::min(v1.x, std::min(v2.x, v3.x));
-                            int minY = std::min(v1.y, std::min(v2.y, v3.y));
 
                             Vec2f vs1(v2.x - v1.x, v2.y - v1.y);
                             Vec2f vs2(v3.x - v1.x, v3.y - v1.y);

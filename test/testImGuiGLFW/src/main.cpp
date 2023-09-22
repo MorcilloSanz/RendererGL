@@ -681,7 +681,9 @@ int main(void) {
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);
-                if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
+                ImVec2 currentSize = ImGui::GetWindowSize();
+
+                if(currentSize.x != previousSize.x || currentSize.y != previousSize.y) {
 
                     // Restart trackball camera
                     float theta = camera.getTheta(), phi = camera.getPhi();
@@ -689,15 +691,15 @@ int main(void) {
                     float radius = camera.getRadius();
 
                     // Update camera aspect ratio
-                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
+                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
                     camera.setTheta(theta);  camera.setPhi(phi);
                     camera.setCenter(center); camera.setUp(up);
                     camera.setRadius(radius);
 
                     // Restart fps camera
-                    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
+                    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
                 }
-                previousSize = ImGui::GetWindowSize();
+                previousSize = currentSize;
 
                 // Mouse Events
                 ImVec2 size = ImGui::GetWindowSize();
@@ -773,7 +775,7 @@ int main(void) {
                             Plane(double _A, double _B, double _C, double _D)
                                 : A(_A), B(_B), C(_C), D(_D) {
                             }
-                            
+
                             Plane() = default;
                             ~Plane() = default;
 
@@ -815,8 +817,8 @@ int main(void) {
                             }
                         };
 
-                        auto isPointInTriangle = [&](float x, float y, float x0, float y0, float x1, float y1, float x2, float y2) {
-
+                        auto isPointInTriangle = [&](float x, float y, float x0, float y0, float x1, float y1, float x2, float y2) 
+                        {
                             Vec2f v1(x0, y0);
                             Vec2f v2(x1, y1);
                             Vec2f v3(x2, y2);
@@ -833,7 +835,8 @@ int main(void) {
                             return false;
                         };
 
-                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group::Ptr& group, Scene::Ptr& scene, Polytope::Ptr& polytope) {
+                        auto checkPolytopeSelection = [&](std::vector<Vec3f>& points, Group::Ptr& group, Scene::Ptr& scene, Polytope::Ptr& polytope) 
+                        {
                             for(int i = 0; i < points.size(); i += 3) {
 
                                 glm::vec4 vertex1(points[i].x, points[i].y, points[i].z, 1);
@@ -891,11 +894,15 @@ int main(void) {
                         static std::vector<Vec3f> pointsIndices;
                         static std::vector<Vec3f> cubeVertices = cubePolytopeIndices->getVertices();
                         static std::vector<unsigned int> cubeIndices = cubePolytopeIndices->getIndices();
+
                         if(pointsIndices.empty()) {
+
                             for(int i = 0; i < cubeIndices.size(); i += 3) {
+
                                 Vec3f vertex1 = cubeVertices[cubeIndices[i]];
                                 Vec3f vertex2 = cubeVertices[cubeIndices[i + 1]];
                                 Vec3f vertex3 = cubeVertices[cubeIndices[i + 2]];
+
                                 pointsIndices.push_back(vertex1);
                                 pointsIndices.push_back(vertex2);
                                 pointsIndices.push_back(vertex3);

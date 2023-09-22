@@ -14,17 +14,23 @@ FPSCamera::FPSCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMat
 	this->viewMatrix = glm::lookAt(eye, center, up);
 }
 
-FPSCamera FPSCamera::orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar) {
+FPSCamera::Ptr FPSCamera::orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar) {
+
     glm::mat4 projection = glm::ortho(left, right, bottom, top, zNear, zFar);
     glm::mat4 view(1.0f);
-    FPSCamera camera(projection, view);
+
+    FPSCamera::Ptr camera = FPSCamera::New(projection, view);
+
     return camera;
 }
 
-FPSCamera FPSCamera::perspectiveCamera(float fovy, float aspect, float zNear, float zFar) {
+FPSCamera::Ptr FPSCamera::perspectiveCamera(float fovy, float aspect, float zNear, float zFar) {
+
     glm::mat4 projection = glm::perspective(fovy, aspect, zNear, zFar);
     glm::mat4 view(1.0f);
-    FPSCamera camera(projection, view);
+
+    FPSCamera::Ptr camera = FPSCamera::New(projection, view);
+
     return camera;
 }
 

@@ -8,7 +8,7 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
     projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
     depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
     shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), 
-    gammaCorrection(false), pbr(false) {
+    gammaCorrection(false), pbr(false), backgroundColor(0.1f) {
     loadFunctionsGL();
     initShaders();
     enableBlending();
@@ -611,9 +611,9 @@ void Renderer::setBackgroundColor(float r, float g, float b) {
     backgroundColor.b = b;
 }
 
-void Renderer::setCamera(Camera& camera) {
+void Renderer::setCamera(const Camera::Ptr& camera) {
     hasCamera = true;
-    this->camera = &camera;
+    this->camera = camera;
 }
 
 void Renderer::addLight(Light& light) {

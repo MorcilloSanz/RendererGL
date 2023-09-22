@@ -44,7 +44,7 @@ private:
     std::vector<Scene::Ptr> scenes;
 
     // Camera
-    Camera* camera;
+    Camera::Ptr camera;
     bool hasCamera;
 
     // Lighting
@@ -120,7 +120,7 @@ public:
     void removeLight(Light& light);
     void render();
     void setBackgroundColor(float r, float g, float b);
-    void setCamera(Camera& camera);
+    void setCamera(const Camera::Ptr& camera);
     void setLight(Light& light);
     void addLight(Light& light);
     void clear();
@@ -137,7 +137,7 @@ public:
     inline Scene::Ptr getScene(int index) { return scenes[index]; }
     inline std::vector<Scene::Ptr>& getScenes() { return scenes; }
 
-    inline Camera* getCamera() { return camera; }
+    inline Camera::Ptr getCamera() { return camera; }
 
     inline void enableLight() { hasLight = true; }
     inline void disableLight() { hasLight = false; } 

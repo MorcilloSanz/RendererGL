@@ -5,7 +5,10 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "engine/ptr.h"
+
 class Camera {
+    GENERATE_PTR(Camera)
 protected:
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;

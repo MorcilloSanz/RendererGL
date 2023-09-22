@@ -59,10 +59,10 @@ int main() {
 
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
     float sensitivity = 1.75f, panSensitivity = 1.0f, zoomSensitivity = 0.5f;
-    camera.zoom(-2.5);
-    renderer->setCamera(camera);
+    camera->zoom(-2.5);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // Grid polytope
     float a = -20; float b = -a;
@@ -152,15 +152,15 @@ int main() {
                 if(ImGui::GetWindowSize().x != previousSize.x || ImGui::GetWindowSize().y != previousSize.y) {
 
                     // Restart trackball camera
-                    float theta = camera.getTheta(), phi = camera.getPhi();
-                    glm::vec3 center = camera.getCenter(), up = camera.getUp();
-                    float radius = camera.getRadius();
+                    float theta = camera->getTheta(), phi = camera->getPhi();
+                    glm::vec3 center = camera->getCenter(), up = camera->getUp();
+                    float radius = camera->getRadius();
 
                     // Update camera aspect ratio
-                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
-                    camera.setTheta(theta);  camera.setPhi(phi);
-                    camera.setCenter(center); camera.setUp(up);
-                    camera.setRadius(radius);
+                    *camera = *TrackballCamera::perspectiveCamera(glm::radians(45.0f), ImGui::GetWindowSize().x  / ImGui::GetWindowSize().y, 0.1, 1000);
+                    camera->setTheta(theta);  camera->setPhi(phi);
+                    camera->setCenter(center); camera->setUp(up);
+                    camera->setRadius(radius);
                 }
                 previousSize = ImGui::GetWindowSize();
 
@@ -185,7 +185,7 @@ int main() {
                     float dTheta = (mousePositionRelative.x - previous.x) / size.x;
                     float dPhi = (mousePositionRelative.y - previous.y) / size.y;
                     previous = mousePositionRelative;
-                    camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
+                    camera->rotate(-dTheta * sensitivity, dPhi * sensitivity);
                 }
 
                 // Camera pan
@@ -193,11 +193,11 @@ int main() {
                     float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
                     float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
                     previous = mousePositionRelative;
-                    camera.pan(dx * panSensitivity, -dy * panSensitivity);
+                    camera->pan(dx * panSensitivity, -dy * panSensitivity);
                 }
 
                 // Camera zoom
-                if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
+                if(windowFocus) camera->zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
                
                 ImGui::End();
             }

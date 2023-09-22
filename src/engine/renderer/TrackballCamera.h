@@ -3,19 +3,20 @@
 #include "Camera.h"
 
 class TrackballCamera : public Camera {
+    GENERATE_PTR(TrackballCamera)
 private:
     float theta, phi;
     float radius;
-    TrackballCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
 private:
     glm::vec4 toCartesianCoords();
     glm::vec3 getCameraPosition();
 public:
+    TrackballCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
     TrackballCamera() = default;
     ~TrackballCamera() = default;
     
-    static TrackballCamera orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar);
-    static TrackballCamera perspectiveCamera(float fovy, float aspect, float zNear, float zFar);
+    static TrackballCamera::Ptr orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar);
+    static TrackballCamera::Ptr perspectiveCamera(float fovy, float aspect, float zNear, float zFar);
 
     virtual glm::mat4& getViewMatrix() override;
 

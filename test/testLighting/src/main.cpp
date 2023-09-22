@@ -43,10 +43,10 @@ int main() {
 
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera.zoom(-2.5);
+    TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    camera->zoom(-2.5);
 
-    renderer->setCamera(camera);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // Scene
     Cube::Ptr cube = Cube::New();

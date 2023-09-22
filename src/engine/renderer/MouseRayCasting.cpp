@@ -1,6 +1,6 @@
 #include "MouseRayCasting.h"
 
-MouseRayCasting::MouseRayCasting(const Camera& _camera, unsigned int _width, unsigned int _height)
+MouseRayCasting::MouseRayCasting(const Camera::Ptr& _camera, unsigned int _width, unsigned int _height)
     : camera(_camera), width(_width), height(_height) {
 }
 
@@ -15,13 +15,13 @@ glm::vec4 MouseRayCasting::getHomogeneousClipCoords(const glm::vec2& normalizedD
 }
 
 glm::vec4 MouseRayCasting::getEyeCoords(const glm::vec4& clipCoords) {
-    glm::vec4 eyeCoords = camera.getInverseProjectionMatrix() * clipCoords;
+    glm::vec4 eyeCoords = camera->getInverseProjectionMatrix() * clipCoords;
     eyeCoords = glm::vec4(eyeCoords.x, eyeCoords.y, -1.0, 0.0);
     return eyeCoords;
 }
 
 glm::vec3 MouseRayCasting::getWorldCoords(const glm::vec4& eyeCoords) {
-    glm::vec4 worldCoordinates = camera.getInverseViewMatrix() * eyeCoords;
+    glm::vec4 worldCoordinates = camera->getInverseViewMatrix() * eyeCoords;
     glm::vec3 worldCoords(worldCoordinates.x, worldCoordinates.y, worldCoordinates.z);
     worldCoords = glm::normalize(worldCoords);
     return worldCoords;
@@ -32,5 +32,5 @@ MouseRayCasting::Ray MouseRayCasting::getRay(int mouseX, int mouseY) {
     glm::vec4 clipCoords = getHomogeneousClipCoords(normalizedDeviceCoords);
     glm::vec4 eyeCoords = getEyeCoords(clipCoords);
     glm::vec3 worldCoords = getWorldCoords(eyeCoords);
-    return Ray(camera.getEye(), worldCoords);
+    return Ray(camera->getEye(), worldCoords);
 }

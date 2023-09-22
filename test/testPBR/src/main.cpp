@@ -56,11 +56,11 @@ int main() {
 
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera.setPhi(M_PI / 3 - 0.1);
-    camera.setTheta(M_PI / 4 - 0.1);
-    camera.zoom(-6.5);
-    renderer->setCamera(camera);
+    TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    camera->setPhi(M_PI / 3 - 0.1);
+    camera->setTheta(M_PI / 4 - 0.1);
+    camera->zoom(-6.5);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // Spheres
     Sphere::Ptr sphere = Sphere::New();

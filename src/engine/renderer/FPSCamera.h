@@ -3,6 +3,7 @@
 #include "Camera.h"
 
 class FPSCamera : public Camera {
+    GENERATE_PTR(FPSCamera)
 public:
     enum class Movement {
 		Forward, Backward, Right, Left
@@ -13,14 +14,15 @@ private:
 	float lastX, lastY;
 	float yaw, pitch;
     float sensitivity, cameraSpeed;
-    
-    FPSCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
 public:
+
+    FPSCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
+
     FPSCamera() = default;
     ~FPSCamera() = default;
 
-    static FPSCamera orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar);
-    static FPSCamera perspectiveCamera(float fovy, float aspect, float zNear, float zFar);
+    static FPSCamera::Ptr orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar);
+    static FPSCamera::Ptr perspectiveCamera(float fovy, float aspect, float zNear, float zFar);
 
     virtual glm::mat4& getViewMatrix() override;
     virtual void move(const Movement& movement);

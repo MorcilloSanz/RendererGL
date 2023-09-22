@@ -37,10 +37,10 @@ public:
         }
     };
 private:
-    Camera camera;
+    Camera::Ptr camera;
     unsigned int width, height;
 public:
-    MouseRayCasting(const Camera& _camera, unsigned int _width, unsigned int _height);
+    MouseRayCasting(const Camera::Ptr& _camera, unsigned int _width, unsigned int _height);
     MouseRayCasting() = default;
     ~MouseRayCasting() = default;
 private:

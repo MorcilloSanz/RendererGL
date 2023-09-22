@@ -49,10 +49,10 @@ int main() {
     renderer = Renderer::New(WIDTH, HEIGHT);
 
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera.zoom(-2.5);
+    TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    camera->zoom(-2.5);
 
-    renderer->setCamera(camera);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // Scene
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
@@ -67,6 +67,8 @@ int main() {
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
+
+        renderer->setBackgroundColor(0.f, 0.f, 0.f);
 
         // Update scene
         polytopeCube->rotate(0.55, glm::vec3(1, 0, 1));

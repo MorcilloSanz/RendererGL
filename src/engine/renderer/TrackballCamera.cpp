@@ -6,19 +6,25 @@ TrackballCamera::TrackballCamera(const glm::mat4& projectionMatrix, const glm::m
     : Camera(projectionMatrix, viewMatrix), theta(M_PI), phi(M_PI * 2), radius(0) {
 }
 
-TrackballCamera TrackballCamera::orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar) {
+TrackballCamera::Ptr TrackballCamera::orthoCamera(float left, float right, float bottom, float top, float zNear, float zFar) {
+
     glm::mat4 projection = glm::ortho(left, right, bottom, top, zNear, zFar);
     glm::mat4 view(1.0f);
-    TrackballCamera camera(projection, view);
-    camera.lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+    TrackballCamera::Ptr camera = TrackballCamera::New(projection, view);
+    camera->lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
     return camera;
 }
 
-TrackballCamera TrackballCamera::perspectiveCamera(float fovy, float aspect, float zNear, float zFar) {
+TrackballCamera::Ptr TrackballCamera::perspectiveCamera(float fovy, float aspect, float zNear, float zFar) {
+
     glm::mat4 projection = glm::perspective(fovy, aspect, zNear, zFar);
     glm::mat4 view(1.0f);
-    TrackballCamera camera(projection, view);
-    camera.lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+    TrackballCamera::Ptr camera = TrackballCamera::New(projection, view);
+    camera->lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
     return camera;
 }
 

@@ -148,6 +148,10 @@ int main() {
 
 ![](img/pointcloud.png)
 
+**Post-apocalyptic box**
+
+![](img/box.png)
+
 [Gabriel archangel by greypixel geometrics](https://skfb.ly/6GvWu)
 
 ## Contribution

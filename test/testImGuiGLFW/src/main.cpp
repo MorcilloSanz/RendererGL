@@ -42,13 +42,13 @@ GLFWwindow* window;
 FrameCapturer::Ptr frameCapturer;
 
 // TrackBallCamera 
-TrackballCamera camera;
+TrackballCamera::Ptr camera;
 
 // Renderer
 Renderer::Ptr renderer;
 
 // FPS camera
-FPSCamera fpsCamera;
+FPSCamera::Ptr fpsCamera;
 bool movementForward = false, movementBackward = false;
 bool movementRight = false, movementLeft = false;
 
@@ -86,12 +86,12 @@ int main(void) {
     // Trackball Camera
     camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), WIDTH / HEIGHT, 0.1, 1000);
     float sensitivity = 1.5f, panSensitivity = 1.0f, zoomSensitivity = 1.0f;
-    camera.zoom(-5.5);
-    renderer->setCamera(camera);
+    camera->zoom(-5.5);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // First Person Shooter Camera
     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), WIDTH / HEIGHT, 0.1, 1000);
-    fpsCamera.setSensitivity(sensitivity / 10);
+    fpsCamera->setSensitivity(sensitivity / 10);
 
     // Point Lighting
     PointLight light(glm::vec3(3, 3, 3));
@@ -621,40 +621,40 @@ int main(void) {
                 ImGui::SliderFloat("Pan sensitivity", &panSensitivity, 0.01f, 50.f);
                 ImGui::SliderFloat("Zoom sensitivity", &zoomSensitivity, 0.01f, 50.f);
 
-                fpsCamera.setSensitivity(sensitivity / 10);
+                fpsCamera->setSensitivity(sensitivity / 10);
 
                 ImGui::Separator();
 
                 ImGui::Text("Camera rotation angles");
-                float theta = camera.getTheta(), phi = camera.getPhi();
+                float theta = camera->getTheta(), phi = camera->getPhi();
                 ImGui::SliderFloat("Theta", &theta, 0, M_PI);
                 ImGui::SliderFloat("Phi", &phi, 0, 2 * M_PI);
-                camera.setTheta(theta);
-                camera.setPhi(phi);
+                camera->setTheta(theta);
+                camera->setPhi(phi);
 
                 ImGui::Separator();
 
                 if (ImGui::Button("Reset camera")) {
-                    camera.setTheta(M_PI_2); 
-                    camera.setPhi(2 * M_PI);
-                    camera.setRadius(5.5f);
-                    camera.setCenter(glm::vec3(0, 0, 0));
-                    camera.setUp(glm::vec3(0, 1, 0));
+                    camera->setTheta(M_PI_2); 
+                    camera->setPhi(2 * M_PI);
+                    camera->setRadius(5.5f);
+                    camera->setCenter(glm::vec3(0, 0, 0));
+                    camera->setUp(glm::vec3(0, 1, 0));
                     sensitivity = 1.5f;
                     panSensitivity = 1.0f;
                     zoomSensitivity = 1.0f;
 
-                    fpsCamera.setEye(glm::vec3(0, 0, -1));
-                    fpsCamera.setUp(glm::vec3(0, -1, 0));
-                    fpsCamera.setCenter(glm::vec3(0, 0, 0));
+                    fpsCamera->setEye(glm::vec3(0, 0, -1));
+                    fpsCamera->setUp(glm::vec3(0, -1, 0));
+                    fpsCamera->setCenter(glm::vec3(0, 0, 0));
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Trackball camera")) {
-                    renderer->setCamera(camera);
+                    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("FPS camera")) {
-                    renderer->setCamera(fpsCamera);
+                    renderer->setCamera(std::dynamic_pointer_cast<Camera>(fpsCamera));
                     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
 
@@ -686,15 +686,15 @@ int main(void) {
                 if(currentSize.x != previousSize.x || currentSize.y != previousSize.y) {
 
                     // Restart trackball camera
-                    float theta = camera.getTheta(), phi = camera.getPhi();
-                    glm::vec3 center = camera.getCenter(), up = camera.getUp();
-                    float radius = camera.getRadius();
+                    float theta = camera->getTheta(), phi = camera->getPhi();
+                    glm::vec3 center = camera->getCenter(), up = camera->getUp();
+                    float radius = camera->getRadius();
 
                     // Update camera aspect ratio
-                    camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
-                    camera.setTheta(theta);  camera.setPhi(phi);
-                    camera.setCenter(center); camera.setUp(up);
-                    camera.setRadius(radius);
+                    *camera = *TrackballCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
+                    camera->setTheta(theta);  camera->setPhi(phi);
+                    camera->setCenter(center); camera->setUp(up);
+                    camera->setRadius(radius);
 
                     // Restart fps camera
                     fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
@@ -722,7 +722,7 @@ int main(void) {
                     float dTheta = (mousePositionRelative.x - previous.x) / size.x;
                     float dPhi = (mousePositionRelative.y - previous.y) / size.y;
                     previous = mousePositionRelative;
-                    camera.rotate(-dTheta * sensitivity, dPhi * sensitivity);
+                    camera->rotate(-dTheta * sensitivity, dPhi * sensitivity);
                 }
 
                 // Camera pan
@@ -730,11 +730,11 @@ int main(void) {
                     float dx = (mousePositionRelative.x - previous.x) / (size.x / 2);
                     float dy = (mousePositionRelative.y - previous.y) / (size.y / 2);
                     previous = mousePositionRelative;
-                    camera.pan(dx * panSensitivity, -dy * panSensitivity);
+                    camera->pan(dx * panSensitivity, -dy * panSensitivity);
                 }
 
                 // Camera zoom
-                if(windowFocus) camera.zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
+                if(windowFocus) camera->zoom(ImGui::GetIO().MouseWheel * zoomSensitivity);
 
                 // FPS Camera
                 updateFPSCamera(mousePositionRelative.x, mousePositionRelative.y);
@@ -742,7 +742,7 @@ int main(void) {
                 // Mouse Picking
                 if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && (enablePoint3d || enableDrawRay || enableObjectSelecting) && windowFocus) {
 
-                    MouseRayCasting mouseRayCasting(camera, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+                    MouseRayCasting mouseRayCasting(std::dynamic_pointer_cast<Camera>(camera), ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
                     MouseRayCasting::Ray mouseRay = mouseRayCasting.getRay(mousePositionRelative.x, mousePositionRelative.y);
 
                     if(enablePoint3d) {
@@ -1047,10 +1047,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 void updateFPSCamera(double xpos, double ypos) {
     // Look around
-    fpsCamera.lookAround(xpos, ypos);
+    fpsCamera->lookAround(xpos, ypos);
     // Movement
-    if(movementForward) fpsCamera.move(FPSCamera::Movement::Forward);
-    if(movementBackward) fpsCamera.move(FPSCamera::Movement::Backward);
-    if(movementRight) fpsCamera.move(FPSCamera::Movement::Right);
-    if(movementLeft) fpsCamera.move(FPSCamera::Movement::Left);
+    if(movementForward) fpsCamera->move(FPSCamera::Movement::Forward);
+    if(movementBackward) fpsCamera->move(FPSCamera::Movement::Backward);
+    if(movementRight) fpsCamera->move(FPSCamera::Movement::Right);
+    if(movementLeft) fpsCamera->move(FPSCamera::Movement::Left);
 }

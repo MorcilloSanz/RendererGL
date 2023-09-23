@@ -27,7 +27,7 @@ Take a look at some [screenshots](#screenshots). *3D assets are not included*
 A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data structure which arranges the logical and often spatial representation of a graphical scene. It is a collection of nodes in a graph or tree structure:
 
 * **Polytope:** A set of vertices and indices (optional) that defines a shape
-* **Group:** A set of polytopes
+* **Group:** A set of polytopes. It also defines the primitive (triangles, quads...) which the polytopes inside of it will be drawn.
 * **Model:** A group which contains a set of polytopes that are loaded from a file (*.obj*, *.dae*, *...*)
 * **Scene:** Contains a set of groups, models and other scenes
 * **Renderer:** Contains a set of scenes. It's the one who deals with all the graphics stuff

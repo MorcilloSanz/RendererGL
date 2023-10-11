@@ -33,7 +33,7 @@ IndexBuffer::~IndexBuffer() {
 void IndexBuffer::initBuffer(std::vector<unsigned int> indices) {
     glGenBuffers(1, &id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices), &indices[0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_DYNAMIC_DRAW);
 }
 
 void IndexBuffer::initBuffer() { }

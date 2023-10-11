@@ -6,11 +6,11 @@
 #define DEFAULT_CAMERA_SPEED 0.1
 
 FPSCamera::FPSCamera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix) 
-    : Camera(projectionMatrix, viewMatrix), cameraFront(glm::vec3(0, 0, -1)), yaw(-90.0f), pitch(0),
+    : Camera(projectionMatrix, viewMatrix), cameraFront(glm::vec3(0, 0, -1)), yaw(0.0f), pitch(0),
     lastX(0), lastY(0), sensitivity(DEFAULT_SENSITIVITY), cameraSpeed(DEFAULT_CAMERA_SPEED) {
     center = glm::vec3(0, 0, 0);
     up = glm::vec3(0, -1, 0);
-    eye = glm::vec3(0, 0, 1);
+    eye = glm::vec3(0, 0, 0);
 	this->viewMatrix = glm::lookAt(eye, center, up);
 }
 
@@ -59,6 +59,7 @@ void FPSCamera::move(const Movement& movement) {
 }
 
 void FPSCamera::lookAround(double xpos, double ypos) {
+
     double xoffset = xpos - lastX;
 	double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 

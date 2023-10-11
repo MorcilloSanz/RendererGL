@@ -697,7 +697,7 @@ int main(void) {
                     camera->setRadius(radius);
 
                     // Restart fps camera
-                    fpsCamera = FPSCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
+                    *fpsCamera = *FPSCamera::perspectiveCamera(glm::radians(45.0f), currentSize.x  / currentSize.y, 0.1, 1000);
                 }
                 previousSize = currentSize;
 

@@ -34,7 +34,7 @@ A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data str
 
 *Take a look at the example below*
 
-## Example: rotating cube
+## Example: rotating cube (mesh)
 
 ```cpp
 #include <iostream>
@@ -53,14 +53,10 @@ Renderer::Ptr renderer;
 
 // x y z  r g b
 std::vector<Vec3f> cubeVertices {
-    Vec3f(-0.5, -0.5,  0.5,   0.0f, 0.0f, 1.0f),
-    Vec3f( 0.5, -0.5,  0.5,   1.0f, 0.0f, 1.0f),
-    Vec3f( 0.5,  0.5,  0.5,   0.0f, 1.0f, 1.0f),
-    Vec3f(-0.5,  0.5,  0.5,   0.0f, 1.0f, 0.5f),
-    Vec3f(-0.5, -0.5, -0.5,   0.0f, 0.0f, 1.0f),
-    Vec3f( 0.5, -0.5, -0.5,   1.0f, 0.0f, 1.0f),
-    Vec3f( 0.5,  0.5, -0.5,   0.0f, 1.0f, 1.0f),
-    Vec3f(-0.5,  0.5, -0.5,   0.0f, 1.0f, 0.5f)
+    Vec3f(-0.5, -0.5,  0.5,   0.0f, 0.0f, 1.0f), Vec3f( 0.5, -0.5,  0.5,   1.0f, 0.0f, 1.0f),
+    Vec3f( 0.5,  0.5,  0.5,   0.0f, 1.0f, 1.0f), Vec3f(-0.5,  0.5,  0.5,   0.0f, 1.0f, 0.5f),
+    Vec3f(-0.5, -0.5, -0.5,   0.0f, 0.0f, 1.0f), Vec3f( 0.5, -0.5, -0.5,   1.0f, 0.0f, 1.0f),
+    Vec3f( 0.5,  0.5, -0.5,   0.0f, 1.0f, 1.0f), Vec3f(-0.5,  0.5, -0.5,   0.0f, 1.0f, 0.5f)
 };
 
 std::vector<unsigned int> cubeIndices {
@@ -88,10 +84,10 @@ int main() {
     renderer = Renderer::New(WIDTH, HEIGHT);
 
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
-    TrackballCamera camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera.zoom(-2.5);
+    TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
+    camera->zoom(-2.5);
 
-    renderer->setCamera(camera);
+    renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
     // Scene
     Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
@@ -150,9 +146,9 @@ int main() {
 
 [Gabriel archangel by greypixel geometrics](https://skfb.ly/6GvWu)
 
-**HDRI example**
+**360 image visualization example**
 
-![](img/hdriDemo.gif)
+![](img/360image.gif)
 
 ## Contribution
 
@@ -181,4 +177,3 @@ Dealing with OpenGL was much easier thanks to:
 * [Learn OpenGL](https://learnopengl.com/)
 * [The Cherno](https://www.youtube.com/@TheCherno)
 * [ThinMatrix](https://www.youtube.com/@ThinMatrix)
-* [Physically Based Rendering: From Theory to Implementation](https://www.pbr-book.org/)

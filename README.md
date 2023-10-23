@@ -124,17 +124,15 @@ int main() {
 
 ## Screenshots
 
-**Multiple point lights (Blinn-Phong)**
-
-![](img/lighting.png)
-
-**Shadow Mapping**
+**Lighting (Blinn-Phong), shadow mapping and emission**
 
 ![](img/shadows.png)
 
-**Emission**
-
 ![](img/emission.png)
+
+![](img/city.gif)
+
+[Apocalyptic City by ruslans3d](https://skfb.ly/H7Fx)
 
 **PBR Materials**
 

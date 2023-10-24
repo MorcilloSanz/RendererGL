@@ -130,10 +130,6 @@ int main() {
 
 ![](img/emission.png)
 
-![](img/city.gif)
-
-[Apocalyptic City by ruslans3d](https://skfb.ly/H7Fx)
-
 **PBR Materials**
 
 ![](img/pbr.png)

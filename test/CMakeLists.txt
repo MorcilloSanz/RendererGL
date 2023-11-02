@@ -22,6 +22,31 @@
     SOFTWARE.
 ]]
 
+# Header Files
+set(IMGUI_HEADERS 
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/backends/imgui_impl_glfw.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/backends/imgui_impl_opengl3.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui_internal.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imstb_rectpack.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imstb_textedit.h
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imstb_truetype.h
+)
+
+# CPP files
+set(IMGUI_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/backends/imgui_impl_glfw.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/backends/imgui_impl_opengl3.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui_demo.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui_draw.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui_tables.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/third_party/imgui/imgui_widgets.cpp
+
+)
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/third_party)
+
 add_subdirectory(testImGuiGLFW)
 add_subdirectory(testCube)
 add_subdirectory(testLighting)

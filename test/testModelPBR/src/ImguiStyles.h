@@ -3,9 +3,9 @@
 // From https://github.com/procedural/gpulib/blob/master/gpulib_imgui.h
 // https://github.com/ocornut/imgui/issues/707
 
-#include "../imgui/imgui.h"
-#include "../imgui/backends/imgui_impl_opengl3.h"
-#include "../imgui/backends/imgui_impl_glfw.h"
+#include <imgui/imgui.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
+#include <imgui/backends/imgui_impl_glfw.h>
 
 struct ImVec3 { float x, y, z; ImVec3(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) { x = _x; y = _y; z = _z; } };
 

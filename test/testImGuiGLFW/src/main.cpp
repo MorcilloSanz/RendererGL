@@ -336,6 +336,17 @@ int main(void) {
     model4->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model4);
 
+    /*
+    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/toadLevel/MiniatureKinopioBrigade.dae");
+    model->setLineWidth(2.5f);
+    model->scale(glm::vec3(0.01, 0.01, 0.01));
+    modelsScene->addModel(model);
+
+    Model::Ptr model4 = Model::New("/home/morcillosanz/Desktop/model/Rabbids/npc_rabbids_01_collectible.obj");
+    model4->translate(glm::vec3(0.25, 0.5, -0.35));
+    modelsScene->addModel(model4);
+    */
+
     mainScene->addScene(modelsScene);
     renderer->addScene(mainScene);
 

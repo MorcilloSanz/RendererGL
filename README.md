@@ -130,6 +130,8 @@ int main() {
 
 ![](img/emission.png)
 
+![](img/rabbids.png)
+
 **PBR Materials**
 
 ![](img/pbr.png)

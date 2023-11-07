@@ -89,6 +89,7 @@ int main() {
     Texture::Ptr textureMetallic2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_metallic.png", Texture::Type::TextureMetallic);
     Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_roughness.png", Texture::Type::TextureRoughness);
     Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_ao.png", Texture::Type::TextureAmbientOcclusion);
+    Texture::Ptr textureHeight2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_height.png", Texture::Type::TextureHeight);
 
     Texture::Ptr textureAlbedo3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_albedo.png", Texture::Type::TextureAlbedo);
     Texture::Ptr textureMetallic3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_metallic.png", Texture::Type::TextureMetallic);
@@ -104,6 +105,7 @@ int main() {
     sphere2->addTexture(textureAmbientOcclusion2);
     sphere2->addTexture(textureNormal2);
     sphere2->addTexture(textureRoughness2);
+    //sphere2->addTexture(textureHeight2);
 
     sphere3->addTexture(textureAlbedo3);
     sphere3->addTexture(textureMetallic3);

@@ -118,7 +118,7 @@ void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::sha
 
 void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
 
-    unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nEmissionMap = 0, nNormalMaps = 0, nHeightMaps = 0;
+    unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nEmissionMap = 0, nNormalMaps = 0, nDepthMaps = 0;
 
     for(auto& texture : polytope->getTextures()) {
 
@@ -147,7 +147,8 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
             break;
 
             case Texture::Type::TextureHeight:
-                nHeightMaps ++;
+                shaderProgram->uniformInt("materialMaps.depthMap", texture->getID() - 1);
+                nDepthMaps ++;
             break;
         }
     }
@@ -155,12 +156,17 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
     shaderProgram->uniformInt("hasDiffuse", nDiffuseMaps > 0);
     shaderProgram->uniformInt("hasSpecular", nSpecularMaps > 0);
     shaderProgram->uniformInt("hasNormalMap", nNormalMaps > 0);
+    shaderProgram->uniformInt("hasDepthMap", nDepthMaps > 0);
     shaderProgram->uniformInt("hasEmission", nEmissionMap > 0);
+
+    const float heightScale = 0.1f;
+    shaderProgram->uniformFloat("heightScale", heightScale);
 }
 
 void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
 
-    unsigned int nAlbedoMaps = 0, nMetallicMaps = 0, nRoughnessMap = 0, nNormalMaps = 0, nAmbientOcclusionMaps = 0, nEmissionMaps = 0;
+    unsigned int nAlbedoMaps = 0, nMetallicMaps = 0, nRoughnessMap = 0, nNormalMaps = 0, 
+        nAmbientOcclusionMaps = 0, nEmissionMaps = 0, nDepthMaps = 0;
 
     for(auto& texture : polytope->getTextures()) {
 
@@ -188,6 +194,11 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
                 nNormalMaps ++;
             break;
 
+            case Texture::Type::TextureHeight:
+                shaderProgram->uniformInt("materialMaps.depthMap", texture->getID() - 1);
+                nDepthMaps ++;
+            break;
+
             case Texture::Type::TextureAmbientOcclusion:
                 shaderProgram->uniformInt("materialMaps.ao", texture->getID() - 1);
                 nAmbientOcclusionMaps ++;
@@ -203,9 +214,13 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
     shaderProgram->uniformInt("hasAlbedo", nAlbedoMaps > 0);
     shaderProgram->uniformInt("hasMetallic", nMetallicMaps > 0);
     shaderProgram->uniformInt("hasNormal", nNormalMaps > 0);
+    shaderProgram->uniformInt("hasDepthMap", nDepthMaps > 0);
     shaderProgram->uniformInt("hasRoughness", nRoughnessMap > 0);
     shaderProgram->uniformInt("hasAmbientOcclusion", nAmbientOcclusionMaps > 0);
     shaderProgram->uniformInt("hasEmission", nEmissionMaps > 0);
+
+    const float heightScale = 0.5f;
+    shaderProgram->uniformFloat("heightScale", heightScale);
 }
 
 void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {

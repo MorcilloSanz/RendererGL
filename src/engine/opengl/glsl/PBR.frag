@@ -27,6 +27,7 @@ struct MaterialMaps {
    sampler2D metallic;
    sampler2D roughness;
    sampler2D normalMap;
+   sampler2D depthMap;
    sampler2D ao;
    sampler2D emission;
 };
@@ -52,12 +53,17 @@ uniform bool hasAlbedo;
 uniform bool hasMetallic;
 uniform bool hasRoughness;
 uniform bool hasNormalMap;
+uniform bool hasDepthMap;
 uniform bool hasAmbientOcclusion;
 uniform bool hasEmission;
+
+uniform float heightScale;
+vec2 texCoord = TexCoord;
 
 uniform vec3 viewPos;
 
 const float PI = 3.14159265359;
+
 
 float distributionGGX(vec3 N, vec3 H, float roughness) {
 
@@ -100,12 +106,12 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0) {
 
 vec3 getNormalFromMap() {
 
-    vec3 tangentNormal = texture(materialMaps.normalMap, TexCoord).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(materialMaps.normalMap, texCoord).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(FragPos);
     vec3 Q2  = dFdy(FragPos);
-    vec2 st1 = dFdx(TexCoord);
-    vec2 st2 = dFdy(TexCoord);
+    vec2 st1 = dFdx(texCoord);
+    vec2 st2 = dFdy(texCoord);
 
     vec3 N   = normalize(Normal);
     vec3 T  = normalize(Q1 * st2.t - Q2 * st1.t);
@@ -117,26 +123,26 @@ vec3 getNormalFromMap() {
 
 vec3 calculateAlbedo() {
     vec3 albedo = material.albedo;
-    if(hasAlbedo) albedo = pow(texture(materialMaps.albedo, TexCoord).rgb, vec3(2.2));
+    if(hasAlbedo) albedo = pow(texture(materialMaps.albedo, texCoord).rgb, vec3(2.2));
     albedo *= ourColor;
     return albedo;
 }
 
 float calculateMetallic() {
     float metallic = material.metallic;
-    if(hasMetallic) metallic = texture(materialMaps.metallic, TexCoord).r;
+    if(hasMetallic) metallic = texture(materialMaps.metallic, texCoord).r;
     return metallic;
 }
 
 float calculateRoughness() {
     float roughness = material.roughness;
-    if(hasRoughness) roughness = texture(materialMaps.roughness, TexCoord).r;
+    if(hasRoughness) roughness = texture(materialMaps.roughness, texCoord).r;
     return roughness;
 }
 
 float calculateAmbientOcclusion() {
     float ao = material.ao;
-    if(hasAmbientOcclusion) ao = texture(materialMaps.ao, TexCoord).r;
+    if(hasAmbientOcclusion) ao = texture(materialMaps.ao, texCoord).r;
     return ao;
 }
 
@@ -148,11 +154,47 @@ vec3 calculateNormal() {
 
 vec3 calculateEmission() {
     vec3 emission = material.emission;
-    if(hasEmission) emission = vec3(texture(materialMaps.emission, TexCoord));
+    if(hasEmission) emission = vec3(texture(materialMaps.emission, texCoord));
     return emission;
 }
 
+vec2 parallaxMapping(vec2 texCoords) { 
+
+    vec2 uvs = texCoords;
+
+    if(hasDepthMap) {
+
+        // Calculate viewDir 
+        vec3 Q1  = dFdx(FragPos);
+        vec3 Q2  = dFdy(FragPos);
+        vec2 st1 = dFdx(texCoord);
+        vec2 st2 = dFdy(texCoord);
+
+        vec3 N   = normalize(Normal);
+        vec3 T  = normalize(Q1 * st2.t - Q2 * st1.t);
+        vec3 B  = -normalize(cross(N, T));
+        mat3 TBN = mat3(T, B, N);
+
+        vec3 tangentViewPos  = TBN * viewPos;
+        vec3 tangentFragPos  = TBN * FragPos;
+
+        vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
+        
+        // Paralax mapping
+        float height = texture(materialMaps.depthMap, texCoords).r;
+        vec2 offset = viewDir.xy * (height * heightScale);
+        return texCoords - offset; 
+    }
+ 
+    return uvs;
+}
+
 void main() {
+
+    // Paralax mapping
+    texCoord = parallaxMapping(TexCoord);
+    if(texCoord.x > 1.0 || texCoord.y > 1.0 || texCoord.x < 0.0 || texCoord.y < 0.0)
+        discard;
 
     // Material
     vec3 albedo = calculateAlbedo();
@@ -227,7 +269,7 @@ void main() {
     // Apply transparency
     float transparency = 1.0;
     if(hasAlbedo) {
-        vec4 textureAlbedo = texture(materialMaps.albedo, TexCoord);
+        vec4 textureAlbedo = texture(materialMaps.albedo, texCoord);
         transparency = textureAlbedo.a;
     }
 

@@ -29,6 +29,7 @@ struct MaterialMaps {
    sampler2D diffuseMap;
    sampler2D specularMap;
    sampler2D normalMap;
+   sampler2D depthMap;
    sampler2D emissionMap;
 };
 
@@ -54,13 +55,18 @@ uniform bool hasDiffuse;
 uniform bool hasSpecular;
 uniform bool hasEmission;
 uniform bool hasNormalMap;
+uniform bool hasDepthMap;
 uniform float emissionStrength;
 
 uniform bool blinn;
 
+uniform float heightScale;
+
 uniform bool shadowMapping;
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
+
+vec2 texCoord = TexCoord;
 
 vec4 calculateAmbient(Light light) {
    vec4 ambient = vec4(1.0);
@@ -69,7 +75,7 @@ vec4 calculateAmbient(Light light) {
    vec4 lightColor = vec4(light.color, 1.0);
 
    if(hasDiffuse) {
-      vec4 textureDiffuse = texture(materialMaps.diffuseMap, TexCoord);
+      vec4 textureDiffuse = texture(materialMaps.diffuseMap, texCoord);
       ambient = lightAmbient * lightColor * textureDiffuse;
    }
    else ambient = lightAmbient * lightColor * vec4(ourColor, 1.0);
@@ -85,7 +91,7 @@ vec4 calculateDiffuse(Light light, vec3 normal, vec3 lightDir) {
    vec4 materialDiffuse = vec4(material.diffuse, 1.0);
 
    if(hasDiffuse) {
-      vec4 textureDiffuse = texture(materialMaps.diffuseMap, TexCoord);
+      vec4 textureDiffuse = texture(materialMaps.diffuseMap, texCoord);
       diffuse = lightDiffuse * diff * textureDiffuse;
    }else diffuse = lightDiffuse * (diff * materialDiffuse);
 
@@ -110,7 +116,7 @@ vec4 calculateSpecular(Light light, vec3 normal, vec3 lightDir) {
    } else spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
    if(hasSpecular) {
-      vec4 specularMapInfo = texture(materialMaps.specularMap, TexCoord);
+      vec4 specularMapInfo = texture(materialMaps.specularMap, texCoord);
       specular = lightSpecular * spec * specularMapInfo;
    }else specular = lightSpecular * (spec * materialSpecular);
 
@@ -119,7 +125,7 @@ vec4 calculateSpecular(Light light, vec3 normal, vec3 lightDir) {
 
 vec4 calculateEmission() {
    vec4 emission = vec4(0.0);
-   if(hasEmission) emission = texture(materialMaps.emissionMap, TexCoord);
+   if(hasEmission) emission = texture(materialMaps.emissionMap, texCoord);
    return emission * emissionStrength;
 }
 
@@ -164,7 +170,7 @@ vec4 getLightColor(Light light) {
    vec3 lightDir = normalize(light.position - FragPos);
 
    if(hasNormalMap) {
-      norm = texture(materialMaps.normalMap, TexCoord).rgb;
+      norm = texture(materialMaps.normalMap, texCoord).rgb;
       // transform normal vector to range [-1,1]
       norm = normalize(norm * 2.0 - 1.0);  // this normal is in tangent space
       lightDir = normalize(TangentLightPos - TangentFragPos);
@@ -194,14 +200,67 @@ vec4 getLightColor(Light light) {
    return (ambient + (1.0 - shadow) * (diffuse + specular) + emission) * lightColor;
 }
 
+vec2 parallaxMapping(vec2 texCoords, vec3 viewDir) { 
+
+   if(!hasDepthMap)
+      return texCoords;
+
+   // number of depth layers
+   const float minLayers = 8;
+   const float maxLayers = 32;
+   float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
+
+   // calculate the size of each layer
+   float layerDepth = 1.0 / numLayers;
+
+   // depth of current layer
+   float currentLayerDepth = 0.0;
+
+   // the amount to shift the texture coordinates per layer (from vector P)
+   vec2 P = viewDir.xy / viewDir.z * heightScale; 
+   vec2 deltaTexCoords = P / numLayers;
+
+   // get initial values
+   vec2  currentTexCoords     = texCoords;
+   float currentDepthMapValue = texture(materialMaps.depthMap, currentTexCoords).r;
+
+   while(currentLayerDepth < currentDepthMapValue) {
+
+      // shift texture coordinates along direction of P
+      currentTexCoords -= deltaTexCoords;
+
+      // get depthmap value at current texture coordinates
+      currentDepthMapValue = texture(materialMaps.depthMap, currentTexCoords).r;  
+
+      // get depth of next layer
+      currentLayerDepth += layerDepth;  
+   }
+
+   // get texture coordinates before collision (reverse operations)
+   vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+
+   // get depth after and before collision for linear interpolation
+   float afterDepth  = currentDepthMapValue - currentLayerDepth;
+   float beforeDepth = texture(materialMaps.depthMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+
+   // interpolation of texture coordinates
+   float weight = afterDepth / (afterDepth - beforeDepth);
+   vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+   return finalTexCoords;
+}
+
 void main() {
+
+   vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
+   texCoord = parallaxMapping(texCoord, viewDir);
 
    vec4 lightColor = vec4(0.0);
    for(int i = 0; i < nLights; i ++) lightColor += getLightColor(lights[i]);
 
    // Apply transparency for blending
    if(hasDiffuse) {
-      vec4 textureDiffuse = texture(materialMaps.diffuseMap, TexCoord);
+      vec4 textureDiffuse = texture(materialMaps.diffuseMap, texCoord);
       lightColor.a = textureDiffuse.a;
    }
 

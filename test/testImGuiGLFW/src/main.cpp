@@ -215,13 +215,13 @@ int main(void) {
     Polytope::Ptr cubePolytope2 = Polytope::New(vertices);
     cubePolytope2->translate(glm::vec3(-5, 0.25, 5));
 
-    Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
-    Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
-    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_normal.jpg", Texture::Type::TextureNormal);
-    Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
-    Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Desktop/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
+    Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
+    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_normal.jpg", Texture::Type::TextureNormal);
+    Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
     
-    //textureDiffuse->changeTexture("/home/morcillosanz/Desktop/model/diffuse.png");
+    //textureDiffuse->changeTexture("/home/morcillosanz/Documents/model/diffuse.png");
 
     cubePolytope2->addTexture(textureDiffuse); // vertices2's colors are all white, thats why the texture looks like texture2.png
     cubePolytope2->addTexture(textureSpecular);
@@ -310,44 +310,44 @@ int main(void) {
     Scene::Ptr modelsScene = Scene::New();
 
     // 3D model from file
-    Model::Ptr modelMap = Model::New("/home/morcillosanz/Desktop/model/BlockCity/mini3_course.dae");
+    Model::Ptr modelMap = Model::New("/home/morcillosanz/Documents/model/BlockCity/mini3_course.dae");
     modelMap->translate(glm::vec3(0, -5, 0));
     modelMap->scale(glm::vec3(0.001, 0.001, 0.001));
     modelsScene->addModel(modelMap);
 
-    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/MarioKart/MarioKart.dae");
+    Model::Ptr model = Model::New("/home/morcillosanz/Documents/model/MarioKart/MarioKart.dae");
     model->setLineWidth(2.5f);
     model->translate(glm::vec3(2.0, 0.0, 0.0));
     model->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model);
 
-    Model::Ptr model2 = Model::New("/home/morcillosanz/Desktop/model/LuigiMansion/Model.dae");
+    Model::Ptr model2 = Model::New("/home/morcillosanz/Documents/model/LuigiMansion/Model.dae");
     model2->translate(glm::vec3(-0.25, 0, -1.0));
     model2->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model2);
 
-    Model::Ptr model3 = Model::New("/home/morcillosanz/Desktop/model/PeachTennis/Model.dae");
+    Model::Ptr model3 = Model::New("/home/morcillosanz/Documents/model/PeachTennis/Model.dae");
     model3->translate(glm::vec3(-1.5, 0, 0.8));
     model3->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model3);
 
-    Model::Ptr model4 = Model::New("/home/morcillosanz/Desktop/model/Goomba/Goomba.dae");
+    Model::Ptr model4 = Model::New("/home/morcillosanz/Documents/model/Goomba/Goomba.dae");
     model4->translate(glm::vec3(0, 0, -4));
     model4->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model4);
 
     /*
-    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/toadLevel/MiniatureKinopioBrigade.dae");
+    Model::Ptr model = Model::New("/home/morcillosanz/Documents/model/toadLevel/MiniatureKinopioBrigade.dae");
     model->setLineWidth(2.5f);
     model->scale(glm::vec3(0.01, 0.01, 0.01));
     modelsScene->addModel(model);
 
-    Model::Ptr model3 = Model::New("/home/morcillosanz/Desktop/model/FlyGuy/Model.dae");
+    Model::Ptr model3 = Model::New("/home/morcillosanz/Documents/model/FlyGuy/Model.dae");
     model3->translate(glm::vec3(0, 2, 0));
     model3->scale(glm::vec3(0.1, 0.1, 0.1));
     modelsScene->addModel(model3);
 
-    Model::Ptr model4 = Model::New("/home/morcillosanz/Desktop/model/Rabbids/npc_rabbids_01_collectible.obj");
+    Model::Ptr model4 = Model::New("/home/morcillosanz/Documents/model/Rabbids/npc_rabbids_01_collectible.obj");
     model4->translate(glm::vec3(0.25, 0.5, -0.35));
     modelsScene->addModel(model4);
     */
@@ -357,12 +357,12 @@ int main(void) {
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveX.tga",
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeX.tga",
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveY.tga",
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeY.tga",
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_PositiveZ.tga",
-        "/home/morcillosanz/Desktop/model/skybox/tilted/GalaxyTex_NegativeZ.tga"
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveX.tga",
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeX.tga",
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveY.tga",
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeY.tga",
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveZ.tga",
+        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeZ.tga"
     };
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);

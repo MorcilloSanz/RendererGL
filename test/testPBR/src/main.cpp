@@ -79,22 +79,22 @@ int main() {
     sphere3->setMaterial(aoMaterial);
 
     // PBR materials
-    Texture::Ptr textureAlbedo = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_basecolor.png", Texture::Type::TextureAlbedo);
-    Texture::Ptr textureMetallic = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_metallic.png", Texture::Type::TextureMetallic);
-    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/Srustediron2_normal.png", Texture::Type::TextureNormal);
-    Texture::Ptr textureRoughness = Texture::New("/home/morcillosanz/Desktop/model/rustediron1-alt2-Unreal-Engine/rustediron2_roughness.png", Texture::Type::TextureRoughness);
+    Texture::Ptr textureAlbedo = Texture::New("/home/morcillosanz/Documents/model/rustediron1-alt2-Unreal-Engine/rustediron2_basecolor.png", Texture::Type::TextureAlbedo);
+    Texture::Ptr textureMetallic = Texture::New("/home/morcillosanz/Documents/model/rustediron1-alt2-Unreal-Engine/rustediron2_metallic.png", Texture::Type::TextureMetallic);
+    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Documents/model/rustediron1-alt2-Unreal-Engine/Srustediron2_normal.png", Texture::Type::TextureNormal);
+    Texture::Ptr textureRoughness = Texture::New("/home/morcillosanz/Documents/model/rustediron1-alt2-Unreal-Engine/rustediron2_roughness.png", Texture::Type::TextureRoughness);
 
-    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_albedo.png", Texture::Type::TextureAlbedo);
-    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_normal-dx.png", Texture::Type::TextureNormal);
-    Texture::Ptr textureMetallic2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_metallic.png", Texture::Type::TextureMetallic);
-    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_roughness.png", Texture::Type::TextureRoughness);
-    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_ao.png", Texture::Type::TextureAmbientOcclusion);
-    Texture::Ptr textureHeight2 = Texture::New("/home/morcillosanz/Desktop/model/painted-worn-asphalt-ue/painted-worn-asphalt_height.png", Texture::Type::TextureHeight);
+    Texture::Ptr textureAlbedo2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_albedo.png", Texture::Type::TextureAlbedo);
+    Texture::Ptr textureNormal2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_normal-dx.png", Texture::Type::TextureNormal);
+    Texture::Ptr textureMetallic2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_metallic.png", Texture::Type::TextureMetallic);
+    Texture::Ptr textureRoughness2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_roughness.png", Texture::Type::TextureRoughness);
+    Texture::Ptr textureAmbientOcclusion2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_ao.png", Texture::Type::TextureAmbientOcclusion);
+    Texture::Ptr textureHeight2 = Texture::New("/home/morcillosanz/Documents/model/painted-worn-asphalt-ue/painted-worn-asphalt_height.png", Texture::Type::TextureHeight);
 
-    Texture::Ptr textureAlbedo3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_albedo.png", Texture::Type::TextureAlbedo);
-    Texture::Ptr textureMetallic3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_metallic.png", Texture::Type::TextureMetallic);
-    Texture::Ptr textureNormal3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_normal-dx.png", Texture::Type::TextureNormal);
-    Texture::Ptr textureRoughness3 = Texture::New("/home/morcillosanz/Desktop/model/chipping-painted-wall-ue/chipping-painted-wall_roughness.png", Texture::Type::TextureRoughness);
+    Texture::Ptr textureAlbedo3 = Texture::New("/home/morcillosanz/Documents/model/chipping-painted-wall-ue/chipping-painted-wall_albedo.png", Texture::Type::TextureAlbedo);
+    Texture::Ptr textureMetallic3 = Texture::New("/home/morcillosanz/Documents/model/chipping-painted-wall-ue/chipping-painted-wall_metallic.png", Texture::Type::TextureMetallic);
+    Texture::Ptr textureNormal3 = Texture::New("/home/morcillosanz/Documents/model/chipping-painted-wall-ue/chipping-painted-wall_normal-dx.png", Texture::Type::TextureNormal);
+    Texture::Ptr textureRoughness3 = Texture::New("/home/morcillosanz/Documents/model/chipping-painted-wall-ue/chipping-painted-wall_roughness.png", Texture::Type::TextureRoughness);
 
     sphere->addTexture(textureAlbedo);
     sphere->addTexture(textureMetallic);

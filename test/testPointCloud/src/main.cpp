@@ -140,7 +140,7 @@ int main() {
     groupGrid->add(gridPolytope);
 
     // Point Cloud
-    Polytope::Ptr pointCloud = pointCloudPolytope("/home/morcillosanz/Desktop/model/Gabriel4Cloud.asc");
+    Polytope::Ptr pointCloud = pointCloudPolytope("/home/morcillosanz/Documents/model/Gabriel4Cloud.asc");
     pointCloud->scale(glm::vec3(0.5));
     pointCloud->translate(glm::vec3(0, -35, 0));
     pointCloud->rotate(-90, glm::vec3(1, 0, 0));

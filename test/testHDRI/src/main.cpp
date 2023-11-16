@@ -53,7 +53,7 @@ int main() {
 
     // Model
     Sphere::Ptr sphere = Sphere::New();
-    Texture::Ptr hdri = Texture::New("/home/morcillosanz/Desktop/hdri2.jpg", Texture::Type::TextureDiffuse);
+    Texture::Ptr hdri = Texture::New("/home/morcillosanz/Documents/hdri2.jpg", Texture::Type::TextureDiffuse);
     sphere->addTexture(hdri);
 
     Group::Ptr sphereGroup = Group::New(GL_TRIANGLES);

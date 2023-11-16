@@ -92,12 +92,12 @@ int main() {
     groupGrid->add(gridPolytope);
 
     // Model 
-    Model::Ptr model = Model::New("/home/morcillosanz/Desktop/model/hand_sculpture/scene.gltf", true);
+    Model::Ptr model = Model::New("/home/morcillosanz/Documents/model/hand_sculpture/scene.gltf", true);
     Polytope::Ptr polytope = model->getPolytopes()[0];
 
-    Texture::Ptr roughness = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_roughness.jpg", Texture::Type::TextureRoughness);
-    Texture::Ptr normal = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_normal.jpg", Texture::Type::TextureNormal);
-    Texture::Ptr ao = Texture::New("/home/morcillosanz/Desktop/model/hand-sculpture/source/hand_AO.jpg", Texture::Type::TextureAmbientOcclusion);
+    Texture::Ptr roughness = Texture::New("/home/morcillosanz/Documents/model/hand-sculpture/source/hand_roughness.jpg", Texture::Type::TextureRoughness);
+    Texture::Ptr normal = Texture::New("/home/morcillosanz/Documents/model/hand-sculpture/source/hand_normal.jpg", Texture::Type::TextureNormal);
+    Texture::Ptr ao = Texture::New("/home/morcillosanz/Documents/model/hand-sculpture/source/hand_AO.jpg", Texture::Type::TextureAmbientOcclusion);
 
     polytope->addTexture(roughness);
     polytope->addTexture(normal);

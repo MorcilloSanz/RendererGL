@@ -34,7 +34,7 @@ A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data str
 
 *Take a look at the example below*
 
-## Example: rotating cube (mesh)
+## Example: rotating cube with lighting
 
 ```cpp
 #include <iostream>
@@ -42,6 +42,7 @@ A [scene graph](https://en.wikipedia.org/wiki/Scene_graph) is a general data str
 
 #include <engine/renderer/Renderer.h>
 #include <engine/renderer/TrackballCamera.h>
+#include <engine/shapes/Cube.h>
 
 #include <GLFW/glfw3.h>
 
@@ -50,21 +51,6 @@ const int HEIGHT = 900;
 GLFWwindow* window;
 
 Renderer::Ptr renderer;
-
-// x y z  r g b
-std::vector<Vec3f> cubeVertices {
-    Vec3f(-0.5, -0.5,  0.5,   0.0f, 0.0f, 1.0f), Vec3f( 0.5, -0.5,  0.5,   1.0f, 0.0f, 1.0f),
-    Vec3f( 0.5,  0.5,  0.5,   0.0f, 1.0f, 1.0f), Vec3f(-0.5,  0.5,  0.5,   0.0f, 1.0f, 0.5f),
-    Vec3f(-0.5, -0.5, -0.5,   0.0f, 0.0f, 1.0f), Vec3f( 0.5, -0.5, -0.5,   1.0f, 0.0f, 1.0f),
-    Vec3f( 0.5,  0.5, -0.5,   0.0f, 1.0f, 1.0f), Vec3f(-0.5,  0.5, -0.5,   0.0f, 1.0f, 0.5f)
-};
-
-std::vector<unsigned int> cubeIndices {
-    0, 1, 2,  1, 5, 6,  7, 6, 5,
-    2, 3, 0,  6, 2, 1,  5, 4, 7,
-    4, 0, 3,  4, 5, 1,  3, 2, 6,
-    3, 7, 4,  1, 0, 4,  6, 7, 3 
-};
 
 int main() {
 
@@ -82,18 +68,24 @@ int main() {
 
     // Renderer
     renderer = Renderer::New(WIDTH, HEIGHT);
+    renderer->enableLight();
 
+    // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
     TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
     camera->zoom(-2.5);
-
     renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
 
+    // Light
+    DirectionalLight light(glm::vec3(1));
+    light.setColor(glm::vec3(1));
+    renderer->addLight(light);
+
     // Scene
-    Polytope::Ptr polytopeCube = Polytope::New(cubeVertices, cubeIndices);
+    Cube::Ptr cube = Cube::New();
 
     Group::Ptr group = Group::New();
-    group->add(polytopeCube);
+    group->add(cube);
 
     Scene::Ptr scene = Scene::New();
     scene->addGroup(group);
@@ -104,7 +96,7 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
 
         // Update scene
-        polytopeCube->rotate(0.55, glm::vec3(1, 0, 1));
+        cube->rotate(0.55, glm::vec3(1, 0, 1));
 
         // Draw scene
         renderer->clear();
@@ -120,6 +112,17 @@ int main() {
 
     return 0;
 }
+```
+
+**Custom mesh**
+```cpp
+std::vector<Vec3f> vertices { ... };
+std::vector<unsigned int> indices { ... };
+
+Polytope::Ptr mesh = Polytope::New(vertices, indices);
+
+Group::Ptr group = Group::New();
+group->add(mesh);
 ```
 
 ## Screenshots

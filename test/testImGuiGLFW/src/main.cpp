@@ -15,7 +15,6 @@
 
 #include <engine/renderer/TrackballCamera.h>
 #include <engine/renderer/FPSCamera.h>
-#include <engine/renderer/FrameCapturer.h>
 #include <engine/renderer/MouseRayCasting.h>
 #include <engine/model/Model.h>
 
@@ -37,9 +36,6 @@ void updateFPSCamera(double xpos, double ypos);
 const int WIDTH = 1280;
 const int HEIGHT = 900;
 GLFWwindow* window;
-
-// FrameCapturer: Converts the scene into a texture (render it to a quad or an ImGui window)
-FrameCapturer::Ptr frameCapturer;
 
 // TrackBallCamera 
 TrackballCamera::Ptr camera;
@@ -367,9 +363,6 @@ int main(void) {
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);
 
-    // Init FrameCapturer
-    frameCapturer = FrameCapturer::New(WIDTH, HEIGHT);
-
     // Get First Vertex from cubePolytopeIndices
     Vec3f firstVertex = cubePolytopeIndices->getVertices()[0];
 
@@ -379,14 +372,8 @@ int main(void) {
         // Clear
         renderer->clear();
 
-        // Draw to texture instead of default
-        frameCapturer->startCapturing();
-
         // Render
         renderer->render();
-
-        // Go back to default
-        frameCapturer->finishCapturing();
 
         // Update cubePolytope2 emission strength
         cubePolytope2->setEmissionStrength(sin(glfwGetTime()) / 2 + 0.5);
@@ -490,10 +477,10 @@ int main(void) {
                     cubePolytope2->addTexture(textureEmissionRed);
                 }
 
-                glm::vec3 backgroundColor = frameCapturer->getBackgroundColor();
+                glm::vec3 backgroundColor = renderer->getFrameCapturer()->getBackgroundColor();
                 static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};
                 ImGui::ColorEdit3("Background color", color, 0);
-                frameCapturer->setBackgroundColor(color[0], color[1], color[2]);
+                renderer->getFrameCapturer()->setBackgroundColor(color[0], color[1], color[2]);
 
                 ImGui::Separator();
 
@@ -693,7 +680,7 @@ int main(void) {
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
 
                 // Render graphics as a texture
-                ImGui::Image((void*)(intptr_t)frameCapturer->getTexture()->getID(), ImGui::GetWindowSize());   
+                ImGui::Image((void*)(intptr_t)renderer->getFrameCapturer()->getTexture()->getID(), ImGui::GetWindowSize());   
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);

@@ -163,7 +163,7 @@ int main() {
 
         // Draw scene
         renderer->clear();
-        renderer->render();
+        renderer->draw();
 
         // Update window
         glfwSwapBuffers(window);

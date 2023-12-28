@@ -306,11 +306,11 @@ void Renderer::pbrShaderUniforms() {
         // Point Light
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-            shaderProgramLighting->uniformInt(lightUniform + ".pointLight", true);
-            shaderProgramLighting->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
-            shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
-            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
-        }else shaderProgramLighting->uniformInt(lightUniform + ".pointLight", false);
+            shaderProgramPBR->uniformInt(lightUniform + ".pointLight", true);
+            shaderProgramPBR->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
+            shaderProgramPBR->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
+            shaderProgramPBR->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
+        }else shaderProgramPBR->uniformInt(lightUniform + ".pointLight", false);
     }
     
     shaderProgramPBR->uniformVec3("viewPos", camera->getEye());
@@ -504,7 +504,7 @@ void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
     glViewport(0, 0, viewportWidth, viewportHeight);
 
     primitiveSettings(group);
-    
+
     enableBlending();
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

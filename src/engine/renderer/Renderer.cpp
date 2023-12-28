@@ -4,11 +4,24 @@
 #define SHADOW_MAP_HEIGHT 1024
 
 Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight) 
-    : camera(nullptr), hasCamera(false), hasLight(false), nLights(0),
-    projection(glm::mat4(1.f)), view(glm::mat4(1.f)), depthMapFBO(0),
-    depthMap(0), viewportWidth(_viewportWidth), viewportHeight(_viewportHeight),
-    shadowLightPos(0, 0, 0), shadowMapping(false), exposure(1.0f), hdr(false), 
-    gammaCorrection(false), pbr(false), backgroundColor(0.1f) {
+    : camera(nullptr), 
+    hasCamera(false), 
+    hasLight(false), 
+    nLights(0),
+    projection(glm::mat4(1.f)), 
+    view(glm::mat4(1.f)), 
+    depthMapFBO(0),
+    depthMap(0), 
+    viewportWidth(_viewportWidth), 
+    viewportHeight(_viewportHeight),
+    shadowLightPos(0, 0, 0), 
+    shadowMapping(false), 
+    exposure(1.0f), 
+    hdr(false), 
+    gammaCorrection(false), 
+    pbr(false), 
+    backgroundColor(0.1f) 
+{
     loadFunctionsGL();
     initShaders();
     enableBlending();
@@ -16,6 +29,8 @@ Renderer::Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight)
     initShadowMapping();
     initHDR();
     initTextureQuad();
+
+    frameCapturer = FrameCapturer::New(viewportWidth, viewportHeight);
 }
 
 Renderer::Renderer() 
@@ -65,6 +80,11 @@ void Renderer::initShaders() {
     Shader vertexSelectionShader = Shader::fromFile("glsl/Selection.vert", Shader::ShaderType::Vertex);
     Shader fragmentSelectionShader = Shader::fromFile("glsl/Selection.frag", Shader::ShaderType::Fragment);
     shaderProgramSelection = ShaderProgram::New(vertexSelectionShader, fragmentSelectionShader);
+
+    // Textured quad shader program
+    Shader vertexTexturedQuadShader = Shader::fromFile("glsl/TexturedQuad.vert", Shader::ShaderType::Vertex);
+    Shader fragmentTexturedQuadShader = Shader::fromFile("glsl/TexturedQuad.frag", Shader::ShaderType::Fragment);
+    shaderProgramTexturedQuad = ShaderProgram::New(vertexTexturedQuadShader, fragmentTexturedQuadShader);
 }
 
 void Renderer::initTextureQuad() {
@@ -286,11 +306,11 @@ void Renderer::pbrShaderUniforms() {
         // Point Light
         if(instanceof<PointLight>(lights[i])) {
             PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-            shaderProgramLighting->uniformInt(lightUniform + ".pointLight", true);
-            shaderProgramLighting->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
-            shaderProgramLighting->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
-            shaderProgramLighting->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
-        }else shaderProgramLighting->uniformInt(lightUniform + ".pointLight", false);
+            shaderProgramPBR->uniformInt(lightUniform + ".pointLight", true);
+            shaderProgramPBR->uniformFloat(lightUniform + ".constant", pointLight->getConstant());
+            shaderProgramPBR->uniformFloat(lightUniform + ".linear", pointLight->getLinear());
+            shaderProgramPBR->uniformFloat(lightUniform + ".quadratic", pointLight->getQuadratic());
+        }else shaderProgramPBR->uniformInt(lightUniform + ".pointLight", false);
     }
     
     shaderProgramPBR->uniformVec3("viewPos", camera->getEye());
@@ -484,7 +504,7 @@ void Renderer::drawGroup(Scene::Ptr& scene, Group::Ptr& group) {
     glViewport(0, 0, viewportWidth, viewportHeight);
 
     primitiveSettings(group);
-    
+
     enableBlending();
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -590,6 +610,8 @@ void Renderer::renderQuad() {
 
 void Renderer::render() {
 
+    frameCapturer->startCapturing();
+
     enableAntialiasing();
     enableBlending();
 
@@ -618,6 +640,23 @@ void Renderer::render() {
         bindPreviousFBO();
         renderQuad();
     }
+
+    frameCapturer->finishCapturing();
+}
+
+void Renderer::draw() {
+
+    render();
+
+    shaderProgramTexturedQuad->useProgram();
+
+    frameCapturer->getTexture()->bind();
+    shaderProgramTexturedQuad->uniformInt("tex", frameCapturer->getTexture()->getID() - 1);
+
+    quadVAO->bind();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    quadVAO->unbind();
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {

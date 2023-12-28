@@ -5,7 +5,6 @@
 #include <engine/renderer/Renderer.h>
 #include <engine/renderer/TrackballCamera.h>
 #include <engine/model/Model.h>
-#include <engine/renderer/FrameCapturer.h>
 
 #include <GLFW/glfw3.h>
 
@@ -21,7 +20,6 @@ const int HEIGHT = 900;
 GLFWwindow* window;
 
 Renderer::Ptr renderer;
-FrameCapturer::Ptr frameCapturer;
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter) {
 
@@ -156,25 +154,16 @@ int main() {
     
     renderer->addScene(scene);
 
-    // Init FrameCapturer
-    frameCapturer = FrameCapturer::New(WIDTH, HEIGHT);
-
     // Main loop
     while (!glfwWindowShouldClose(window)) {
 
-        frameCapturer->setBackgroundColor(0.1, 0.1, 0.1);
+        renderer->getFrameCapturer()->setBackgroundColor(0.1, 0.1, 0.1);
 
         // Clear
         renderer->clear();
 
-        // Draw to texture instead of default
-        frameCapturer->startCapturing();
-
         // Render
         renderer->render();
-
-        // Go back to default
-        frameCapturer->finishCapturing();
 
         {
             ImGui_ImplOpenGL3_NewFrame();
@@ -191,7 +180,7 @@ int main() {
                 windowFocus = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
 
                 // Render graphics as a texture
-                ImGui::Image((void*)(intptr_t)frameCapturer->getTexture()->getID(), ImGui::GetWindowSize());   
+                ImGui::Image((void*)(intptr_t)renderer->getFrameCapturer()->getTexture()->getID(), ImGui::GetWindowSize());   
                 
                 // Resize window
                 static ImVec2 previousSize(0, 0);

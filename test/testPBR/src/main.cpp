@@ -5,6 +5,8 @@
 #include <engine/renderer/TrackballCamera.h>
 #include <engine/shapes/Sphere.h>
 
+#include <engine/shapes/Cube.h>
+
 #include <GLFW/glfw3.h>
 
 const int WIDTH = 1280;
@@ -143,6 +145,10 @@ int main() {
     group->add(sphere2);
     group->add(sphere3);
 
+    // Program only working with this -> FIX NEEDED
+    Cube::Ptr cube = Cube::New();
+    group->add(cube);
+
     group->translate(glm::vec3(0.75, 0, 0.5));
     
     // Scene
@@ -163,7 +169,7 @@ int main() {
 
         // Draw scene
         renderer->clear();
-        renderer->render();
+        renderer->draw();
 
         // Update window
         glfwSwapBuffers(window);

@@ -12,6 +12,9 @@ void MultiSampleTexture::generateTexture() {
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, id);
     glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA, width, height, GL_TRUE);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+    slot = 0x84C0 + count;
+    count ++;
 }
 
 void MultiSampleTexture::bind() {

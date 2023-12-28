@@ -25,6 +25,8 @@
 
 #include "SkyBox.h"
 
+#include "FrameCapturer.h"
+
 class Renderer {
     GENERATE_PTR(Renderer)
 private:
@@ -36,6 +38,7 @@ private:
     ShaderProgram::Ptr shaderProgramHDR;
     ShaderProgram::Ptr shaderProgramSkyBox;
     ShaderProgram::Ptr shaderProgramSelection;
+    ShaderProgram::Ptr shaderProgramTexturedQuad;
 
     // Scenes visualization
     glm::mat4 projection;
@@ -83,6 +86,10 @@ private:
     SkyBox::Ptr skyBox;
 
     unsigned int viewportWidth, viewportHeight;
+
+    // Frame capturer
+    FrameCapturer::Ptr frameCapturer;
+
 public:
     Renderer(unsigned int _viewportWidth, unsigned int _viewportHeight);
     Renderer();
@@ -91,15 +98,19 @@ private:
     void loadFunctionsGL();
     void initShaders();
     void initTextureQuad();
+
     void textureUniformDefault(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
     void textureUniformLighting(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
     void textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
     void textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope);
+
     void initShadowMapping();
     void initHDR();
+
     void primitiveSettings(Group::Ptr& group);
     void defaultPrimitiveSettings();
     void lightShaderUniforms();
+
     void pbrShaderUniforms();
     void lightMaterialUniforms(const Polytope::Ptr& polytope);
     void pbrMaterialUniforms(const Polytope::Ptr& polytope);
@@ -107,28 +118,46 @@ private:
     void lightMVPuniform(const glm::mat4& model);
     void pbrMVPuniform(const glm::mat4& model);
     void shadowMappingUniforms();
+
     void renderScenesToDepthMap(std::vector<Scene::Ptr>& scenes);
     void renderScenes(std::vector<Scene::Ptr>& scenes);
     void renderToDepthMap();
     void renderQuad();
     void drawGroup(Scene::Ptr& scene, Group::Ptr& group);
     void drawSkyBox();
+
     void loadPreviousFBO();
     void bindPreviousFBO();
 public:
     void removeScene(Scene::Ptr& scene);
     void removeLight(Light& light);
+
+    /**
+     * Renders the whole scene into the frame capturer texture
+     * 
+     * You can get it and draw it in ImGui... etc
+    */
     void render();
+
+    /**
+     * Renders the whole scene into the frame capturer texture
+     * and then it draws the texture in a quad
+    */
+    void draw();
+
     void setBackgroundColor(float r, float g, float b);
     void setCamera(const Camera::Ptr& camera);
-    void setLight(Light& light);
+
     void addLight(Light& light);
+
     void clear();
+
     void enableBlending();
     void enableAntialiasing();
     void enableBackFaceCulling();   // Counter-clockwise order
     void enableFrontFaceCulling();  // Counter-clockwise order
     void disableFaceCulling();
+
     void setFaceCulling(const Polytope::Ptr& polytope);
     void setViewport(unsigned int viewportWidth, unsigned int viewportHeight);
 public:
@@ -180,4 +209,6 @@ public:
 
     inline void setGammaCorrection(bool gammaCorrection) { this->gammaCorrection = gammaCorrection; }
     inline bool isGammaCorrection() const { return gammaCorrection; }
+
+    inline FrameCapturer::Ptr getFrameCapturer() { return frameCapturer; }
 };

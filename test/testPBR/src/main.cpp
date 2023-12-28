@@ -114,6 +114,20 @@ int main() {
     sphere3->addTexture(textureNormal3);
     sphere3->addTexture(textureRoughness3);
 
+    Cube::Ptr cube = Cube::New();
+    cube->translate(glm::vec3(0.0, 1.0, 2.0));
+    cube->addTexture(textureAlbedo3);
+    cube->addTexture(textureMetallic3);
+    cube->addTexture(textureNormal3);
+    cube->addTexture(textureRoughness3);
+
+    Cube::Ptr cube2 = Cube::New();
+    cube2->translate(glm::vec3(0.0, 1.0, -2.0));
+    cube2->addTexture(textureAlbedo);
+    cube2->addTexture(textureMetallic);
+    cube2->addTexture(textureNormal);
+    cube2->addTexture(textureRoughness);
+
     // Grid polytope
     std::vector<Vec3f> gridVertices = {};
     float a = -20; float b = -a;
@@ -145,9 +159,8 @@ int main() {
     group->add(sphere2);
     group->add(sphere3);
 
-    // Program only working with this -> FIX NEEDED
-    Cube::Ptr cube = Cube::New();
     group->add(cube);
+    group->add(cube2);
 
     group->translate(glm::vec3(0.75, 0, 0.5));
     

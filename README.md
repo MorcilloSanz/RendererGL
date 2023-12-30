@@ -73,8 +73,8 @@ int main() {
     // Camera
     double aspectRatio = static_cast<double>(WIDTH) / HEIGHT;
     TrackballCamera::Ptr camera = TrackballCamera::perspectiveCamera(glm::radians(45.0f), aspectRatio, 0.1, 1000);
-    camera->zoom(-2.5);
     renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
+    camera->zoom(-2.5);
 
     // Light
     DirectionalLight light(glm::vec3(1));
@@ -100,7 +100,7 @@ int main() {
 
         // Draw scene
         renderer->clear();
-        renderer->render();
+        renderer->draw();
         
         // Update window
         glfwSwapBuffers(window);

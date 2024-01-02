@@ -477,10 +477,10 @@ int main(void) {
                     cubePolytope2->addTexture(textureEmissionRed);
                 }
 
-                glm::vec3 backgroundColor = renderer->getFrameCapturer()->getBackgroundColor();
+                glm::vec3 backgroundColor = renderer->getBackgroundColor();
                 static float color[3] = {backgroundColor.r, backgroundColor.g, backgroundColor.b};
                 ImGui::ColorEdit3("Background color", color, 0);
-                renderer->getFrameCapturer()->setBackgroundColor(color[0], color[1], color[2]);
+                renderer->setBackgroundColor(color[0], color[1], color[2]);
 
                 ImGui::Separator();
 
@@ -1033,7 +1033,6 @@ void renderImGui(ImGuiIO& io) {
 // Window functions
 void resizeCallback(GLFWwindow* w, int width, int height) {
     //renderer->setViewport(width, height);
-    //frameCapturer->updateViewPort(width, height);
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

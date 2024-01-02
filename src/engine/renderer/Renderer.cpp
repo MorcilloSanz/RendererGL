@@ -389,6 +389,7 @@ void Renderer::setFaceCulling(const Polytope::Ptr& polytope) {
 void Renderer::setViewport(unsigned int viewportWidth, unsigned int viewportHeight) {
     this->viewportWidth = viewportWidth;
     this->viewportHeight = viewportHeight;
+    frameCapturer->updateViewPort(viewportWidth, viewportHeight);
 }
 
 void Renderer::initShadowMapping() {
@@ -660,9 +661,12 @@ void Renderer::draw() {
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {
+
     backgroundColor.r = r;
     backgroundColor.g = g;
     backgroundColor.b = b;
+
+    frameCapturer->setBackgroundColor(r, g, b);
 }
 
 void Renderer::setCamera(const Camera::Ptr& camera) {

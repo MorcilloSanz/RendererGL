@@ -211,11 +211,11 @@ int main(void) {
     Polytope::Ptr cubePolytope2 = Polytope::New(vertices);
     cubePolytope2->translate(glm::vec3(-5, 0.25, 5));
 
-    Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_basecolor.jpg", Texture::Type::TextureDiffuse);
-    Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_metallic.jpg", Texture::Type::TextureSpecular);
-    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_normal.jpg", Texture::Type::TextureNormal);
-    Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_emissive.jpg", Texture::Type::TextureEmission);
-    Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Documents/model/Wall/Sci-fi_Wall_011_emissive2.jpg", Texture::Type::TextureEmission);
+    Texture::Ptr textureDiffuse = Texture::New("/home/morcillosanz/Documents/model/military-panel1-unity/military-panel1-albedo.png", Texture::Type::TextureDiffuse);
+    Texture::Ptr textureSpecular = Texture::New("/home/morcillosanz/Documents/model/military-panel1-unity/military-panel1-specular.png", Texture::Type::TextureSpecular);
+    Texture::Ptr textureNormal = Texture::New("/home/morcillosanz/Documents/model/military-panel1-unity/military-panel1-nmap-ogl.png", Texture::Type::TextureNormal);
+    Texture::Ptr textureEmission = Texture::New("/home/morcillosanz/Documents/model/military-panel1-unity/military-panel1-emissive_power.png", Texture::Type::TextureEmission);
+    Texture::Ptr textureEmissionRed = Texture::New("/home/morcillosanz/Documents/model/military-panel1-unity/military-panel1-emissive_power.png", Texture::Type::TextureEmission);
     
     //textureDiffuse->changeTexture("/home/morcillosanz/Documents/model/diffuse.png");
 
@@ -353,12 +353,12 @@ int main(void) {
 
     // SkyBox
     std::vector<std::string> faces = {
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveX.tga",
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeX.tga",
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveY.tga",
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeY.tga",
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_PositiveZ.tga",
-        "/home/morcillosanz/Documents/model/skybox/tilted/GalaxyTex_NegativeZ.tga"
+        "/home/morcillosanz/Documents/model/Yokohama3/posx.jpg",
+        "/home/morcillosanz/Documents/model/Yokohama3/negx.jpg",
+        "/home/morcillosanz/Documents/model/Yokohama3/posy.jpg",
+        "/home/morcillosanz/Documents/model/Yokohama3/negy.jpg",
+        "/home/morcillosanz/Documents/model/Yokohama3/posz.jpg",
+        "/home/morcillosanz/Documents/model/Yokohama3/negz.jpg"
     };
     SkyBox::Ptr skyBox = SkyBox::New(faces);
     renderer->setSkyBox(skyBox);

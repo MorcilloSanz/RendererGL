@@ -88,45 +88,53 @@ void Renderer::initShaders() {
 }
 
 void Renderer::initTextureQuad() {
+
     std::vector<Vec3f> quadVertices = {
         Vec3f(-1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f),
         Vec3f(-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
         Vec3f( 1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f),
         Vec3f( 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
     };
+
     quadVAO = VertexArray::New();
     quadVBO = VertexBuffer::New(quadVertices);
     quadVAO->unbind();
 }
 
 void Renderer::removeScene(Scene::Ptr& scene) {
+
     unsigned int index = 0;
     for(auto& s : scenes) {
+
         if(s.get() == scene.get()) {
             removeScene(index);
             break;
         }
+
         index ++;
     }
 }
 
 void Renderer::removeLight(Light& light) {
+
     unsigned int index = 0;
     for(Light* l : lights) {
+
         if(l == &light) {
             removeLight(index);
             break;
         }
+
         index ++;
     }
 }
 
-void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
 
     std::vector<Texture::Ptr> textures = polytope->getTextures();
 
     if(!textures.empty()) {
-        
+
         for(auto& texture : textures) {
 
             const int uniformSlot = texture->getSlot() - 0x84C0;
@@ -137,10 +145,11 @@ void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::sha
                 shaderProgram->uniformInt("hasTexture", true);
             }
         }
+
     }else shaderProgram->uniformInt("hasTexture", false);
 }
 
-void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
 
     unsigned int nDiffuseMaps = 0, nSpecularMaps = 0, nEmissionMap = 0, nNormalMaps = 0, nDepthMaps = 0;
 
@@ -249,7 +258,7 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
     shaderProgram->uniformFloat("heightScale", heightScale);
 }
 
-void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
+void Renderer::textureUniform(ShaderProgram::Ptr& shaderProgram, Polytope::Ptr& polytope) {
     if(pbr) textureUniformPBR(shaderProgram, polytope);
     else if(hasLight) textureUniformLighting(shaderProgram, polytope);
     else textureUniformDefault(shaderProgram, polytope);
@@ -323,7 +332,7 @@ void Renderer::pbrShaderUniforms() {
     //shaderProgramPBR->uniformInt("shadowMapping", shadowMapping);
 }
 
-void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
+void Renderer::lightMaterialUniforms(const Polytope::Ptr& polytope) {
 
     Material::Ptr material = polytope->getMaterial();
 
@@ -340,7 +349,7 @@ void Renderer::lightMaterialUniforms(const std::shared_ptr<Polytope>& polytope) 
     shaderProgramLighting->uniformFloat("emissionStrength", polytope->getEmissionStrength());
 }
 
-void Renderer::pbrMaterialUniforms(const std::shared_ptr<Polytope>& polytope) {
+void Renderer::pbrMaterialUniforms(const Polytope::Ptr& polytope) {
 
     Material::Ptr material = polytope->getMaterial();
 

@@ -2,7 +2,8 @@
 
 RendererGL is a basic 3D renderer written in C++ and OpenGL that allows working with 3D graphics without the need to know computer graphics or OpenGL. So that both beginners and more experienced programmers can create a 3D scene with lighting, shadows and materials.
 
-> **Warning** This project is still under development
+> [!IMPORTANT] 
+This project is still under development
 
 Take a look at some [screenshots](#screenshots). *3D assets are not included*
 

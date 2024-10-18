@@ -651,10 +651,12 @@ int main(void) {
                     fpsCamera->setUp(glm::vec3(0, -1, 0));
                     fpsCamera->setCenter(glm::vec3(0, 0, 0));
                 }
+
                 ImGui::SameLine();
                 if (ImGui::Button("Trackball camera")) {
                     renderer->setCamera(std::dynamic_pointer_cast<Camera>(camera));
                 }
+
                 ImGui::SameLine();
                 if (ImGui::Button("FPS camera")) {
                     renderer->setCamera(std::dynamic_pointer_cast<Camera>(fpsCamera));
@@ -673,6 +675,7 @@ int main(void) {
 
                 ImGui::End();
             }
+
             // Render window
             static bool windowFocus = false;
             { 

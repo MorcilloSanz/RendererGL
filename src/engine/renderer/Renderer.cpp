@@ -122,15 +122,19 @@ void Renderer::removeLight(Light& light) {
 }
 
 void Renderer::textureUniformDefault(ShaderProgram::Ptr& shaderProgram, std::shared_ptr<Polytope>& polytope) {
-    unsigned int index = 0;
+
     std::vector<Texture::Ptr> textures = polytope->getTextures();
+
     if(!textures.empty()) {
+        
         for(auto& texture : textures) {
+
+            const int uniformSlot = texture->getSlot() - 0x84C0;
+
             if(texture->getType() == Texture::Type::TextureDiffuse) {
                 texture->bind();
-                shaderProgram->uniformInt("tex", texture->getID() - 1);
+                shaderProgram->uniformInt("tex", uniformSlot);
                 shaderProgram->uniformInt("hasTexture", true);
-                index ++;
             }
         }
     }else shaderProgram->uniformInt("hasTexture", false);
@@ -143,31 +147,32 @@ void Renderer::textureUniformLighting(ShaderProgram::Ptr& shaderProgram, std::sh
     for(auto& texture : polytope->getTextures()) {
 
         texture->bind();
+        const int uniformSlot = texture->getSlot() - 0x84C0;
 
         switch(texture->getType()) {
 
             case Texture::Type::TextureDiffuse:
-                shaderProgram->uniformInt("materialMaps.diffuseMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.diffuseMap", uniformSlot);
                 nDiffuseMaps ++;
             break;
 
             case Texture::Type::TextureSpecular:
-                shaderProgram->uniformInt("materialMaps.specularMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.specularMap", uniformSlot);
                 nSpecularMaps ++;
             break;
 
             case Texture::Type::TextureEmission:
-                shaderProgram->uniformInt("materialMaps.emissionMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.emissionMap", uniformSlot);
                 nEmissionMap ++;
             break;
 
             case Texture::Type::TextureNormal:
-                shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.normalMap", uniformSlot);
                 nNormalMaps ++;
             break;
 
             case Texture::Type::TextureHeight:
-                shaderProgram->uniformInt("materialMaps.depthMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.depthMap", uniformSlot);
                 nDepthMaps ++;
             break;
         }
@@ -191,41 +196,42 @@ void Renderer::textureUniformPBR(ShaderProgram::Ptr& shaderProgram, Polytope::Pt
     for(auto& texture : polytope->getTextures()) {
 
         texture->bind();
+        const int uniformSlot = texture->getSlot() - 0x84C0;
 
         switch(texture->getType()) {
 
             case Texture::Type::TextureAlbedo:
-                shaderProgram->uniformInt("materialMaps.albedo", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.albedo", uniformSlot);
                 nAlbedoMaps ++;
             break;
 
             case Texture::Type::TextureMetallic:
-                shaderProgram->uniformInt("materialMaps.metallic", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.metallic", uniformSlot);
                 nMetallicMaps ++;
             break;
 
             case Texture::Type::TextureRoughness:
-                shaderProgram->uniformInt("materialMaps.roughness", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.roughness", uniformSlot);
                 nRoughnessMap ++;
             break;
 
             case Texture::Type::TextureNormal:
-                shaderProgram->uniformInt("materialMaps.normalMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.normalMap", uniformSlot);
                 nNormalMaps ++;
             break;
 
             case Texture::Type::TextureHeight:
-                shaderProgram->uniformInt("materialMaps.depthMap", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.depthMap", uniformSlot);
                 nDepthMaps ++;
             break;
 
             case Texture::Type::TextureAmbientOcclusion:
-                shaderProgram->uniformInt("materialMaps.ao", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.ao", uniformSlot);
                 nAmbientOcclusionMaps ++;
             break;
 
             case Texture::Type::TextureEmission:
-                shaderProgram->uniformInt("materialMaps.emission", texture->getID() - 1);
+                shaderProgram->uniformInt("materialMaps.emission", uniformSlot);
                 nEmissionMaps ++;
             break;
         }
